@@ -55,7 +55,7 @@ function updateWeddingRsvpContactInfo() {
     `Bản đồ: ${RSVP_UPDATE_CONFIG.mapsUrl}`,
     "",
     `Vui lòng phản hồi trước ngày ${RSVP_UPDATE_CONFIG.rsvpDeadline}.`,
-    "Thông tin của Quý khách chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
+    "Thông tin Quý khách cung cấp chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
     "",
     contactBlock,
   ].join("\n");
@@ -64,7 +64,7 @@ function updateWeddingRsvpContactInfo() {
     "Cảm ơn Quý khách đã xác nhận!",
     "",
     `${RSVP_UPDATE_CONFIG.groomName} và ${RSVP_UPDATE_CONFIG.brideName} đã ghi nhận phản hồi của Quý khách.`,
-    "Sự hiện diện và lời chúc phúc của Quý khách là niềm vui lớn đối với chúng tôi.",
+    "Sự hiện diện và lời chúc phúc của Quý khách là niềm vui và niềm vinh hạnh của hai gia đình.",
     "",
     contactBlock,
   ].join("\n");
@@ -73,14 +73,73 @@ function updateWeddingRsvpContactInfo() {
     .setDescription(description)
     .setConfirmationMessage(confirmationMessage);
 
+  updateGuestFacingWording_(form);
+
   const result = {
-    message: "Đã cập nhật mô tả và thông báo xác nhận thành công.",
+    message: "Đã cập nhật nội dung, cách xưng hô và thông tin liên hệ thành công.",
     formEditUrl: form.getEditUrl(),
     formResponderUrl: form.getPublishedUrl(),
   };
 
   console.log(JSON.stringify(result, null, 2));
   return result;
+}
+
+
+/**
+ * Cập nhật cách xưng hô trong các câu hỏi của Google Form hiện có.
+ *
+ * Các chuỗi cách xưng hô cũ bên dưới chỉ dùng làm khóa đối chiếu để tìm và
+ * thay nội dung cũ; chúng không phải nội dung sẽ hiển thị sau khi hàm chạy.
+ */
+function updateGuestFacingWording_(form) {
+  const titleUpdates = Object.freeze({
+    "Bạn là khách của": "Quý khách thuộc nhóm khách mời nào?",
+    "Quý khách là khách của": "Quý khách thuộc nhóm khách mời nào?",
+    "Bạn có thể đến chung vui cùng gia đình không?":
+      "Quý khách có thể đến chung vui cùng gia đình không?",
+    "Bạn có cần hỗ trợ thêm không?":
+      "Quý khách có cần hỗ trợ thêm không?",
+    "Cảm ơn bạn đã phản hồi":
+      "Cảm ơn Quý khách đã phản hồi",
+    "Bạn có lời nhắn nào dành cho cô dâu và chú rể không?":
+      "Quý khách có lời nhắn nào dành cho cô dâu và chú rể không?",
+  });
+
+  const helpTextUpdates = Object.freeze({
+    "Bạn vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.":
+      "Quý khách vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.",
+    "Dù không thể hiện diện, tình cảm và lời chúc của bạn vẫn rất quý giá đối với chúng tôi.":
+      "Dù không thể hiện diện, tình cảm và lời chúc của Quý khách vẫn là niềm trân quý đối với hai gia đình.",
+  });
+
+  form.getItems().forEach((item) => {
+    const currentTitle = item.getTitle();
+    const currentHelpText = item.getHelpText();
+
+    if (titleUpdates[currentTitle]) {
+      item.setTitle(titleUpdates[currentTitle]);
+    }
+
+    if (helpTextUpdates[currentHelpText]) {
+      item.setHelpText(helpTextUpdates[currentHelpText]);
+    }
+
+    // Câu hỏi phân nhóm khách không dùng điều hướng theo câu trả lời.
+    if (
+      item.getType() === FormApp.ItemType.MULTIPLE_CHOICE &&
+      item.getTitle() === "Quý khách thuộc nhóm khách mời nào?"
+    ) {
+      item.asMultipleChoiceItem()
+        .setChoiceValues([
+          "Nhà trai",
+          "Nhà gái",
+          "Khách mời chung của cô dâu và chú rể",
+          "Đồng nghiệp",
+        ])
+        .showOtherOption(true);
+    }
+  });
 }
 
 

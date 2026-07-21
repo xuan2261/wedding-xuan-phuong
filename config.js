@@ -26,7 +26,7 @@ window.WEDDING_CONFIG = {
   invitation: {
     heading: "Trân trọng kính mời",
     message:
-      "Thời gian đã cho chúng tôi gặp nhau, yêu thương đã đưa chúng tôi về chung một nhà. Trong niềm vui của hai gia đình, chúng tôi trân trọng kính mời bạn đến dự Lễ Thành Hôn của Bùi Thanh Xuân và Trần Thị Phượng. Sự hiện diện và lời chúc phúc của bạn là niềm hạnh phúc quý giá trong ngày trọng đại của chúng tôi."
+      "Thời gian đã đưa Thanh Xuân và Thị Phượng đến bên nhau, yêu thương đã dẫn lối để cùng xây dựng một mái ấm. Trong niềm hân hoan của hai gia đình, trân trọng kính mời Quý vị đến tham dự Lễ Thành Hôn của Bùi Thanh Xuân và Trần Thị Phượng. Sự hiện diện cùng lời chúc phúc của Quý vị là niềm vui và niềm vinh hạnh của hai gia đình trong ngày trọng đại."
   },
 
   contact: {
