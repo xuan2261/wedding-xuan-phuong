@@ -1,0 +1,218 @@
+[
+  {
+    "asset": "bride",
+    "source": "DRS06549.jpg",
+    "original_size": [
+      1366,
+      2047
+    ],
+    "original_bytes": 386048,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 47468,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 106738,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "couple-formal",
+    "source": "DRS06605.jpg",
+    "original_size": [
+      1366,
+      2048
+    ],
+    "original_bytes": 477860,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 61184,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 139112,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "hero",
+    "source": "DRS06640.jpg",
+    "original_size": [
+      1364,
+      2048
+    ],
+    "original_bytes": 662475,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 104958,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 256848,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "couple-hands",
+    "source": "DRS06659.jpg",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 456623,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 58990,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 133518,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "couple-playful",
+    "source": "DRS06669.jpg",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 675030,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 110072,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 263294,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "groom",
+    "source": "DRS07188.jpg",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 886886,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 160928,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 395504,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "couple-aodai",
+    "source": "DRS07389.jpg",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 485975,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 68686,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 151266,
+        "quality": 82
+      }
+    }
+  },
+  {
+    "asset": "couple-studio",
+    "source": "DRS07545.jpg",
+    "original_size": [
+      1366,
+      2048
+    ],
+    "original_bytes": 277795,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 33002,
+        "quality": 80
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 78256,
+        "quality": 82
+      }
+    }
+  }
+]

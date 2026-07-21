@@ -1,0 +1,7 @@
+# Không chặn crawler tại đây.
+# Việc loại khỏi kết quả tìm kiếm được điều khiển bằng:
+# <meta name="robots" content="noindex, nofollow, noimageindex">
+#
+# Nếu Disallow toàn bộ ở robots.txt, crawler có thể không đọc được thẻ noindex.
+User-agent: *
+Allow: /
