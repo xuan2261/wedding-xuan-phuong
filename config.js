@@ -57,13 +57,14 @@ window.WEDDING_CONFIG = {
   ],
 
   music: {
-    enabled: true, // Đổi thành true sau khi thêm assets/audio/music.mp3
+    enabled: true, // Giữ file assets/audio/music.mp3 hiện có trên GitHub
     file: "assets/audio/music.mp3",
-    title: "Ngày Đầu Tiên — Đức Phúc"
+    title: "Ngày Đầu Tiên — Đức Phúc",
+    volume: 0.72
   },
 
   site: {
-    domain: "", // Ví dụ: xuanphuong.id.vn
+    domain: "https://xuan2261.github.io/wedding-xuan-phuong/",
     footer: "Thanh Xuân & Thị Phượng · 30.07.2026"
   }
 };

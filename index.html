@@ -9,13 +9,17 @@
   <!-- Không cho phép lập chỉ mục; không phải là cơ chế đặt mật khẩu. -->
   <meta name="robots" content="noindex, nofollow, noimageindex">
   <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 
   <title>Lễ Thành Hôn · Thanh Xuân & Thị Phượng</title>
 
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://xuan2261.github.io/wedding-xuan-phuong/">
   <meta property="og:title" content="Lễ Thành Hôn · Thanh Xuân & Thị Phượng">
   <meta property="og:description" content="Trân trọng kính mời bạn đến chung vui cùng chúng tôi ngày 30.07.2026.">
-  <meta property="og:image" content="assets/images/meta-v3.jpg">
+  <meta property="og:image" content="https://xuan2261.github.io/wedding-xuan-phuong/assets/images/meta-v3.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -25,16 +29,20 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lễ Thành Hôn · Bùi Thanh Xuân & Trần Thị Phượng">
   <meta name="twitter:description" content="Trân trọng kính mời bạn đến chung vui cùng chúng tôi ngày 30.07.2026.">
-  <meta name="twitter:image" content="assets/images/meta-v3.jpg">
+  <meta name="twitter:image" content="https://xuan2261.github.io/wedding-xuan-phuong/assets/images/meta-v3.jpg">
 
   <link rel="icon" href="assets/images/favicon.png" type="image/png">
   <link rel="preload" as="image" href="assets/images/hero-720.webp?v=5"
         imagesrcset="assets/images/hero-720.webp?v=5 720w, assets/images/hero-1280.webp?v=5 1280w"
         imagesizes="(max-width: 760px) 100vw, 760px">
-  <link rel="stylesheet" href="styles.css?v=1.1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
+  <link rel="stylesheet" href="styles.css?v=1.4">
 
-  <script src="config.js?v=1.4" defer></script>
-  <script src="app.js?v=1.2" defer></script>
+  <script src="config.js?v=1.6" defer></script>
+  <script src="app.js?v=1.5" defer></script>
 </head>
 
 <body>
@@ -172,7 +180,7 @@
       <div class="countdown__inner reveal">
         <p class="section-kicker">Đếm ngược</p>
         <h2 id="countdown-title">Chờ ngày chung đôi</h2>
-        <div class="countdown__grid" role="timer" aria-live="polite">
+        <div class="countdown__grid" role="timer" aria-live="off" aria-label="Thời gian còn lại đến lễ cưới">
           <div><strong data-days>00</strong><span>Ngày</span></div>
           <div><strong data-hours>00</strong><span>Giờ</span></div>
           <div><strong data-minutes>00</strong><span>Phút</span></div>
@@ -184,7 +192,7 @@
     <section class="section actions reveal" aria-labelledby="actions-title">
       <p class="section-kicker">Phản hồi</p>
       <h2 id="actions-title">Sự hiện diện của bạn là món quà quý giá</h2>
-      <p>Vui lòng xác nhận tham dự trước <strong data-rsvp-deadline>25.07.2026</strong> để gia đình chuẩn bị đón tiếp chu đáo.</p>
+      <p>Vui lòng xác nhận tham dự trước <strong data-rsvp-deadline>24.07.2026</strong> để gia đình chuẩn bị đón tiếp chu đáo.</p>
       <div class="actions__buttons">
         <a class="button" id="rsvpButton" href="#" target="_blank" rel="noopener noreferrer">
           Xác nhận tham dự
@@ -289,7 +297,15 @@
     title="Bật nhạc nền"
     hidden
   >
-    <span data-music-icon aria-hidden="true">🔇</span>
+    <svg class="music-button__icon" data-music-icon="muted" aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M4 9v6h4l5 4V5L8 9H4z"></path>
+      <path d="m17 9 4 4m0-4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="music-button__icon" data-music-icon="playing" aria-hidden="true" viewBox="0 0 24 24" hidden>
+      <path d="M9 18V5l11-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="17" cy="16" r="3"></circle>
+    </svg>
     <span class="sr-only">Bật nhạc nền</span>
   </button>
   <audio id="weddingMusic" loop preload="none"></audio>
@@ -302,13 +318,13 @@
       </div>
       <button class="icon-button" type="button" data-close-dialog aria-label="Đóng cửa sổ">×</button>
     </div>
-    <p class="dialog-intro">Bạn có thể thay hai ảnh QR bên dưới trong thư mục <code>assets/qr</code>.</p>
+    <p class="dialog-intro">Thông tin mừng cưới dành cho khách ở xa.</p>
     <div class="gift-grid" id="giftGrid"></div>
   </dialog>
 
   <dialog class="lightbox" id="lightboxDialog" aria-label="Xem ảnh phóng lớn">
     <button class="icon-button lightbox__close" type="button" data-close-lightbox aria-label="Đóng ảnh">×</button>
-    <img id="lightboxImage" src="" alt="">
+    <img id="lightboxImage" src="" width="1280" height="1920" alt="">
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

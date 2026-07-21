@@ -17,6 +17,22 @@
     });
   }
 
+  function giftsAreReady() {
+    if (!Array.isArray(config.gifts) || config.gifts.length === 0) return false;
+
+    const placeholderNumbers = new Set(["11111111", "222222"]);
+    return config.gifts.every((gift) => {
+      const accountNumber = String(gift.accountNumber || "").replace(/\s+/g, "");
+      return (
+        gift.bankName &&
+        gift.accountName &&
+        gift.qrImage &&
+        accountNumber.length >= 6 &&
+        !placeholderNumbers.has(accountNumber)
+      );
+    });
+  }
+
   function applyConfig() {
     const { couple, event, invitation, rsvp, site } = config;
 
@@ -46,6 +62,11 @@
 
     const rsvpButton = $("#rsvpButton");
     const rsvpNote = $("#rsvpNote");
+    const giftButton = $("#giftButton");
+
+    if (!giftsAreReady()) {
+      giftButton.hidden = true;
+    }
 
     if (rsvp.url) {
       rsvpButton.href = rsvp.url;
@@ -123,6 +144,8 @@
     const openButton = $("#giftButton");
     const closeButton = $("[data-close-dialog]", dialog);
 
+    if (!giftsAreReady()) return;
+
     grid.replaceChildren(
       ...config.gifts.map((gift) => {
         const card = document.createElement("article");
@@ -198,7 +221,8 @@
     const button = $("#musicButton");
     const audio = $("#weddingMusic");
     const openInvitationButton = $("#openInvitationButton");
-    const icon = $("[data-music-icon]", button);
+    const mutedIcon = $("[data-music-icon=\"muted\"]", button);
+    const playingIcon = $("[data-music-icon=\"playing\"]", button);
     const screenReaderLabel = $(".sr-only", button);
 
     if (!music.enabled) return;
@@ -222,7 +246,8 @@
       button.setAttribute("aria-label", accessibleLabel);
       button.title = accessibleLabel;
 
-      icon.textContent = isPlaying ? "♫" : "🔇";
+      mutedIcon.toggleAttribute("hidden", isPlaying);
+      playingIcon.toggleAttribute("hidden", !isPlaying);
       screenReaderLabel.textContent = accessibleLabel;
     };
 
