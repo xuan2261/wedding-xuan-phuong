@@ -129,16 +129,30 @@ input {
 .hero__shade {
   z-index: -2;
   background:
-    linear-gradient(to bottom, rgba(6, 21, 14, 0.18), rgba(6, 21, 14, 0.06) 35%, rgba(6, 21, 14, 0.72)),
-    linear-gradient(110deg, rgba(16, 43, 32, 0.30), transparent 58%);
+    linear-gradient(
+      to bottom,
+      rgba(6, 21, 14, 0.46) 0%,
+      rgba(6, 21, 14, 0.22) 30%,
+      rgba(6, 21, 14, 0.07) 58%,
+      rgba(6, 21, 14, 0.72) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(6, 21, 14, 0.18) 0%,
+      transparent 33%,
+      transparent 67%,
+      rgba(6, 21, 14, 0.18) 100%
+    );
 }
 
 .hero__content {
-  width: min(90%, 620px);
-  margin-top: auto;
-  padding: 12vh 20px 12vh;
-  text-align: center;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.52);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: initial;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.56);
 }
 
 .eyebrow,
@@ -153,40 +167,95 @@ input {
 }
 
 .hero .eyebrow {
+  position: absolute;
+  z-index: 2;
+  top: max(62px, calc(env(safe-area-inset-top) + 42px));
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
   color: #f6e7bf;
+  white-space: nowrap;
 }
 
-.hero h1 {
+.hero-names {
+  position: absolute;
+  z-index: 2;
+  top: clamp(112px, 14.5svh, 154px);
+  right: clamp(14px, 3.8vw, 32px);
+  left: clamp(14px, 3.8vw, 32px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(34px, 7vw, 54px) minmax(0, 1fr);
+  align-items: start;
   margin: 0;
   font-family: var(--script);
-  font-size: clamp(3rem, 12vw, 6rem);
+}
+
+.hero-name {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  color: #fff;
+  font-size: clamp(2.65rem, 11vw, 5.05rem);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.02;
   text-wrap: balance;
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.42));
 }
 
-.hero h1 > span {
+.hero-name > span {
   display: block;
+  white-space: nowrap;
 }
 
-.hero .ampersand {
-  margin: 8px 0;
+.hero-name--groom {
+  align-items: flex-start;
+  justify-self: start;
+  text-align: left;
+  transform: translateY(-8px) rotate(-1deg);
+}
+
+.hero-name--bride {
+  align-items: flex-end;
+  justify-self: end;
+  text-align: right;
+  transform: translateY(32px) rotate(1deg);
+}
+
+.hero-names__amp {
+  align-self: start;
+  margin-top: clamp(54px, 8svh, 78px);
   font-family: var(--serif);
-  font-size: 0.42em;
+  font-size: clamp(1.25rem, 3.8vw, 1.75rem);
   font-style: italic;
+  text-align: center;
 }
 
 .hero__date {
-  margin: 28px 0 30px;
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(128px, 15svh, 158px);
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
   font-family: var(--serif);
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.28em;
+  white-space: nowrap;
+}
+
+#openInvitationButton {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(68px, 8svh, 88px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .hero__scroll {
   position: absolute;
-  bottom: 22px;
+  bottom: 18px;
   left: 50%;
   width: 24px;
   height: 42px;
@@ -300,22 +369,42 @@ input {
   font-size: 1.4rem;
 }
 
+.invitation__title > span {
+  display: block;
+}
+
 .invitation__copy {
-  max-width: 610px;
+  max-width: 34ch;
   margin: 0 auto;
   color: #47554d;
   font-family: var(--serif);
   font-size: clamp(1.04rem, 3vw, 1.25rem);
-  line-height: 1.9;
+  line-height: 1.78;
 }
 
 .signature {
-  margin: 28px 0 0;
+  display: flex;
+  max-width: 650px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.1em 0.28em;
+  margin: 34px auto 0;
   color: var(--green-800);
   font-family: var(--script);
-  font-size: clamp(2rem, 7vw, 3.2rem);
+  font-size: clamp(1.85rem, 6.4vw, 3rem);
   font-weight: 600;
-  line-height: 1.16;
+  line-height: 1.18;
+}
+
+.signature__name {
+  white-space: nowrap;
+}
+
+.signature__amp {
+  font-family: var(--serif);
+  font-size: 0.5em;
+  font-style: italic;
 }
 
 .couple {
@@ -854,10 +943,25 @@ dialog::backdrop {
 }
 
 @media (max-width: 460px) {
+  .hero-names {
+    top: clamp(108px, 14svh, 132px);
+    right: 12px;
+    left: 12px;
+    grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+  }
 
-  .hero h1 {
-    font-size: clamp(2.85rem, 14vw, 4.6rem);
-    line-height: 1.12;
+  .hero-name {
+    font-size: clamp(2.55rem, 11.3vw, 3.25rem);
+    line-height: 1.04;
+  }
+
+  .hero-name--bride {
+    transform: translateY(28px) rotate(1deg);
+  }
+
+  .hero-names__amp {
+    margin-top: 50px;
+    font-size: 1.2rem;
   }
 
   .hero__date {
@@ -895,6 +999,30 @@ dialog::backdrop {
 
   .album-item--wide {
     min-height: 500px;
+  }
+}
+
+@media (max-width: 350px) {
+  .hero-names {
+    top: 112px;
+    grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+  }
+
+  .hero-name {
+    font-size: clamp(2.2rem, 10.8vw, 2.55rem);
+  }
+
+  .hero-name--bride {
+    transform: translateY(24px);
+  }
+
+  .hero-names__amp {
+    margin-top: 43px;
+    font-size: 1rem;
+  }
+
+  .signature {
+    font-size: 1.75rem;
   }
 }
 

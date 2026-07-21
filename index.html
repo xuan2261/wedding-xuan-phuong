@@ -39,10 +39,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="styles.css?v=1.4">
+  <link rel="stylesheet" href="styles.css?v=1.5">
 
-  <script src="config.js?v=1.6" defer></script>
-  <script src="app.js?v=1.5" defer></script>
+  <script src="config.js?v=1.7" defer></script>
+  <script src="app.js?v=1.6" defer></script>
 </head>
 
 <body>
@@ -63,10 +63,17 @@
 
     <div class="hero__content">
       <p class="eyebrow">Save the date</p>
-      <h1 id="hero-title">
-        <span data-groom-display>Thanh Xuân</span>
-        <span class="ampersand">&amp;</span>
-        <span data-bride-display>Thị Phượng</span>
+      <h1 class="hero-names" id="hero-title">
+        <span class="sr-only" data-hero-accessible>Thanh Xuân và Thị Phượng</span>
+        <span class="hero-name hero-name--groom" aria-hidden="true">
+          <span data-hero-groom-line1>Thanh</span>
+          <span data-hero-groom-line2>Xuân</span>
+        </span>
+        <span class="hero-names__amp" aria-hidden="true">&amp;</span>
+        <span class="hero-name hero-name--bride" aria-hidden="true">
+          <span data-hero-bride-line1>Thị</span>
+          <span data-hero-bride-line2>Phượng</span>
+        </span>
       </h1>
       <p class="hero__date" data-date-display>30.07.2026</p>
       <a class="button button--glass" id="openInvitationButton" href="#invitation">Mở thiệp</a>
@@ -80,13 +87,16 @@
   <main id="main">
     <section class="section invitation reveal" id="invitation" aria-labelledby="invitation-title">
       <p class="section-kicker">Lời ngỏ</p>
-      <h2 id="invitation-title" data-invitation-heading>Trân trọng kính mời</h2>
+      <h2 class="invitation__title" id="invitation-title" data-invitation-heading>
+        <span data-invitation-heading-line1>Trân trọng</span>
+        <span data-invitation-heading-line2>kính mời</span>
+      </h2>
       <div class="ornament" aria-hidden="true">✦</div>
       <p class="invitation__copy" data-invitation-message></p>
-      <p class="signature">
-        <span data-groom-display>Thanh Xuân</span>
-        <span aria-hidden="true"> &amp; </span>
-        <span data-bride-display>Thị Phượng</span>
+      <p class="signature" aria-label="Thanh Xuân và Thị Phượng">
+        <span class="signature__name" data-groom-display>Thanh Xuân</span>
+        <span class="signature__amp" aria-hidden="true">&amp;</span>
+        <span class="signature__name" data-bride-display>Thị Phượng</span>
       </p>
     </section>
 

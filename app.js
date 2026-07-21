@@ -17,6 +17,31 @@
     });
   }
 
+
+  function splitDisplayName(value) {
+    const words = String(value || "").trim().split(/\s+/).filter(Boolean);
+    if (words.length <= 1) return [words[0] || "", ""];
+    return [words.slice(0, -1).join(" "), words[words.length - 1]];
+  }
+
+  function setHeroNames(groomName, brideName) {
+    const [groomLine1, groomLine2] = splitDisplayName(groomName);
+    const [brideLine1, brideLine2] = splitDisplayName(brideName);
+
+    setText("[data-hero-groom-line1]", groomLine1);
+    setText("[data-hero-groom-line2]", groomLine2);
+    setText("[data-hero-bride-line1]", brideLine1);
+    setText("[data-hero-bride-line2]", brideLine2);
+    setText("[data-hero-accessible]", `${groomName} và ${brideName}`);
+  }
+
+  function setBalancedInvitationHeading(value) {
+    const words = String(value || "").trim().split(/\s+/).filter(Boolean);
+    const splitAt = Math.max(1, Math.ceil(words.length / 2));
+    setText("[data-invitation-heading-line1]", words.slice(0, splitAt).join(" "));
+    setText("[data-invitation-heading-line2]", words.slice(splitAt).join(" "));
+  }
+
   function giftsAreReady() {
     if (!Array.isArray(config.gifts) || config.gifts.length === 0) return false;
 
@@ -40,6 +65,7 @@
 
     setText("[data-groom-display]", couple.groomDisplayName);
     setText("[data-bride-display]", couple.brideDisplayName);
+    setHeroNames(couple.groomDisplayName, couple.brideDisplayName);
     setText("[data-groom-full]", couple.groomFullName);
     setText("[data-bride-full]", couple.brideFullName);
 
@@ -52,7 +78,7 @@
     setText("[data-address-line1]", event.addressLine1);
     setText("[data-address-line2]", event.addressLine2);
 
-    setText("[data-invitation-heading]", invitation.heading);
+    setBalancedInvitationHeading(invitation.heading);
     setText("[data-invitation-message]", invitation.message);
     setText("[data-rsvp-deadline]", rsvp.deadline);
     setText("[data-footer]", site.footer);
