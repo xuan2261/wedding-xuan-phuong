@@ -31,10 +31,10 @@
   <link rel="preload" as="image" href="assets/images/hero-720.webp?v=5"
         imagesrcset="assets/images/hero-720.webp?v=5 720w, assets/images/hero-1280.webp?v=5 1280w"
         imagesizes="(max-width: 760px) 100vw, 760px">
-  <link rel="stylesheet" href="styles.css?v=1.0">
+  <link rel="stylesheet" href="styles.css?v=1.1">
 
   <script src="config.js?v=1.4" defer></script>
-  <script src="app.js?v=1.1" defer></script>
+  <script src="app.js?v=1.2" defer></script>
 </head>
 
 <body>
@@ -61,7 +61,7 @@
         <span data-bride-display>Thị Phượng</span>
       </h1>
       <p class="hero__date" data-date-display>30.07.2026</p>
-      <a class="button button--glass" href="#invitation">Mở thiệp</a>
+      <a class="button button--glass" id="openInvitationButton" href="#invitation">Mở thiệp</a>
     </div>
 
     <div class="hero__scroll" aria-hidden="true">
@@ -280,8 +280,16 @@
     <p data-footer>Thanh Xuân &amp; Thị Phượng · 30.07.2026</p>
   </footer>
 
-  <button class="music-button" id="musicButton" type="button" aria-pressed="false" hidden>
-    <span aria-hidden="true">♫</span>
+  <button
+    class="music-button"
+    id="musicButton"
+    type="button"
+    aria-pressed="false"
+    aria-label="Bật nhạc nền"
+    title="Bật nhạc nền"
+    hidden
+  >
+    <span data-music-icon aria-hidden="true">🔇</span>
     <span class="sr-only">Bật nhạc nền</span>
   </button>
   <audio id="weddingMusic" loop preload="none"></audio>

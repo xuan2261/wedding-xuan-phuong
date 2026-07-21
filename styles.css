@@ -657,9 +657,21 @@ footer {
   box-shadow: 0 8px 25px rgba(16, 43, 32, 0.28);
 }
 
-.music-button[aria-pressed="true"] span[aria-hidden] {
-  display: inline-block;
+.music-button [data-music-icon] {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.4em;
+  font-size: 1.35rem;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.music-button[aria-pressed="true"] [data-music-icon] {
   animation: spin 4s linear infinite;
+}
+
+.music-button[aria-pressed="false"] {
+  background: rgba(33, 75, 58, 0.88);
 }
 
 @keyframes spin {

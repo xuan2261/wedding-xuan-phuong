@@ -197,6 +197,9 @@
     const { music } = config;
     const button = $("#musicButton");
     const audio = $("#weddingMusic");
+    const openInvitationButton = $("#openInvitationButton");
+    const icon = $("[data-music-icon]", button);
+    const screenReaderLabel = $(".sr-only", button);
 
     if (!music.enabled) return;
 
@@ -204,21 +207,75 @@
     audio.src = music.file;
     audio.setAttribute("aria-label", music.title);
 
+    // Âm lượng mặc định vừa phải. Có thể đặt music.volume trong config.js.
+    const configuredVolume =
+      typeof music.volume === "number" ? music.volume : 0.75;
+    audio.volume = Math.min(1, Math.max(0, configuredVolume));
+
+    const syncMusicButton = () => {
+      const isPlaying = !audio.paused && !audio.ended;
+      const accessibleLabel = isPlaying
+        ? "Tắt nhạc nền"
+        : "Bật nhạc nền";
+
+      button.setAttribute("aria-pressed", String(isPlaying));
+      button.setAttribute("aria-label", accessibleLabel);
+      button.title = accessibleLabel;
+
+      icon.textContent = isPlaying ? "♫" : "🔇";
+      screenReaderLabel.textContent = accessibleLabel;
+    };
+
+    const playMusic = async ({ silent = false } = {}) => {
+      try {
+        await audio.play();
+        syncMusicButton();
+        return true;
+      } catch (error) {
+        syncMusicButton();
+
+        // NotAllowedError thường là do chính sách autoplay của trình duyệt.
+        if (!silent && error?.name !== "NotAllowedError") {
+          showToast(
+            "Không phát được nhạc. Hãy kiểm tra assets/audio/music.mp3."
+          );
+        }
+
+        return false;
+      }
+    };
+
+    const pauseMusic = () => {
+      audio.pause();
+      syncMusicButton();
+    };
+
     button.addEventListener("click", async () => {
       if (audio.paused) {
-        try {
-          await audio.play();
-          button.setAttribute("aria-pressed", "true");
-          $(".sr-only", button).textContent = "Tắt nhạc nền";
-        } catch {
-          showToast("Không phát được nhạc. Hãy kiểm tra assets/audio/music.mp3.");
-        }
+        await playMusic();
       } else {
-        audio.pause();
-        button.setAttribute("aria-pressed", "false");
-        $(".sr-only", button).textContent = "Bật nhạc nền";
+        pauseMusic();
       }
     });
+
+    // "Mở thiệp" là thao tác chủ động của khách nên trình duyệt cho phép
+    // bắt đầu nhạc tại đây. Đây là cách ổn định hơn autoplay khi vừa tải trang.
+    openInvitationButton?.addEventListener("click", () => {
+      if (audio.paused) {
+        void playMusic({ silent: true });
+      }
+    });
+
+    // Đồng bộ icon ngay cả khi audio bị dừng bởi hệ điều hành/trình duyệt.
+    ["play", "pause", "ended", "volumechange"].forEach((eventName) => {
+      audio.addEventListener(eventName, syncMusicButton);
+    });
+
+    syncMusicButton();
+
+    // Thử autoplay trên các trình duyệt/tài khoản đã cấp quyền trước đó.
+    // Nếu bị chặn, code sẽ im lặng chờ khách bấm "Mở thiệp".
+    void playMusic({ silent: true });
   }
 
   let toastTimer;
