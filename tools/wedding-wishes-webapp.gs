@@ -15,12 +15,12 @@
  */
 
 const WISHES_APP = Object.freeze({
-  version: "1.0.0",
+  version: "1.1.0",
   spreadsheetTitle: "Lời chúc cưới - Thanh Xuân & Thị Phượng",
   sheetName: "Lời chúc",
   siteOrigin: "https://xuan2261.github.io",
   cacheKey: "approved-wedding-wishes-v1",
-  cacheSeconds: 90,
+  cacheSeconds: 300,
   clientCooldownSeconds: 180,
   duplicateWindowSeconds: 86400,
   maxApprovedResults: 100,

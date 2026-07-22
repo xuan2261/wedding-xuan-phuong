@@ -716,6 +716,10 @@ textarea {
   background:
     radial-gradient(circle at 12% 12%, rgba(184, 153, 90, 0.12), transparent 17rem),
     linear-gradient(180deg, var(--cream), var(--paper));
+
+  /* Bỏ qua phần lớn layout/paint khi section còn xa viewport. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 760px;
 }
 
 .wishes > h2 {
@@ -793,6 +797,31 @@ textarea {
   margin: 28px auto 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.wishes__status[data-state="loading"] {
+  color: var(--green-650);
+}
+
+.wishes__status[data-state="error"] {
+  color: #9f2e2e;
+}
+
+.wishes__retry {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 7px 4px;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  color: var(--green-650);
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.wishes__retry:hover {
+  color: var(--green-950);
 }
 
 .wishes__controls {

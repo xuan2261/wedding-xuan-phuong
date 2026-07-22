@@ -185,7 +185,12 @@
     loadingScript: null,
     loadingTimer: null,
     submitTimer: null,
-    submitting: false
+    submitting: false,
+
+    // idle → loading → loaded; lỗi quay lại idle để có thể retry.
+    loadStatus: "idle",
+    observer: null,
+    fallbackCleanup: null
   };
 
   function getWishClientKey() {
@@ -290,13 +295,42 @@
     }
   }
 
-  function loadApprovedWishes() {
-    if (!wishesAreReady()) return;
-
-    const wishes = config.wishes;
+  function setWishesStatus(message, state = "") {
     const status = $("#wishesStatus");
     status.hidden = false;
-    status.textContent = "Đang tải những lời chúc đã được duyệt…";
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function resetWishLoadForRetry(message) {
+    wishState.loadStatus = "idle";
+    setWishesStatus(message, "error");
+    $("#wishesRetry").hidden = false;
+  }
+
+  function stopWishLazyObserver() {
+    wishState.observer?.disconnect();
+    wishState.observer = null;
+
+    wishState.fallbackCleanup?.();
+    wishState.fallbackCleanup = null;
+  }
+
+  function loadApprovedWishes() {
+    if (
+      !wishesAreReady() ||
+      wishState.loadStatus === "loading" ||
+      wishState.loadStatus === "loaded"
+    ) {
+      return;
+    }
+
+    wishState.loadStatus = "loading";
+    stopWishLazyObserver();
+    $("#wishesRetry").hidden = true;
+    setWishesStatus("Đang tải những lời chúc đã được duyệt…", "loading");
+
+    const wishes = config.wishes;
 
     window.__weddingWishCallbacks ||= {};
     const callbackName = `cb_${Date.now()}_${Math.random()
@@ -308,8 +342,9 @@
       cleanupWishJsonp(callbackName);
 
       if (!payload?.ok || !Array.isArray(payload.wishes)) {
-        status.textContent =
-          "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới.";
+        resetWishLoadForRetry(
+          "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới."
+        );
         return;
       }
 
@@ -332,6 +367,8 @@
         wishes.initialDisplayLimit,
         wishState.items.length
       );
+      wishState.loadStatus = "loaded";
+      $("#wishesRetry").hidden = true;
       renderWishes();
     };
 
@@ -346,18 +383,87 @@
     script.referrerPolicy = "no-referrer";
     script.addEventListener("error", () => {
       cleanupWishJsonp(callbackName);
-      status.textContent =
-        "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới.";
+      resetWishLoadForRetry(
+        "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới."
+      );
     });
 
     wishState.loadingScript = script;
     wishState.loadingTimer = window.setTimeout(() => {
       cleanupWishJsonp(callbackName);
-      status.textContent =
-        "Máy chủ lời chúc phản hồi chậm. Vui lòng thử lại sau.";
+      resetWishLoadForRetry(
+        "Máy chủ lời chúc phản hồi chậm. Vui lòng thử lại sau."
+      );
     }, wishes.requestTimeoutMs);
 
     document.head.append(script);
+  }
+
+  function setupWishLazyLoading(section) {
+    const wishes = config.wishes;
+    const rootMargin = wishes.preloadRootMargin || "1200px 0px";
+
+    if ("IntersectionObserver" in window) {
+      wishState.observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          loadApprovedWishes();
+        },
+        {
+          root: null,
+          rootMargin,
+          threshold: 0.01
+        }
+      );
+
+      wishState.observer.observe(section);
+      return;
+    }
+
+    // Fallback không tải theo timer cố định; chỉ kiểm tra khi scroll/resize.
+    const preloadDistance = Number.parseInt(rootMargin, 10) || 1200;
+    const throttleMs = wishes.fallbackCheckThrottleMs || 180;
+    let scheduled = false;
+    let lastRun = 0;
+
+    const cleanup = () => {
+      window.removeEventListener("scroll", scheduleCheck);
+      window.removeEventListener("resize", scheduleCheck);
+      window.removeEventListener("orientationchange", scheduleCheck);
+    };
+
+    const checkDistance = () => {
+      scheduled = false;
+      const now = Date.now();
+
+      if (now - lastRun < throttleMs) {
+        scheduleCheck();
+        return;
+      }
+
+      lastRun = now;
+      const rect = section.getBoundingClientRect();
+
+      if (
+        rect.top <= window.innerHeight + preloadDistance &&
+        rect.bottom >= -preloadDistance
+      ) {
+        cleanup();
+        loadApprovedWishes();
+      }
+    };
+
+    const scheduleCheck = () => {
+      if (scheduled) return;
+      scheduled = true;
+      window.requestAnimationFrame(checkDistance);
+    };
+
+    wishState.fallbackCleanup = cleanup;
+    window.addEventListener("scroll", scheduleCheck, { passive: true });
+    window.addEventListener("resize", scheduleCheck, { passive: true });
+    window.addEventListener("orientationchange", scheduleCheck, { passive: true });
+    scheduleCheck();
   }
 
   function setupWishes() {
@@ -376,9 +482,11 @@
     const openedAt = $("#wishOpenedAt");
     const requestId = $("#wishRequestId");
     const siteOrigin = $("#wishSiteOrigin");
+    const wishesSection = $("#wishes");
     const openButtons = [$("#wishButton"), $("#wishesSectionButton")];
     const closeButtons = $$("[data-close-wish-dialog]", dialog);
     const loadMore = $("#wishesLoadMore");
+    const retryButton = $("#wishesRetry");
 
     form.action = wishes.apiUrl;
     displayName.maxLength = wishes.maxNameLength;
@@ -393,6 +501,9 @@
     };
 
     const openDialog = () => {
+      // Khách chủ động quan tâm: tải ngay nếu danh sách chưa được tải.
+      loadApprovedWishes();
+
       openedAt.value = String(Date.now());
       requestId.value = "";
       setWishFormStatus("");
@@ -429,6 +540,8 @@
       );
       renderWishes();
     });
+
+    retryButton.addEventListener("click", loadApprovedWishes);
 
     form.addEventListener("submit", (event) => {
       const normalizedName = displayName.value.trim();
@@ -547,7 +660,10 @@
       );
     });
 
-    loadApprovedWishes();
+    setWishesStatus(
+      "Những lời chúc sẽ được tải khi Quý vị cuộn đến gần khu vực này."
+    );
+    setupWishLazyLoading(wishesSection);
   }
 
   function setupGiftDialog() {

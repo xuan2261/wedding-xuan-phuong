@@ -39,10 +39,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="styles.css?v=1.6">
+  <link rel="stylesheet" href="styles.css?v=1.7">
 
-  <script src="config.js?v=2.0" defer></script>
-  <script src="app.js?v=1.7" defer></script>
+  <script src="config.js?v=2.1" defer></script>
+  <script src="app.js?v=1.8" defer></script>
 </head>
 
 <body>
@@ -289,8 +289,11 @@
 
       <div class="wishes-grid" id="wishesGrid" aria-live="off"></div>
       <p class="wishes__status" id="wishesStatus" role="status" aria-live="polite">
-        Đang tải những lời chúc đã được duyệt…
+        Những lời chúc sẽ được tải khi Quý vị cuộn đến gần khu vực này.
       </p>
+      <button class="wishes__retry" type="button" id="wishesRetry" hidden>
+        Thử tải lại
+      </button>
 
       <div class="wishes__controls reveal">
         <button class="button button--secondary" type="button" id="wishesLoadMore" hidden>

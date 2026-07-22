@@ -1,0 +1,122 @@
+{
+  "generated_at_utc": "2026-07-22T06:01:58.536900+00:00",
+  "source_version": "v12",
+  "static": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/create-google-forms-rsvp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/wedding-wishes-webapp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "duplicate_ids": [],
+    "css_parse_errors": [],
+    "missing_local_refs": [],
+    "markers": {
+      "unique_ids": true,
+      "css_parse_pass": true,
+      "no_missing_assets": true,
+      "observer": true,
+      "root_margin_config": true,
+      "state_machine": true,
+      "duplicate_guard": true,
+      "dialog_triggers_load": true,
+      "retry_button": true,
+      "retry_logic": true,
+      "content_visibility": true,
+      "intrinsic_size": true,
+      "backend_cache_300": true,
+      "backend_version": true,
+      "no_immediate_load": true
+    }
+  },
+  "browser_smoke": {
+    "dialog_click_before_scroll": {
+      "requests_before_click": 0,
+      "requests_after_click": 1,
+      "cards_rendered": 6
+    },
+    "retry_after_error": {
+      "total_requests": 2,
+      "cards_rendered": 6
+    },
+    "responsive": [
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "initial_apps_script_requests": 0,
+        "requests_after_near_scroll": 1,
+        "requests_after_repeated_scroll": 1,
+        "cards": 6,
+        "horizontal_overflow": false
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "initial_apps_script_requests": 0,
+        "requests_after_near_scroll": 1,
+        "requests_after_repeated_scroll": 1,
+        "cards": 6,
+        "horizontal_overflow": false
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "initial_apps_script_requests": 0,
+        "requests_after_near_scroll": 1,
+        "requests_after_repeated_scroll": 1,
+        "cards": 6,
+        "horizontal_overflow": false
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "initial_apps_script_requests": 0,
+        "requests_after_near_scroll": 1,
+        "requests_after_repeated_scroll": 1,
+        "cards": 6,
+        "horizontal_overflow": false
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "initial_apps_script_requests": 0,
+        "requests_after_near_scroll": 1,
+        "requests_after_repeated_scroll": 1,
+        "cards": 6,
+        "horizontal_overflow": false
+      }
+    ]
+  },
+  "known_caveats": [
+    "Live Apps Script latency not measured",
+    "Lighthouse/Core Web Vitals production not measured",
+    "Real iOS/Android devices unavailable",
+    "Full ZIP does not redistribute assets/audio/music.mp3"
+  ],
+  "browser_errors": [],
+  "verdict": "PASS_WITH_LIVE_PERFORMANCE_MEASUREMENT_RECOMMENDED"
+}
