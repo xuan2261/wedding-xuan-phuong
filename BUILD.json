@@ -1,0 +1,34 @@
+{
+  "buildId": "v18-20260722",
+  "release": "v18",
+  "generatedAtUtc": "2026-07-22T14:50:01.275446+00:00",
+  "confirmedGuestTime": "10h00",
+  "ceremonyTime": "08h30",
+  "wishesContract": "payload.ok === true && payload.stored === true",
+  "imageRelease": "v16-images",
+  "imageCount": 11,
+  "responsiveImageFiles": 22,
+  "newImages": [
+    "DRS06828.jpg",
+    "DRS07290.JPG",
+    "DRS07446.JPG"
+  ],
+  "backendVersion": "1.5.0",
+  "features": [
+    "personalized guest invitation via #to",
+    "offline guest link generator",
+    "optional family section",
+    "two-step wedding timeline",
+    "lazy Google Forms RSVP dialog with full-screen fallback",
+    "lazy Google Maps dialog with external directions fallback",
+    "copy address and direction contact",
+    "two-event ICS calendar",
+    "general native share plus explicit personalized-link copy",
+    "optional Google Forms name prefill",
+    "local wedding motion system with reduced-motion",
+    "local Váy Cưới MP3 with Pancake remote fallback",
+    "lightbox previous/next/counter/keyboard/swipe",
+    "single wedding-data.json consistency gate",
+    "browser and image/QR CI gates"
+  ]
+}

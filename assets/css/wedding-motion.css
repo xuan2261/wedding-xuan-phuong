@@ -1,0 +1,110 @@
+/*
+ * Wedding Motion v1
+ * Bộ hiệu ứng local có chọn lọc, không hotlink Webcake/Animate.css.
+ * Nội dung chỉ bị ẩn sau khi JavaScript thêm class motion-ready.
+ */
+
+:root {
+  --motion-duration: 680ms;
+  --motion-easing: cubic-bezier(.2, .8, .2, 1);
+}
+
+.motion-ready .reveal,
+.motion-ready .motion-load {
+  opacity: 0;
+  transition:
+    opacity var(--motion-duration) var(--motion-easing),
+    transform var(--motion-duration) var(--motion-easing);
+  transition-delay: var(--motion-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.motion-ready .reveal,
+.motion-ready [data-motion="fade-up"] {
+  transform: translate3d(0, 28px, 0);
+}
+
+.motion-ready [data-motion="fade-down"] {
+  transform: translate3d(0, -24px, 0);
+}
+
+.motion-ready [data-motion="fade-left"] {
+  transform: translate3d(-34px, 0, 0);
+}
+
+.motion-ready [data-motion="fade-right"] {
+  transform: translate3d(34px, 0, 0);
+}
+
+.motion-ready [data-motion="zoom-in"] {
+  transform: scale(.94);
+}
+
+.motion-ready [data-motion="soft-scale"] {
+  transform: translate3d(0, 18px, 0) scale(.975);
+}
+
+.motion-ready .reveal.is-visible,
+.motion-ready .motion-load.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+dialog[open] {
+  animation: wedding-dialog-enter 260ms var(--motion-easing);
+}
+
+dialog[open]::backdrop {
+  animation: wedding-backdrop-enter 180ms ease-out;
+}
+
+.loading-spinner {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  flex: 0 0 auto;
+  border: 3px solid rgba(33, 75, 58, .16);
+  border-top-color: var(--green-800);
+  border-radius: 50%;
+  animation: wedding-spinner 800ms linear infinite;
+}
+
+@keyframes wedding-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.975);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes wedding-backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes wedding-spinner {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .motion-ready .reveal,
+  .motion-ready .motion-load {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

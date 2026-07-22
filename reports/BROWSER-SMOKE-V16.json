@@ -1,0 +1,118 @@
+{
+  "generatedAtUtc": "2026-07-22T09:42:16.705242+00:00",
+  "buildId": "v16-20260722",
+  "verdict": "PASS",
+  "viewports": [
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "horizontalOverflow": false,
+      "build": "v16-20260722",
+      "hero": {
+        "naturalWidth": 720,
+        "loading": null,
+        "fetchpriority": "high"
+      },
+      "feature": {
+        "naturalWidth": 720
+      },
+      "albumCount": 9,
+      "seatedLightboxNaturalWidth": 1280,
+      "closing": {
+        "naturalWidth": 720
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "build": "v16-20260722",
+      "hero": {
+        "naturalWidth": 720,
+        "loading": null,
+        "fetchpriority": "high"
+      },
+      "feature": {
+        "naturalWidth": 720
+      },
+      "albumCount": 9,
+      "seatedLightboxNaturalWidth": 1280,
+      "closing": {
+        "naturalWidth": 720
+      }
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "horizontalOverflow": false,
+      "build": "v16-20260722",
+      "hero": {
+        "naturalWidth": 720,
+        "loading": null,
+        "fetchpriority": "high"
+      },
+      "feature": {
+        "naturalWidth": 720
+      },
+      "albumCount": 9,
+      "seatedLightboxNaturalWidth": 1280,
+      "closing": {
+        "naturalWidth": 720
+      }
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "horizontalOverflow": false,
+      "build": "v16-20260722",
+      "hero": {
+        "naturalWidth": 720,
+        "loading": null,
+        "fetchpriority": "high"
+      },
+      "feature": {
+        "naturalWidth": 720
+      },
+      "albumCount": 9,
+      "seatedLightboxNaturalWidth": 1280,
+      "closing": {
+        "naturalWidth": 720
+      }
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "build": "v16-20260722",
+      "hero": {
+        "naturalWidth": 720,
+        "loading": null,
+        "fetchpriority": "high"
+      },
+      "feature": {
+        "naturalWidth": 720
+      },
+      "albumCount": 9,
+      "seatedLightboxNaturalWidth": 1280,
+      "closing": {
+        "naturalWidth": 720
+      }
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Inline harness with images/CSS/JS embedded as data; no HTTP cache/network behavior measured.",
+    "Wishes and music disabled for visual smoke.",
+    "Real iOS/Android devices unavailable."
+  ]
+}

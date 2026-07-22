@@ -1,0 +1,12 @@
+{
+  "name": "wedding-xuan-phuong",
+  "private": true,
+  "version": "18.0.0",
+  "scripts": {
+    "test:browser": "node tests/browser_smoke.mjs",
+    "test:consistency": "python tests/consistency_check.py"
+  },
+  "devDependencies": {
+    "playwright": "1.54.2"
+  }
+}

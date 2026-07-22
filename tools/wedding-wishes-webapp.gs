@@ -1,5 +1,5 @@
 /**
- * SỔ LỜI CHÚC CƯỚI — GOOGLE APPS SCRIPT WEB APP
+ * SỔ LỜI CHÚC CƯỚI — GOOGLE APPS SCRIPT WEB APP (release v17)
  *
  * Luồng:
  * - POST: lưu lời chúc ở trạng thái pending.
@@ -15,14 +15,14 @@
  */
 
 const WISHES_APP = Object.freeze({
-  version: "1.1.0",
+  version: "1.5.0",
   spreadsheetTitle: "Lời chúc cưới - Thanh Xuân & Thị Phượng",
   sheetName: "Lời chúc",
   siteOrigin: "https://xuan2261.github.io",
   cacheKey: "approved-wedding-wishes-v1",
   cacheSeconds: 300,
   clientCooldownSeconds: 180,
-  duplicateWindowSeconds: 86400,
+  duplicateWindowSeconds: 21600,
   maxApprovedResults: 100,
   minFormOpenMs: 1200,
   minNameLength: 2,
@@ -179,11 +179,25 @@ function doPost(e) {
 function submitWeddingWish_(parameters) {
   const requestId = normalizeRequestId_(parameters.requestId);
 
-  // Honeypot: giả vờ nhận thành công để bot không biết đã bị phát hiện.
-  if (normalizePlainText_(parameters.website, 120)) {
+  // Honeypot: trong giai đoạn vận hành thực tế, không báo thành công giả.
+  // Điều này giúp frontend chỉ báo thành công khi Sheet đã được ghi thật.
+  const honeypotValue = normalizePlainText_(parameters.website, 120);
+  if (honeypotValue) {
+    console.warn(
+      JSON.stringify({
+        event: "honeypot-triggered",
+        requestId,
+        valueLength: honeypotValue.length,
+      })
+    );
+
     return {
-      ok: true,
-      pending: true,
+      ok: false,
+      stored: false,
+      code: "SPAM_GUARD",
+      message:
+        "Biểu mẫu có dữ liệu tự động điền không hợp lệ. " +
+        "Vui lòng tải lại trang và thử lại.",
       requestId,
     };
   }
@@ -290,39 +304,80 @@ function submitWeddingWish_(parameters) {
     const spreadsheet = getWishesSpreadsheet_();
     const sheet = ensureWishesSheet_(spreadsheet);
     const now = new Date();
+    const submissionId = Utilities.getUuid();
+    const rowNumber = findNextWishRow_(sheet);
 
-    sheet.appendRow([
-      Utilities.getUuid(),
-      now,
-      safeSheetCell_(displayName),
-      safeSheetCell_(relationship),
-      safeSheetCell_(message),
-      WISHES_STATUS.pending,
-      "",
-      "",
-      false,
-      safeSheetCell_(clientKey),
-    ]);
+    sheet
+      .getRange(rowNumber, 1, 1, WISHES_HEADERS.length)
+      .setValues([[
+        submissionId,
+        now,
+        safeSheetCell_(displayName),
+        safeSheetCell_(relationship),
+        safeSheetCell_(message),
+        WISHES_STATUS.pending,
+        "",
+        "",
+        "", // Ô trống là checkbox chưa chọn; không ghi FALSE hàng loạt.
+        safeSheetCell_(clientKey),
+      ]]);
 
+    applyWishValidationRules_(sheet, rowNumber, 1);
     SpreadsheetApp.flush();
 
-    cache.put(
-      clientRateKey,
-      "1",
-      WISHES_APP.clientCooldownSeconds
+    const storedId = sheet.getRange(rowNumber, 1).getDisplayValue();
+    if (storedId !== submissionId) {
+      throw new Error(
+        `Không xác minh được hàng vừa lưu tại dòng ${rowNumber}.`
+      );
+    }
+
+    console.info(
+      JSON.stringify({
+        event: "wish-stored",
+        requestId,
+        submissionId,
+        spreadsheetId: spreadsheet.getId(),
+        sheetId: sheet.getSheetId(),
+        sheetName: sheet.getName(),
+        rowNumber,
+        status: WISHES_STATUS.pending,
+      })
     );
-    cache.put(
-      duplicateKey,
-      "1",
-      WISHES_APP.duplicateWindowSeconds
-    );
-    cache.remove(WISHES_APP.cacheKey);
+
+    // Cache là tối ưu best-effort. Một lỗi cache không được phép
+    // biến một hàng đã xác minh lưu thành phản hồi thất bại.
+    try {
+      cache.put(
+        clientRateKey,
+        "1",
+        WISHES_APP.clientCooldownSeconds
+      );
+      cache.put(
+        duplicateKey,
+        "1",
+        WISHES_APP.duplicateWindowSeconds
+      );
+      cache.remove(WISHES_APP.cacheKey);
+    } catch (cacheError) {
+      console.warn(
+        JSON.stringify({
+          event: "wish-cache-write-failed",
+          requestId,
+          submissionId,
+          message: String(cacheError),
+        })
+      );
+    }
 
     return {
       ok: true,
+      stored: true,
       pending: true,
+      submissionId,
+      rowNumber,
       message:
-        "Lời chúc đã được gửi và đang chờ hai gia đình duyệt.",
+        "Lời chúc đã được lưu và đang chờ hai gia đình duyệt.",
       requestId,
     };
   } finally {
@@ -379,13 +434,16 @@ function getApprovedWishes_() {
   }
 
   const sheet = ensureWishesSheet_(getWishesSpreadsheet_());
-  const values = sheet.getDataRange().getDisplayValues();
+  const lastWishRow = findLastWishDataRow_(sheet);
 
-  if (values.length <= 1) {
+  if (lastWishRow < 2) {
     cache.put(WISHES_APP.cacheKey, "[]", WISHES_APP.cacheSeconds);
     return [];
   }
 
+  const values = sheet
+    .getRange(1, 1, lastWishRow, WISHES_HEADERS.length)
+    .getDisplayValues();
   const headerIndex = createHeaderIndex_(values[0]);
 
   const wishes = values
@@ -499,6 +557,336 @@ function getWishesSpreadsheet_() {
 }
 
 
+/**
+ * Chẩn đoán vùng dữ liệu đang dùng.
+ */
+function inspectWeddingWishesStorage() {
+  const spreadsheet = getWishesSpreadsheet_();
+  const sheet = spreadsheet.getSheetByName(WISHES_APP.sheetName);
+
+  if (!sheet) {
+    throw new Error(`Không tìm thấy tab "${WISHES_APP.sheetName}".`);
+  }
+
+  const lastSheetRow = sheet.getLastRow();
+  const lastWishDataRow = findLastWishDataRow_(sheet);
+  const nextWishRow = findNextWishRow_(sheet);
+  const startRow = Math.max(2, lastWishDataRow - 14);
+  const rowCount =
+    lastWishDataRow >= 2
+      ? lastWishDataRow - startRow + 1
+      : 0;
+
+  const recentRows = rowCount
+    ? sheet
+        .getRange(
+          startRow,
+          1,
+          rowCount,
+          WISHES_HEADERS.length
+        )
+        .getDisplayValues()
+        .map((row, index) => ({
+          rowNumber: startRow + index,
+          id: row[0],
+          createdAt: row[1],
+          displayName: row[2],
+          relationship: row[3],
+          message: row[4],
+          status: row[5],
+          approvedAt: row[6],
+          sortOrder: row[7],
+          featured: row[8],
+        }))
+    : [];
+
+  const result = {
+    spreadsheetId: spreadsheet.getId(),
+    spreadsheetUrl: spreadsheet.getUrl(),
+    sheetName: sheet.getName(),
+    sheetId: sheet.getSheetId(),
+    maxRows: sheet.getMaxRows(),
+    lastSheetRow,
+    lastWishDataRow,
+    nextWishRow,
+    recentRows,
+  };
+
+  console.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
+
+/**
+ * Chạy MỘT LẦN sau khi thay source.
+ *
+ * - Giữ lại mọi hàng có id, displayName hoặc message.
+ * - Xóa FALSE do insertCheckboxes() từng ghi vào các hàng trống.
+ * - Dồn dữ liệu thật lên từ hàng 2.
+ * - Khôi phục dropdown trạng thái và checkbox featured chỉ cho hàng có dữ liệu.
+ */
+function repairAndCompactWeddingWishes() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(20000)) {
+    throw new Error(
+      "Không lấy được khóa sửa bảng. Vui lòng thử lại sau."
+    );
+  }
+
+  try {
+    const spreadsheet = getWishesSpreadsheet_();
+    const sheet = spreadsheet.getSheetByName(WISHES_APP.sheetName);
+
+    if (!sheet) {
+      throw new Error(`Không tìm thấy tab "${WISHES_APP.sheetName}".`);
+    }
+
+    const width = WISHES_HEADERS.length;
+    const maxRows = sheet.getMaxRows();
+    const rowCount = Math.max(0, maxRows - 1);
+    const now = new Date();
+
+    const sourceRows = rowCount
+      ? sheet.getRange(2, 1, rowCount, width).getValues()
+      : [];
+
+    const statusIndex = WISHES_HEADERS.indexOf("status");
+    const approvedAtIndex = WISHES_HEADERS.indexOf("approvedAt");
+    const featuredIndex = WISHES_HEADERS.indexOf("featured");
+
+    const wishes = sourceRows
+      .filter(isWishDataRow_)
+      .map((sourceRow) => {
+        const row = sourceRow.slice(0, width);
+
+        if (!String(row[0] || "").trim()) {
+          row[0] = Utilities.getUuid();
+        }
+
+        if (!row[1]) {
+          row[1] = now;
+        }
+
+        row[2] = safeSheetCell_(
+          normalizePlainText_(row[2], WISHES_APP.maxNameLength)
+        );
+        row[3] = safeSheetCell_(
+          normalizePlainText_(
+            row[3],
+            WISHES_APP.maxRelationshipLength
+          )
+        );
+        row[4] = safeSheetCell_(
+          normalizePlainText_(row[4], WISHES_APP.maxMessageLength)
+        );
+
+        const rawStatus = String(row[statusIndex] || "")
+          .trim()
+          .toLowerCase();
+
+        row[statusIndex] = Object.values(WISHES_STATUS).includes(rawStatus)
+          ? rawStatus
+          : WISHES_STATUS.pending;
+
+        if (row[statusIndex] === WISHES_STATUS.approved) {
+          if (!row[approvedAtIndex]) {
+            row[approvedAtIndex] = row[1] || now;
+          }
+        } else {
+          row[approvedAtIndex] = "";
+        }
+
+        row[featuredIndex] =
+          row[featuredIndex] === true ||
+          String(row[featuredIndex] || "").toLowerCase() === "true"
+            ? true
+            : "";
+
+        row[9] = safeSheetCell_(
+          normalizePlainText_(row[9], 100)
+        );
+
+        return row;
+      });
+
+    if (rowCount > 0) {
+      sheet
+        .getRange(2, 1, rowCount, width)
+        .clearContent();
+
+      sheet
+        .getRange(
+          2,
+          WISHES_HEADERS.indexOf("status") + 1,
+          rowCount,
+          1
+        )
+        .clearDataValidations();
+
+      sheet
+        .getRange(
+          2,
+          WISHES_HEADERS.indexOf("featured") + 1,
+          rowCount,
+          1
+        )
+        .clearDataValidations();
+    }
+
+    if (wishes.length > 0) {
+      sheet
+        .getRange(2, 1, wishes.length, width)
+        .setValues(wishes);
+
+      applyWishValidationRules_(sheet, 2, wishes.length);
+
+      sheet
+        .getRange(2, 2, wishes.length, 1)
+        .setNumberFormat("yyyy-mm-dd hh:mm:ss");
+
+      sheet
+        .getRange(2, 7, wishes.length, 1)
+        .setNumberFormat("yyyy-mm-dd hh:mm:ss");
+    }
+
+    clearWeddingWishesCache();
+    SpreadsheetApp.flush();
+
+    const result = {
+      message:
+        "Đã dồn các lời chúc thật lên đầu bảng và xóa FALSE ở hàng trống.",
+      wishesCount: wishes.length,
+      firstDataRow: wishes.length ? 2 : null,
+      lastDataRow: wishes.length ? wishes.length + 1 : null,
+      nextWishRow: wishes.length + 2,
+      spreadsheetUrl: spreadsheet.getUrl(),
+      sheetName: sheet.getName(),
+    };
+
+    console.log(JSON.stringify(result, null, 2));
+    return result;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+
+function isWishDataRow_(row) {
+  return Boolean(
+    String(row[0] || "").trim() ||
+    String(row[2] || "").trim() ||
+    String(row[4] || "").trim()
+  );
+}
+
+
+function findLastWishDataRow_(sheet) {
+  const upperRow = sheet.getLastRow();
+
+  if (upperRow < 2) {
+    return 1;
+  }
+
+  const values = sheet
+    .getRange(2, 1, upperRow - 1, 5)
+    .getDisplayValues();
+
+  for (let index = values.length - 1; index >= 0; index -= 1) {
+    if (isWishDataRow_(values[index])) {
+      return index + 2;
+    }
+  }
+
+  return 1;
+}
+
+
+/**
+ * Tìm hàng đầu tiên không có id, displayName và message.
+ * Vì bỏ qua cột featured, các giá trị FALSE cũ không thể đẩy hàng mới xuống 1001.
+ */
+function findNextWishRow_(sheet) {
+  const maxRows = sheet.getMaxRows();
+
+  if (maxRows < 2) {
+    sheet.insertRowsAfter(1, 100);
+    return 2;
+  }
+
+  const values = sheet
+    .getRange(2, 1, maxRows - 1, 5)
+    .getDisplayValues();
+
+  const firstEmptyIndex = values.findIndex(
+    (row) => !isWishDataRow_(row)
+  );
+
+  if (firstEmptyIndex >= 0) {
+    return firstEmptyIndex + 2;
+  }
+
+  sheet.insertRowsAfter(maxRows, 100);
+  return maxRows + 1;
+}
+
+
+function buildWishValidationRules_() {
+  const statusRule = SpreadsheetApp
+    .newDataValidation()
+    .requireValueInList(
+      [
+        WISHES_STATUS.pending,
+        WISHES_STATUS.approved,
+        WISHES_STATUS.hidden,
+      ],
+      true
+    )
+    .setAllowInvalid(false)
+    .build();
+
+  /*
+   * checked = TRUE; unchecked = ô trống.
+   * setDataValidation() chỉ đặt quy tắc, không ghi FALSE vào hàng trống.
+   */
+  const featuredRule = SpreadsheetApp
+    .newDataValidation()
+    .requireCheckbox(true)
+    .setAllowInvalid(false)
+    .build();
+
+  return {
+    statusRule,
+    featuredRule,
+  };
+}
+
+
+function applyWishValidationRules_(sheet, startRow, rowCount) {
+  if (rowCount <= 0) return;
+
+  const rules = buildWishValidationRules_();
+
+  sheet
+    .getRange(
+      startRow,
+      WISHES_HEADERS.indexOf("status") + 1,
+      rowCount,
+      1
+    )
+    .setDataValidation(rules.statusRule);
+
+  sheet
+    .getRange(
+      startRow,
+      WISHES_HEADERS.indexOf("featured") + 1,
+      rowCount,
+      1
+    )
+    .setDataValidation(rules.featuredRule);
+}
+
+
 function ensureWishesSheet_(spreadsheet) {
   let sheet = spreadsheet.getSheetByName(WISHES_APP.sheetName);
 
@@ -507,7 +895,9 @@ function ensureWishesSheet_(spreadsheet) {
   }
 
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow([...WISHES_HEADERS]);
+    sheet
+      .getRange(1, 1, 1, WISHES_HEADERS.length)
+      .setValues([[...WISHES_HEADERS]]);
   } else {
     const existingHeaders = sheet
       .getRange(1, 1, 1, WISHES_HEADERS.length)
@@ -527,25 +917,18 @@ function ensureWishesSheet_(spreadsheet) {
     .setBackground("#214b3a")
     .setFontColor("#ffffff");
 
-  const statusRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(
-      [
-        WISHES_STATUS.pending,
-        WISHES_STATUS.approved,
-        WISHES_STATUS.hidden,
-      ],
-      true
-    )
-    .setAllowInvalid(false)
-    .build();
-
-  const availableRows = Math.max(1, sheet.getMaxRows() - 1);
-  sheet
-    .getRange(2, WISHES_HEADERS.indexOf("status") + 1, availableRows, 1)
-    .setDataValidation(statusRule);
-  sheet
-    .getRange(2, WISHES_HEADERS.indexOf("featured") + 1, availableRows, 1)
-    .insertCheckboxes();
+  /*
+   * Chỉ đặt validation cho hàng có dữ liệu thật.
+   * Tuyệt đối không gọi insertCheckboxes() trên toàn bộ 999 hàng trống.
+   */
+  const lastWishDataRow = findLastWishDataRow_(sheet);
+  if (lastWishDataRow >= 2) {
+    applyWishValidationRules_(
+      sheet,
+      2,
+      lastWishDataRow - 1
+    );
+  }
 
   const widths = [250, 145, 190, 170, 520, 110, 145, 90, 85, 230];
   widths.forEach((width, index) => {
@@ -609,13 +992,17 @@ function createIframeResponse_(payload) {
   const json = JSON.stringify(payload).replace(/</g, "\\u003c");
   const targetOrigin = JSON.stringify(WISHES_APP.siteOrigin);
 
+  // HtmlService chạy trong IFRAME sandbox của Google. Khi response được nạp
+  // vào iframe target trên website, window.parent có thể là iframe wrapper
+  // googleusercontent trung gian; window.top mới là trang GitHub Pages.
+
   return HtmlService
     .createHtmlOutput(
       [
         "<!doctype html>",
         '<html lang="vi"><head><meta charset="utf-8"></head><body>',
         "<script>",
-        `window.parent.postMessage(${json}, ${targetOrigin});`,
+        `window.top.postMessage(${json}, ${targetOrigin});`,
         "</script>",
         "</body></html>",
       ].join("")

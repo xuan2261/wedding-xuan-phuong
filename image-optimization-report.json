@@ -1,217 +1,298 @@
 [
   {
     "asset": "bride",
-    "source": "DRS06549.jpg",
+    "source": "DRS06549(1).jpg",
     "original_size": [
       1366,
       2047
     ],
-    "original_bytes": 386048,
+    "original_bytes": 373362,
     "outputs": {
       "720": {
         "size": [
           720,
-          1080
+          1079
         ],
-        "bytes": 47468,
-        "quality": 80
+        "bytes": 47770,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
-          1920
+          1918
         ],
-        "bytes": 106738,
-        "quality": 82
+        "bytes": 110914,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "couple-formal",
-    "source": "DRS06605.jpg",
+    "source": "DRS06605(1).jpg",
     "original_size": [
       1366,
       2048
     ],
-    "original_bytes": 477860,
+    "original_bytes": 457422,
     "outputs": {
       "720": {
         "size": [
           720,
-          1080
+          1079
         ],
-        "bytes": 61184,
-        "quality": 80
+        "bytes": 61144,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
-          1920
+          1919
         ],
-        "bytes": 139112,
-        "quality": 82
+        "bytes": 141698,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "hero",
-    "source": "DRS06640.jpg",
+    "source": "DRS06640(1).jpg",
     "original_size": [
       1364,
       2048
     ],
-    "original_bytes": 662475,
+    "original_bytes": 644983,
     "outputs": {
       "720": {
         "size": [
           720,
-          1080
+          1081
         ],
-        "bytes": 104958,
-        "quality": 80
+        "bytes": 107928,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
-          1920
+          1922
         ],
-        "bytes": 256848,
-        "quality": 82
+        "bytes": 264284,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "couple-hands",
-    "source": "DRS06659.jpg",
+    "source": "DRS06659(1).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 456623,
+    "original_bytes": 454726,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 58990,
-        "quality": 80
+        "bytes": 61740,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 133518,
-        "quality": 82
+        "bytes": 141826,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "couple-playful",
-    "source": "DRS06669.jpg",
+    "source": "DRS06669(1).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 675030,
+    "original_bytes": 658395,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 110072,
-        "quality": 80
+        "bytes": 111368,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 263294,
-        "quality": 82
+        "bytes": 273144,
+        "format": "WebP"
+      }
+    }
+  },
+  {
+    "asset": "couple-intimate",
+    "source": "DRS06828.jpg",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 848572,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 95594,
+        "format": "WebP"
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 402814,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "groom",
-    "source": "DRS07188.jpg",
+    "source": "DRS07188(1).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 886886,
+    "original_bytes": 904589,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 160928,
-        "quality": 80
+        "bytes": 170100,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 395504,
-        "quality": 82
+        "bytes": 432752,
+        "format": "WebP"
+      }
+    }
+  },
+  {
+    "asset": "couple-seated",
+    "source": "DRS07290.JPG",
+    "original_size": [
+      1365,
+      2048
+    ],
+    "original_bytes": 450217,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 68264,
+        "format": "WebP"
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 155812,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "couple-aodai",
-    "source": "DRS07389.jpg",
+    "source": "DRS07389(1).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 485975,
+    "original_bytes": 468618,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 68686,
-        "quality": 80
+        "bytes": 70338,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 151266,
-        "quality": 82
+        "bytes": 155864,
+        "format": "WebP"
+      }
+    }
+  },
+  {
+    "asset": "couple-garden",
+    "source": "DRS07446.JPG",
+    "original_size": [
+      1365,
+      2047
+    ],
+    "original_bytes": 725272,
+    "outputs": {
+      "720": {
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 153080,
+        "format": "WebP"
+      },
+      "1280": {
+        "size": [
+          1280,
+          1920
+        ],
+        "bytes": 329656,
+        "format": "WebP"
       }
     }
   },
   {
     "asset": "couple-studio",
-    "source": "DRS07545.jpg",
+    "source": "DRS07545(1).jpg",
     "original_size": [
       1366,
       2048
     ],
-    "original_bytes": 277795,
+    "original_bytes": 290539,
     "outputs": {
       "720": {
         "size": [
           720,
-          1080
+          1079
         ],
-        "bytes": 33002,
-        "quality": 80
+        "bytes": 34184,
+        "format": "WebP"
       },
       "1280": {
         "size": [
           1280,
-          1920
+          1919
         ],
-        "bytes": 78256,
-        "quality": 82
+        "bytes": 85762,
+        "format": "WebP"
       }
     }
   }

@@ -13,3 +13,13 @@ GitHub Pages là website có thể truy cập công khai.
 
 Các biện pháp này **không đặt mật khẩu**. Người có link vẫn xem được nội dung.
 Không đăng dữ liệu mà bạn không chấp nhận công khai.
+
+
+## Cá nhân hóa tên khách
+
+Tên khách có thể nằm trong fragment `#to=...` của link. Fragment không được gửi
+đến máy chủ GitHub Pages trong HTTP request. Website chỉ hiển thị bằng
+`textContent`; mặc định không lưu tên vào `sessionStorage`.
+
+Nếu cấu hình `rsvp.guestNameEntry`, tên khách sẽ được thêm vào link Google Forms
+khi khách chủ động bấm **Xác nhận tham dự**.

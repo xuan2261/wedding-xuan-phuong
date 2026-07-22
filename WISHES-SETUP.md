@@ -1,98 +1,82 @@
-# Thiết lập Sổ lời chúc v10
+# Thiết lập Sổ lời chúc v17
 
-## Kiến trúc
+## Source chính
 
-- GitHub Pages: giao diện gửi và hiển thị lời chúc.
-- Google Apps Script Web App: nhận POST và trả danh sách approved bằng JSONP.
-- Google Sheet: lưu và kiểm duyệt.
-- Trạng thái mặc định: `pending`.
-- Website chỉ nhận các hàng `approved`.
-
-## Bước 1 — Tạo backend
-
-1. Mở Google Apps Script.
-2. Tạo project mới.
-3. Dán nội dung `tools/wedding-wishes-webapp.gs`.
-4. Chạy:
-
-```javascript
-setupWeddingWishes()
+```text
+tools/wedding-wishes-webapp.gs
 ```
 
-5. Cấp quyền.
-6. Mở Execution log và lưu `spreadsheetUrl`.
+Backend version: `1.5.0`.
 
-## Bước 2 — Deploy Web App
+## Trạng thái production
 
-1. Chọn **Deploy → New deployment**.
-2. Type: **Web app**.
-3. Execute as: **Me**.
-4. Who has access: **Anyone**.
-5. Deploy.
-6. Sao chép URL kết thúc bằng `/exec`.
+- Website: GitHub Pages.
+- API: Google Apps Script Web App.
+- Dữ liệu: tab `Lời chúc` trong Google Sheet.
+- Lời chúc mới: `pending`.
+- Website chỉ đọc `approved`.
+- Frontend chỉ báo thành công khi backend trả `stored: true`.
 
-Apps Script gọi `doGet()` cho GET và `doPost()` cho POST. Backend dùng Content
-Service cho JSON/JSONP và HtmlService cho phản hồi vào iframe.
+## Cập nhật project Apps Script hiện có
 
-## Bước 3 — Kết nối website
-
-Trong `config.js`:
+1. Mở project `LoiChuc_DamCuoi_Xuan_Phuong`.
+2. Ghi đè file backend bằng `tools/wedding-wishes-webapp.gs`.
+3. Lưu source.
+4. Chạy một lần:
 
 ```javascript
-wishes: {
-  enabled: true,
-  apiUrl: "https://script.google.com/macros/s/MA_TRIEN_KHAI/exec",
-  initialDisplayLimit: 6,
-  pageSize: 6,
-  maxNameLength: 50,
-  maxRelationshipLength: 40,
-  minMessageLength: 5,
-  maxMessageLength: 280,
-  cooldownSeconds: 180,
-  requestTimeoutMs: 15000
-}
+repairAndCompactWeddingWishes()
 ```
 
-Sau đó commit và push.
+5. Kiểm tra:
 
-## Bước 4 — Kiểm duyệt
+```javascript
+inspectWeddingWishesStorage()
+```
 
-Trong Google Sheet:
+Kết quả đúng: `nextWishRow = lastWishDataRow + 1`.
+
+## Cập nhật Web App mà không đổi URL
+
+```text
+Deploy → Manage deployments → Edit
+→ Version: New version → Deploy
+```
+
+Cập nhật deployment hiện có để URL `/exec` trong `config.js` tiếp tục dùng được.
+
+## Kiểm thử lưu
+
+Gửi một lời chúc thử. Kết quả cần có:
+
+- UI hiển thị “đã được lưu”.
+- Execution log có `event: wish-stored`.
+- Payload có `stored: true`, `submissionId`, `rowNumber`.
+- Hàng mới nằm ngay sau dữ liệu thật cuối cùng.
+- Trạng thái là `pending`.
+
+## Kiểm duyệt
 
 - `pending`: chờ duyệt.
-- `approved`: xuất hiện công khai.
-- `hidden`: không hiển thị.
+- `approved`: công khai.
+- `hidden`: ẩn.
+- `featured`: ưu tiên hiển thị.
+- `sortOrder`: thứ tự thủ công.
 
-Đổi cột `status` thành `approved`. Trigger cài bởi setup sẽ:
+Khi đổi sang `approved`, trigger ghi `approvedAt` và xóa cache.
 
-- ghi `approvedAt`;
-- xóa cache danh sách lời chúc.
-
-Có thể chọn cột `featured` và điền `sortOrder` để ưu tiên.
-
-## Bước 5 — Kiểm tra
-
-Mở:
+## Kiểm tra endpoint
 
 ```text
 WEB_APP_URL?action=health
 ```
 
-Kết quả phải có `ok: true`.
+Kết quả phải có `ok: true` và version `1.5.0`.
 
-Sau đó gửi một lời chúc thử:
 
-1. Sheet nhận hàng `pending`.
-2. Website chưa hiển thị.
-3. Đổi status thành `approved`.
-4. Tải lại sau vài giây; lời chúc xuất hiện.
+## CacheService v17
 
-## An toàn
-
-- Không lưu số điện thoại hoặc email.
-- Không trả hàng `pending`.
-- Không render HTML từ người dùng.
-- Có honeypot, giới hạn độ dài, rate limit, duplicate check và chống formula injection.
-- JSONP chỉ chứa dữ liệu đã duyệt và công khai.
-- `XFrameOptionsMode.ALLOWALL` chỉ được dùng cho trang phản hồi trống trong iframe;
-  backend dùng target origin cố định `https://xuan2261.github.io`.
+- `duplicateWindowSeconds` tối đa 21600 giây.
+- Cache chỉ là tối ưu ngắn hạn.
+- Sau khi `submissionId` được xác minh trong Sheet, lỗi cache chỉ ghi warning và
+  không làm website báo gửi thất bại.

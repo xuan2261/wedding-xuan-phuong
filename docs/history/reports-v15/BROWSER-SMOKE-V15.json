@@ -1,0 +1,85 @@
+{
+  "generatedAtUtc": "2026-07-22T08:56:38.013869+00:00",
+  "verdict": "PASS",
+  "viewports": [
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "guestTime": "10h00",
+      "guestLabel": "Đón khách dự tiệc",
+      "build": "v15-20260722",
+      "wishVisible": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "guestTime": "10h00",
+      "guestLabel": "Đón khách dự tiệc",
+      "build": "v15-20260722",
+      "wishVisible": true
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "guestTime": "10h00",
+      "guestLabel": "Đón khách dự tiệc",
+      "build": "v15-20260722",
+      "wishVisible": true
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "guestTime": "10h00",
+      "guestLabel": "Đón khách dự tiệc",
+      "build": "v15-20260722",
+      "wishVisible": true
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "guestTime": "10h00",
+      "guestLabel": "Đón khách dự tiệc",
+      "build": "v15-20260722",
+      "wishVisible": true
+    }
+  ],
+  "contract": {
+    "storedFalse": {
+      "state": "error",
+      "text": "Máy chủ đã phản hồi nhưng chưa xác nhận lưu lời chúc. Vui lòng thử lại sau."
+    },
+    "storedTrue": {
+      "state": "success",
+      "text": "Cảm ơn Quý vị! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt."
+    }
+  },
+  "errors": [],
+  "limitations": [
+    "Inline harness; external network and real Apps Script were not used."
+  ]
+}

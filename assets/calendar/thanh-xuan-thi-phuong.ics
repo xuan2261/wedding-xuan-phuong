@@ -1,0 +1,53 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Thanh Xuan & Thi Phuong//Wedding Invitation v17//VI
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Lễ Thành Hôn · Thanh Xuân & Thị Phượng
+BEGIN:VTIMEZONE
+TZID:Asia/Ho_Chi_Minh
+X-LIC-LOCATION:Asia/Ho_Chi_Minh
+BEGIN:STANDARD
+TZOFFSETFROM:+0700
+TZOFFSETTO:+0700
+TZNAME:+07
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:20260730-ceremony-xuan-phuong@xuan2261.github.io
+DTSTAMP:20260722T114923Z
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260730T083000
+SUMMARY:Lễ Thành Hôn · Thanh Xuân & Thị Phượng
+DESCRIPTION:Lễ Thành Hôn lúc 08h30. Đón khách và dùng tiệc l
+ úc 10h00. Liên hệ chú rể: 0374037026\; cô dâu: 0906878461.
+LOCATION:Tư gia nhà trai\, 346 Nguyễn Huệ\, Xã Bình Dương\, T
+ ỉnh Gia Lai
+URL:https://maps.app.goo.gl/zki7tKDUw8Ff8twA6
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Nhắc lịch cưới Thanh Xuân & Thị Phượng
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20260730-reception-xuan-phuong@xuan2261.github.io
+DTSTAMP:20260722T114923Z
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260730T100000
+SUMMARY:Đón khách và dùng tiệc · Thanh Xuân & Thị Phượng
+DESCRIPTION:Hân hạnh đón Quý vị đến chung vui cùng hai gia đ
+ ình. Lễ Thành Hôn được cử hành lúc 08h30.
+LOCATION:Tư gia nhà trai\, 346 Nguyễn Huệ\, Xã Bình Dương\, T
+ ỉnh Gia Lai
+URL:https://maps.app.goo.gl/zki7tKDUw8Ff8twA6
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Nhắc lịch cưới Thanh Xuân & Thị Phượng
+END:VALARM
+END:VEVENT
+END:VCALENDAR

@@ -28,3 +28,13 @@
 - Header Google Forms mới: `google-forms-header-xuan-phuong-v2.jpg`, 1600 × 400.
 
 Không cần đưa 8 ảnh JPG gốc lên GitHub Pages.
+
+
+## Bản cập nhật v16
+
+Xem `IMAGE-MAP-V16.md` để biết:
+
+- `DRS06828.jpg` → `couple-intimate`
+- `DRS07290.JPG` → `couple-seated`
+- `DRS07446.JPG` → `couple-garden`
+- Thứ tự kể chuyện mới của toàn bộ album.

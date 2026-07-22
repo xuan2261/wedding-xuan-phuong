@@ -1,0 +1,522 @@
+{
+  "generatedAtUtc": "2026-07-22T09:45:24.318187+00:00",
+  "buildId": "v16-20260722",
+  "release": "v16",
+  "verdict": "PASS_READY_FOR_DEPLOYMENT",
+  "sourceBase": "user-uploaded wedding-xuan-phuong-reviewed-v15(1).zip",
+  "imageChanges": {
+    "sourceImageCount": 11,
+    "responsiveFileCount": 22,
+    "featurePhoto": "DRS06828.jpg / couple-intimate",
+    "albumAddition": "DRS07290.JPG / couple-seated",
+    "closingPhoto": "DRS07446.JPG / couple-garden",
+    "shareImageUpdated": true,
+    "googleFormsHeaderUpdated": true
+  },
+  "preservedProductionFeatures": [
+    "config.js production values",
+    "RSVP URL",
+    "bank QR and account information",
+    "music.mp3",
+    "wedding wishes Apps Script backend 1.4.0",
+    "stored:true frontend contract"
+  ],
+  "checks": {
+    "verify_release": {
+      "pass": true,
+      "command": [
+        "python",
+        "tests/verify_release.py"
+      ],
+      "stdout": "PASS: release source checks",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "contract_check": {
+      "pass": true,
+      "command": [
+        "node",
+        "tests/contract_check.js"
+      ],
+      "stdout": "PASS: wishes storage contract",
+      "stderr": ""
+    },
+    "node_app": {
+      "pass": true,
+      "command": [
+        "node",
+        "--check",
+        "app.js"
+      ],
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_config": {
+      "pass": true,
+      "command": [
+        "node",
+        "--check",
+        "config.js"
+      ],
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_create-google-forms-rsvp.gs": {
+      "pass": true,
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmpm4x4kvy1.js"
+      ],
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmpq5l20skq.js"
+      ],
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_wedding-wishes-webapp.gs": {
+      "pass": true,
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmp4j6rq2jl.js"
+      ],
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "browserSmoke": {
+    "generatedAtUtc": "2026-07-22T09:42:16.705242+00:00",
+    "buildId": "v16-20260722",
+    "verdict": "PASS",
+    "viewports": [
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "horizontalOverflow": false,
+        "build": "v16-20260722",
+        "hero": {
+          "naturalWidth": 720,
+          "loading": null,
+          "fetchpriority": "high"
+        },
+        "feature": {
+          "naturalWidth": 720
+        },
+        "albumCount": 9,
+        "seatedLightboxNaturalWidth": 1280,
+        "closing": {
+          "naturalWidth": 720
+        }
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "horizontalOverflow": false,
+        "build": "v16-20260722",
+        "hero": {
+          "naturalWidth": 720,
+          "loading": null,
+          "fetchpriority": "high"
+        },
+        "feature": {
+          "naturalWidth": 720
+        },
+        "albumCount": 9,
+        "seatedLightboxNaturalWidth": 1280,
+        "closing": {
+          "naturalWidth": 720
+        }
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "horizontalOverflow": false,
+        "build": "v16-20260722",
+        "hero": {
+          "naturalWidth": 720,
+          "loading": null,
+          "fetchpriority": "high"
+        },
+        "feature": {
+          "naturalWidth": 720
+        },
+        "albumCount": 9,
+        "seatedLightboxNaturalWidth": 1280,
+        "closing": {
+          "naturalWidth": 720
+        }
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "horizontalOverflow": false,
+        "build": "v16-20260722",
+        "hero": {
+          "naturalWidth": 720,
+          "loading": null,
+          "fetchpriority": "high"
+        },
+        "feature": {
+          "naturalWidth": 720
+        },
+        "albumCount": 9,
+        "seatedLightboxNaturalWidth": 1280,
+        "closing": {
+          "naturalWidth": 720
+        }
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "horizontalOverflow": false,
+        "build": "v16-20260722",
+        "hero": {
+          "naturalWidth": 720,
+          "loading": null,
+          "fetchpriority": "high"
+        },
+        "feature": {
+          "naturalWidth": 720
+        },
+        "albumCount": 9,
+        "seatedLightboxNaturalWidth": 1280,
+        "closing": {
+          "naturalWidth": 720
+        }
+      }
+    ],
+    "errors": [],
+    "limitations": [
+      "Inline harness with images/CSS/JS embedded as data; no HTTP cache/network behavior measured.",
+      "Wishes and music disabled for visual smoke.",
+      "Real iOS/Android devices unavailable."
+    ]
+  },
+  "imageOptimization": {
+    "assets": [
+      {
+        "asset": "bride",
+        "source": "DRS06549(1).jpg",
+        "original_size": [
+          1366,
+          2047
+        ],
+        "original_bytes": 373362,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1079
+            ],
+            "bytes": 47770,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1918
+            ],
+            "bytes": 110914,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-formal",
+        "source": "DRS06605(1).jpg",
+        "original_size": [
+          1366,
+          2048
+        ],
+        "original_bytes": 457422,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1079
+            ],
+            "bytes": 61144,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1919
+            ],
+            "bytes": 141698,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "hero",
+        "source": "DRS06640(1).jpg",
+        "original_size": [
+          1364,
+          2048
+        ],
+        "original_bytes": 644983,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1081
+            ],
+            "bytes": 107928,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1922
+            ],
+            "bytes": 264284,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-hands",
+        "source": "DRS06659(1).jpg",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 454726,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 61740,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 141826,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-playful",
+        "source": "DRS06669(1).jpg",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 658395,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 111368,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 273144,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-intimate",
+        "source": "DRS06828.jpg",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 848572,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 95594,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 402814,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "groom",
+        "source": "DRS07188(1).jpg",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 904589,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 170100,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 432752,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-seated",
+        "source": "DRS07290.JPG",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 450217,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 68264,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 155812,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-aodai",
+        "source": "DRS07389(1).jpg",
+        "original_size": [
+          1365,
+          2048
+        ],
+        "original_bytes": 468618,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 70338,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 155864,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-garden",
+        "source": "DRS07446.JPG",
+        "original_size": [
+          1365,
+          2047
+        ],
+        "original_bytes": 725272,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 153080,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1920
+            ],
+            "bytes": 329656,
+            "format": "WebP"
+          }
+        }
+      },
+      {
+        "asset": "couple-studio",
+        "source": "DRS07545(1).jpg",
+        "original_size": [
+          1366,
+          2048
+        ],
+        "original_bytes": 290539,
+        "outputs": {
+          "720": {
+            "size": [
+              720,
+              1079
+            ],
+            "bytes": 34184,
+            "format": "WebP"
+          },
+          "1280": {
+            "size": [
+              1280,
+              1919
+            ],
+            "bytes": 85762,
+            "format": "WebP"
+          }
+        }
+      }
+    ],
+    "totalResponsiveBytes": 3476036
+  },
+  "deploymentSteps": [
+    "Extract the full source and replace repository contents.",
+    "git add .",
+    "git commit -m \"Release wedding website v16\"",
+    "git push",
+    "Run tools/check-live-build.ps1 after GitHub Pages finishes.",
+    "Open an incognito window and hard refresh."
+  ]
+}

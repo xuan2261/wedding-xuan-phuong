@@ -1,0 +1,195 @@
+{
+  "generatedAtUtc": "2026-07-22T08:53:44.568940+00:00",
+  "buildId": "v15-20260722",
+  "verdict": "PASS_READY_FOR_DEPLOYMENT_WITH_APPS_SCRIPT_VERSION_UPDATE",
+  "confirmedFacts": {
+    "guestTime": "10h00",
+    "ceremonyTime": "08h30",
+    "qrSvgStatus": "verified embedded copies of production PNG QR"
+  },
+  "fixes": [
+    "Resolved guest-time contradiction by documenting reception at 10h00 after the 08h30 ceremony.",
+    "Frontend success now requires payload.stored === true.",
+    "Canonicalized Apps Script backend filename and synchronized documentation.",
+    "Added live build marker and verification script.",
+    "Added narrow CSP wildcard for Google dynamic script subdomains.",
+    "Made lazy-load settings explicit.",
+    "Replaced placeholder SVG content with exact embedded production PNG QR images.",
+    "Added repeatable static/contract CI gates.",
+    "Moved historical reports and apply guides out of the deployment root."
+  ],
+  "checks": {
+    "verify_release": {
+      "pass": true,
+      "stdout": "PASS: release source checks",
+      "stderr": "",
+      "command": [
+        "python",
+        "tests/verify_release.py"
+      ]
+    },
+    "contract_check": {
+      "pass": true,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": "",
+      "command": [
+        "node",
+        "tests/contract_check.js"
+      ]
+    },
+    "node_app": {
+      "pass": true,
+      "stdout": "",
+      "stderr": "",
+      "command": [
+        "node",
+        "--check",
+        "app.js"
+      ]
+    },
+    "node_config": {
+      "pass": true,
+      "stdout": "",
+      "stderr": "",
+      "command": [
+        "node",
+        "--check",
+        "config.js"
+      ]
+    },
+    "node_create-google-forms-rsvp.gs": {
+      "pass": true,
+      "stdout": "",
+      "stderr": "",
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmpc1g9j8_2.js"
+      ]
+    },
+    "node_update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "stdout": "",
+      "stderr": "",
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmpj490ae4d.js"
+      ]
+    },
+    "node_wedding-wishes-webapp.gs": {
+      "pass": true,
+      "stdout": "",
+      "stderr": "",
+      "command": [
+        "node",
+        "--check",
+        "/tmp/tmpxarmeogk.js"
+      ]
+    }
+  },
+  "qrChecks": {
+    "qr-nha-trai": {
+      "png_decodes": true,
+      "svg_decodes": true,
+      "payload_matches": true
+    },
+    "qr-nha-gai": {
+      "png_decodes": true,
+      "svg_decodes": true,
+      "payload_matches": true
+    }
+  },
+  "remainingOperationalSteps": [
+    "Deploy the updated GitHub Pages source.",
+    "Update the existing Apps Script deployment to a new version.",
+    "Run repairAndCompactWeddingWishes once if not already completed.",
+    "Run inspectWeddingWishesStorage and submit one live pending test.",
+    "Run tools/check-live-build.ps1 after GitHub Pages deployment."
+  ],
+  "browserSmoke": {
+    "generatedAtUtc": "2026-07-22T08:56:38.013869+00:00",
+    "verdict": "PASS",
+    "viewports": [
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "horizontalOverflow": false,
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "guestTime": "10h00",
+        "guestLabel": "Đón khách dự tiệc",
+        "build": "v15-20260722",
+        "wishVisible": true
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "horizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "guestTime": "10h00",
+        "guestLabel": "Đón khách dự tiệc",
+        "build": "v15-20260722",
+        "wishVisible": true
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "horizontalOverflow": false,
+        "scrollWidth": 430,
+        "clientWidth": 430,
+        "guestTime": "10h00",
+        "guestLabel": "Đón khách dự tiệc",
+        "build": "v15-20260722",
+        "wishVisible": true
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "horizontalOverflow": false,
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "guestTime": "10h00",
+        "guestLabel": "Đón khách dự tiệc",
+        "build": "v15-20260722",
+        "wishVisible": true
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "horizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "guestTime": "10h00",
+        "guestLabel": "Đón khách dự tiệc",
+        "build": "v15-20260722",
+        "wishVisible": true
+      }
+    ],
+    "contract": {
+      "storedFalse": {
+        "state": "error",
+        "text": "Máy chủ đã phản hồi nhưng chưa xác nhận lưu lời chúc. Vui lòng thử lại sau."
+      },
+      "storedTrue": {
+        "state": "success",
+        "text": "Cảm ơn Quý vị! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt."
+      }
+    },
+    "errors": [],
+    "limitations": [
+      "Inline harness; external network and real Apps Script were not used."
+    ]
+  }
+}

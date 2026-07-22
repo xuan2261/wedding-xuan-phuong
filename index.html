@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#214b3a">
+  <meta name="wedding-build" content="v18-20260722">
   <meta name="description" content="Thiệp mời Lễ Thành Hôn của Bùi Thanh Xuân và Trần Thị Phượng, ngày 30 tháng 7 năm 2026 tại Gia Lai.">
 
   <!-- Không cho phép lập chỉ mục; không phải là cơ chế đặt mật khẩu. -->
@@ -11,7 +12,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self'; connect-src 'self'; frame-src https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action https://script.google.com https://script.googleusercontent.com; upgrade-insecure-requests">
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; media-src 'self' https://statics.pancake.vn; connect-src 'self'; frame-src https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com https://docs.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; upgrade-insecure-requests">
 
   <title>Lễ Thành Hôn · Thanh Xuân & Thị Phượng</title>
 
@@ -32,17 +33,19 @@
   <meta name="twitter:image" content="https://xuan2261.github.io/wedding-xuan-phuong/assets/images/meta-v3.jpg">
 
   <link rel="icon" href="assets/images/favicon.png" type="image/png">
-  <link rel="preload" as="image" href="assets/images/hero-720.webp?v=5"
-        imagesrcset="assets/images/hero-720.webp?v=5 720w, assets/images/hero-1280.webp?v=5 1280w"
-        imagesizes="(max-width: 760px) 100vw, 760px">
+  <link rel="preload" as="image" href="assets/images/hero-720.webp?v=16"
+        imagesrcset="assets/images/hero-720.webp?v=16 720w, assets/images/hero-1280.webp?v=16 1280w"
+        imagesizes="100vw">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="styles.css?v=1.7">
+  <link rel="stylesheet" href="styles.css?v=4.0">
+  <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.0">
 
-  <script src="config.js?v=2.1" defer></script>
-  <script src="app.js?v=1.9" defer></script>
+  <script src="config.js?v=4.0" defer></script>
+  <script src="guest-utils.js?v=1.0" defer></script>
+  <script src="app.js?v=4.0" defer></script>
 </head>
 
 <body>
@@ -51,9 +54,9 @@
   <header class="hero" aria-labelledby="hero-title">
     <img
       class="hero__image"
-      src="assets/images/hero-720.webp?v=5"
-      srcset="assets/images/hero-720.webp?v=5 720w, assets/images/hero-1280.webp?v=5 1280w"
-      sizes="(max-width: 760px) 100vw, 760px"
+      src="assets/images/hero-720.webp?v=16"
+      srcset="assets/images/hero-720.webp?v=16 720w, assets/images/hero-1280.webp?v=16 1280w"
+      sizes="100vw"
       width="1280"
       height="1920"
       alt="Thanh Xuân và Thị Phượng trong trang phục cưới"
@@ -62,21 +65,21 @@
     <div class="hero__shade" aria-hidden="true"></div>
 
     <div class="hero__content">
-      <p class="eyebrow">Save the date</p>
+      <p class="eyebrow motion-load" data-motion="fade-down" data-motion-delay="80">Save the date</p>
       <h1 class="hero-names" id="hero-title">
         <span class="sr-only" data-hero-accessible>Thanh Xuân và Thị Phượng</span>
-        <span class="hero-name hero-name--groom" aria-hidden="true">
+        <span class="hero-name hero-name--groom motion-load" data-motion="fade-left" data-motion-delay="160" aria-hidden="true">
           <span data-hero-groom-line1>Thanh</span>
           <span data-hero-groom-line2>Xuân</span>
         </span>
         <span class="hero-names__amp" aria-hidden="true">&amp;</span>
-        <span class="hero-name hero-name--bride" aria-hidden="true">
+        <span class="hero-name hero-name--bride motion-load" data-motion="fade-right" data-motion-delay="250" aria-hidden="true">
           <span data-hero-bride-line1>Thị</span>
           <span data-hero-bride-line2>Phượng</span>
         </span>
       </h1>
-      <p class="hero__date" data-date-display>30.07.2026</p>
-      <a class="button button--glass" id="openInvitationButton" href="#invitation">Mở thiệp</a>
+      <p class="hero__date motion-load" data-motion="fade-up" data-motion-delay="330" data-date-display>30.07.2026</p>
+      <a class="button button--glass motion-load" data-motion="zoom-in" data-motion-delay="410" id="openInvitationButton" href="#invitation">Mở thiệp</a>
     </div>
 
     <div class="hero__scroll" aria-hidden="true">
@@ -85,7 +88,20 @@
   </header>
 
   <main id="main">
-    <section class="section invitation reveal" id="invitation" aria-labelledby="invitation-title">
+
+    <section class="section guest-invitation reveal" data-motion="zoom-in" id="guest-invitation" aria-labelledby="guest-invitation-title">
+      <div class="guest-invitation__seal" aria-hidden="true">XP</div>
+      <p class="section-kicker">Trân trọng kính mời</p>
+      <h2 id="guest-invitation-title" data-guest-name>Quý vị</h2>
+      <p class="guest-invitation__copy">
+        Đến tham dự Lễ Thành Hôn của
+        <strong data-groom-full>Bùi Thanh Xuân</strong>
+        và
+        <strong data-bride-full>Trần Thị Phượng</strong>.
+      </p>
+    </section>
+
+    <section class="section invitation reveal" data-motion="fade-up" id="invitation" aria-labelledby="invitation-title">
       <p class="section-kicker">Lời ngỏ</p>
       <h2 class="invitation__title" id="invitation-title" data-invitation-heading>
         <span data-invitation-heading-line1>Trân trọng</span>
@@ -100,15 +116,41 @@
       </p>
     </section>
 
+
+    <section class="section families reveal" id="families" aria-labelledby="families-title" hidden>
+      <p class="section-kicker">Hai bên gia đình</p>
+      <h2 id="families-title">Trong niềm vui của hai gia đình</h2>
+      <div class="families__grid">
+        <article class="family-card" data-family-card="groom">
+          <p>Nhà trai</p>
+          <h3>Gia đình chú rể</h3>
+          <dl>
+            <div data-family-field="groom-father" hidden><dt>Thân phụ</dt><dd></dd></div>
+            <div data-family-field="groom-mother" hidden><dt>Thân mẫu</dt><dd></dd></div>
+          </dl>
+          <p class="family-card__location" data-family-field="groom-location" hidden></p>
+        </article>
+        <article class="family-card" data-family-card="bride">
+          <p>Nhà gái</p>
+          <h3>Gia đình cô dâu</h3>
+          <dl>
+            <div data-family-field="bride-father" hidden><dt>Thân phụ</dt><dd></dd></div>
+            <div data-family-field="bride-mother" hidden><dt>Thân mẫu</dt><dd></dd></div>
+          </dl>
+          <p class="family-card__location" data-family-field="bride-location" hidden></p>
+        </article>
+      </div>
+    </section>
+
     <section class="section couple" aria-labelledby="couple-title">
       <p class="section-kicker reveal">Đôi uyên ương</p>
       <h2 id="couple-title" class="reveal">Chú rể &amp; Cô dâu</h2>
 
       <div class="portrait-grid">
-        <article class="portrait-card reveal">
+        <article class="portrait-card reveal" data-motion="fade-left">
           <img
-            src="assets/images/groom-720.webp?v=5"
-            srcset="assets/images/groom-720.webp?v=5 720w, assets/images/groom-1280.webp?v=5 1280w"
+            src="assets/images/groom-720.webp?v=16"
+            srcset="assets/images/groom-720.webp?v=16 720w, assets/images/groom-1280.webp?v=16 1280w"
             sizes="(max-width: 760px) 92vw, 360px"
             width="1280"
             height="1920"
@@ -121,10 +163,10 @@
           </div>
         </article>
 
-        <article class="portrait-card reveal">
+        <article class="portrait-card reveal" data-motion="fade-right">
           <img
-            src="assets/images/bride-720.webp?v=5"
-            srcset="assets/images/bride-720.webp?v=5 720w, assets/images/bride-1280.webp?v=5 1280w"
+            src="assets/images/bride-720.webp?v=16"
+            srcset="assets/images/bride-720.webp?v=16 720w, assets/images/bride-1280.webp?v=16 1280w"
             sizes="(max-width: 760px) 92vw, 360px"
             width="1280"
             height="1920"
@@ -139,55 +181,80 @@
       </div>
     </section>
 
-    <section class="feature-photo reveal" aria-label="Ảnh cưới">
+    <section class="feature-photo reveal" data-motion="soft-scale" aria-label="Ảnh cưới">
       <img
-        src="assets/images/couple-studio-720.webp?v=5"
-        srcset="assets/images/couple-studio-720.webp?v=5 720w, assets/images/couple-studio-1280.webp?v=5 1280w"
+        src="assets/images/couple-intimate-720.webp?v=16"
+        srcset="assets/images/couple-intimate-720.webp?v=16 720w, assets/images/couple-intimate-1280.webp?v=16 1280w"
         sizes="(max-width: 760px) 100vw, 760px"
         width="1280"
         height="1920"
         loading="lazy"
-        alt="Thanh Xuân và Thị Phượng trong bộ ảnh cưới áo dài"
+        alt="Thanh Xuân dịu dàng ôm Thị Phượng trong khoảnh khắc cưới"
       >
       <blockquote>
         “Từ hôm nay, hai hành trình trở thành một.”
       </blockquote>
     </section>
 
-    <section class="section event reveal" aria-labelledby="event-title">
-      <p class="section-kicker">Lễ Thành Hôn</p>
-      <h2 id="event-title">Hân hạnh đón tiếp Quý vị</h2>
+    <section class="section event reveal" data-motion="fade-up" aria-labelledby="event-title">
+      <p class="section-kicker">Ngày chung đôi</p>
+      <h2 id="event-title">Lịch trình ngày cưới</h2>
 
-      <div class="date-card">
-        <div class="date-card__side">
-          <span data-weekday>Thứ Năm</span>
-          <small>Đón khách</small>
-          <strong data-guest-time>08h00</strong>
-        </div>
-        <div class="date-card__day">30</div>
-        <div class="date-card__side">
-          <span>Tháng 07</span>
-          <small>Làm lễ</small>
-          <strong data-ceremony-time>08h30</strong>
-        </div>
+      <div class="event-summary">
+        <span data-weekday>Thứ Năm</span>
+        <strong data-date-display>30.07.2026</strong>
+        <small data-lunar-date>Ngày 17 tháng 6 năm Bính Ngọ</small>
       </div>
 
-      <p class="lunar-date" data-lunar-date>Ngày 17 tháng 6 năm Bính Ngọ</p>
+      <ol class="event-timeline" aria-label="Lịch trình ngày cưới">
+        <li>
+          <time data-ceremony-time datetime="2026-07-30T08:30:00+07:00">08h30</time>
+          <div>
+            <h3 data-ceremony-label>Lễ Thành Hôn</h3>
+            <p data-ceremony-note>Nghi thức được cử hành tại tư gia nhà trai.</p>
+          </div>
+        </li>
+        <li>
+          <time data-guest-time datetime="2026-07-30T10:00:00+07:00">10h00</time>
+          <div>
+            <h3 data-reception-label>Đón khách và dùng tiệc</h3>
+            <p data-reception-note>Hân hạnh đón Quý vị đến chung vui cùng hai gia đình.</p>
+          </div>
+        </li>
+      </ol>
 
       <div class="venue">
         <h3 data-venue-name>Tư gia nhà trai</h3>
-        <p>
+        <p id="venueAddress">
           <span data-address-line1>346 Nguyễn Huệ</span><br>
           <span data-address-line2>Xã Bình Dương, Tỉnh Gia Lai</span>
         </p>
-        <a class="button" data-maps-link target="_blank" rel="noopener noreferrer">
-          Xem chỉ đường
-        </a>
+
+        <div class="venue__actions">
+          <button class="button" type="button" id="mapButton">
+            Xem bản đồ
+          </button>
+          <a class="button button--secondary" data-maps-link target="_blank" rel="noopener noreferrer">
+            Mở Google Maps
+          </a>
+          <button class="button button--secondary" type="button" id="copyAddressButton">
+            Sao chép địa chỉ
+          </button>
+          <a class="button button--secondary" id="directionContactButton" href="#">
+            Liên hệ chỉ đường
+          </a>
+        </div>
+
+        <ul class="venue-notes" id="venueNotes" hidden>
+          <li data-venue-note="landmark" hidden></li>
+          <li data-venue-note="entrance" hidden></li>
+          <li data-venue-note="parking" hidden></li>
+        </ul>
       </div>
     </section>
 
     <section class="countdown" aria-labelledby="countdown-title">
-      <div class="countdown__inner reveal">
+      <div class="countdown__inner reveal" data-motion="zoom-in">
         <p class="section-kicker">Đếm ngược</p>
         <h2 id="countdown-title">Chờ ngày chung đôi</h2>
         <div class="countdown__grid" role="timer" aria-live="off" aria-label="Thời gian còn lại đến lễ cưới">
@@ -199,14 +266,23 @@
       </div>
     </section>
 
-    <section class="section actions reveal" aria-labelledby="actions-title">
+    <section class="section actions reveal" data-motion="fade-up" aria-labelledby="actions-title">
       <p class="section-kicker">Phản hồi</p>
       <h2 id="actions-title">Sự hiện diện của Quý vị là niềm vui quý giá</h2>
-      <p>Vui lòng xác nhận tham dự trước <strong data-rsvp-deadline>24.07.2026</strong> để gia đình chuẩn bị đón tiếp chu đáo.</p>
+      <p>Vui lòng xác nhận tham dự trước <strong data-rsvp-deadline>28.07.2026</strong> để gia đình chuẩn bị đón tiếp chu đáo.</p>
       <div class="actions__buttons">
-        <a class="button" id="rsvpButton" href="#" target="_blank" rel="noopener noreferrer">
+        <button class="button" id="rsvpButton" type="button">
           Xác nhận tham dự
+        </button>
+        <a class="button button--secondary" id="calendarButton" href="#" type="text/calendar">
+          Thêm vào lịch
         </a>
+        <button class="button button--secondary" type="button" id="shareButton">
+          Chia sẻ thiệp
+        </button>
+        <button class="button button--secondary" type="button" id="copyPersonalizedLinkButton" hidden>
+          Sao chép link có tên này
+        </button>
         <button class="button button--secondary" type="button" id="wishButton" hidden>
           Gửi lời chúc
         </button>
@@ -223,58 +299,71 @@
 
       <div class="album-grid">
         <button class="album-item album-item--wide reveal" type="button" data-lightbox="couple-hands" aria-label="Xem ảnh Thanh Xuân và Thị Phượng nhìn nhau">
-          <img src="assets/images/couple-hands-720.webp?v=5"
-               srcset="assets/images/couple-hands-720.webp?v=5 720w, assets/images/couple-hands-1280.webp?v=5 1280w"
+          <img src="assets/images/couple-hands-720.webp?v=16"
+               srcset="assets/images/couple-hands-720.webp?v=16 720w, assets/images/couple-hands-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 92vw, 720px" width="1280" height="1920"
                loading="lazy" alt="Thanh Xuân và Thị Phượng nắm tay và nhìn nhau">
         </button>
 
         <button class="album-item reveal" type="button" data-lightbox="couple-formal" aria-label="Xem ảnh cưới trang trọng">
-          <img src="assets/images/couple-formal-720.webp?v=5"
-               srcset="assets/images/couple-formal-720.webp?v=5 720w, assets/images/couple-formal-1280.webp?v=5 1280w"
+          <img src="assets/images/couple-formal-720.webp?v=16"
+               srcset="assets/images/couple-formal-720.webp?v=16 720w, assets/images/couple-formal-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
                loading="lazy" alt="Thanh Xuân và Thị Phượng trong ảnh cưới trang trọng">
         </button>
 
         <button class="album-item reveal" type="button" data-lightbox="couple-playful" aria-label="Xem ảnh cưới vui tươi">
-          <img src="assets/images/couple-playful-720.webp?v=5"
-               srcset="assets/images/couple-playful-720.webp?v=5 720w, assets/images/couple-playful-1280.webp?v=5 1280w"
+          <img src="assets/images/couple-playful-720.webp?v=16"
+               srcset="assets/images/couple-playful-720.webp?v=16 720w, assets/images/couple-playful-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
                loading="lazy" alt="Thanh Xuân và Thị Phượng tạo dáng vui tươi">
         </button>
 
         <button class="album-item album-item--wide reveal" type="button" data-lightbox="couple-aodai" aria-label="Xem ảnh áo dài và nhẫn cưới">
-          <img src="assets/images/couple-aodai-720.webp?v=5"
-               srcset="assets/images/couple-aodai-720.webp?v=5 720w, assets/images/couple-aodai-1280.webp?v=5 1280w"
+          <img src="assets/images/couple-aodai-720.webp?v=16"
+               srcset="assets/images/couple-aodai-720.webp?v=16 720w, assets/images/couple-aodai-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 92vw, 720px" width="1280" height="1920"
                loading="lazy" alt="Thanh Xuân và Thị Phượng trong trang phục áo dài, khoe nhẫn cưới">
         </button>
+        <button class="album-item reveal" type="button"
+          data-lightbox="couple-seated"
+          aria-label="Xem ảnh Thanh Xuân và Thị Phượng ngồi bên nhau trong trang phục áo dài">
+          <img
+            src="assets/images/couple-seated-720.webp?v=16"
+            srcset="assets/images/couple-seated-720.webp?v=16 720w, assets/images/couple-seated-1280.webp?v=16 1280w"
+            sizes="(max-width: 760px) 46vw, 360px"
+            width="1280"
+            height="1920"
+            loading="lazy"
+            alt="Thanh Xuân và Thị Phượng ngồi bên nhau trong trang phục áo dài">
+        </button>
+
 
         <button class="album-item reveal" type="button" data-lightbox="bride" aria-label="Xem chân dung cô dâu">
-          <img src="assets/images/bride-720.webp?v=5"
-               srcset="assets/images/bride-720.webp?v=5 720w, assets/images/bride-1280.webp?v=5 1280w"
+          <img src="assets/images/bride-720.webp?v=16"
+               srcset="assets/images/bride-720.webp?v=16 720w, assets/images/bride-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
                loading="lazy" alt="Chân dung cô dâu Thị Phượng cầm hoa">
         </button>
 
         <button class="album-item reveal" type="button" data-lightbox="groom" aria-label="Xem chân dung chú rể">
-          <img src="assets/images/groom-720.webp?v=5"
-               srcset="assets/images/groom-720.webp?v=5 720w, assets/images/groom-1280.webp?v=5 1280w"
+          <img src="assets/images/groom-720.webp?v=16"
+               srcset="assets/images/groom-720.webp?v=16 720w, assets/images/groom-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
                loading="lazy" alt="Chân dung chú rể Thanh Xuân mặc vest đen">
         </button>
 
         <button class="album-item reveal" type="button" data-lightbox="couple-studio" aria-label="Xem ảnh cưới nền trắng">
-          <img src="assets/images/couple-studio-720.webp?v=5"
-               srcset="assets/images/couple-studio-720.webp?v=5 720w, assets/images/couple-studio-1280.webp?v=5 1280w"
+          <img src="assets/images/couple-studio-720.webp?v=16"
+               srcset="assets/images/couple-studio-720.webp?v=16 720w, assets/images/couple-studio-1280.webp?v=16 1280w"
                sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
                loading="lazy" alt="Ảnh cưới Thanh Xuân và Thị Phượng trên nền trắng">
         </button>
 
-        <button class="album-item reveal" type="button" data-lightbox="hero" aria-label="Xem ảnh toàn thân của cô dâu chú rể">
-          <img src="assets/images/hero-720.webp?v=5"
-               srcset="assets/images/hero-720.webp?v=5 720w, assets/images/hero-1280.webp?v=5 1280w"
-               sizes="(max-width: 760px) 46vw, 360px" width="1280" height="1920"
+        <button class="album-item album-item--wide reveal" type="button" data-lightbox="hero" aria-label="Xem ảnh toàn thân của cô dâu chú rể">
+          <img src="assets/images/hero-720.webp?v=16"
+               srcset="assets/images/hero-720.webp?v=16 720w, assets/images/hero-1280.webp?v=16 1280w"
+               sizes="(max-width: 760px) 92vw, 720px" width="1280" height="1920"
                loading="lazy" alt="Ảnh toàn thân của Thanh Xuân và Thị Phượng">
         </button>
       </div>
@@ -307,15 +396,15 @@
 
     <section class="closing">
       <img
-        src="assets/images/couple-hands-720.webp?v=5"
-        srcset="assets/images/couple-hands-720.webp?v=5 720w, assets/images/couple-hands-1280.webp?v=5 1280w"
+        src="assets/images/couple-garden-720.webp?v=16"
+        srcset="assets/images/couple-garden-720.webp?v=16 720w, assets/images/couple-garden-1280.webp?v=16 1280w"
         sizes="(max-width: 760px) 100vw, 760px"
         width="1280"
         height="1920"
         loading="lazy"
         alt=""
       >
-      <div class="closing__content reveal">
+      <div class="closing__content reveal" data-motion="fade-up">
         <p>Thank you</p>
         <h2>Rất hân hạnh được đón tiếp!</h2>
       </div>
@@ -347,6 +436,96 @@
     <span class="sr-only">Bật nhạc nền</span>
   </button>
   <audio id="weddingMusic" loop preload="none"></audio>
+
+  <dialog
+    class="embed-dialog rsvp-dialog"
+    id="rsvpDialog"
+    aria-labelledby="rsvp-dialog-title"
+    aria-describedby="rsvp-dialog-intro"
+  >
+    <div class="dialog-header">
+      <div>
+        <p class="section-kicker">Phản hồi</p>
+        <h2 id="rsvp-dialog-title">Xác nhận tham dự</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-rsvp-dialog aria-label="Đóng biểu mẫu">×</button>
+    </div>
+
+    <p class="dialog-intro" id="rsvp-dialog-intro">
+      Quý vị vui lòng điền biểu mẫu để hai gia đình chuẩn bị đón tiếp chu đáo.
+    </p>
+
+    <div class="embed-dialog__body">
+      <div class="embed-dialog__loading" id="rsvpLoading" role="status" aria-live="polite">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        Đang tải biểu mẫu xác nhận…
+      </div>
+      <iframe
+        class="embed-dialog__frame"
+        id="rsvpFrame"
+        title="Biểu mẫu xác nhận tham dự đám cưới"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </div>
+
+    <div class="embed-dialog__footer">
+      <a
+        class="button button--secondary"
+        id="rsvpExternalLink"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Mở biểu mẫu toàn màn hình
+      </a>
+      <button class="button button--secondary" type="button" data-close-rsvp-dialog>
+        Đóng
+      </button>
+    </div>
+  </dialog>
+
+  <dialog
+    class="embed-dialog map-dialog"
+    id="mapDialog"
+    aria-labelledby="map-dialog-title"
+    aria-describedby="map-dialog-intro"
+  >
+    <div class="dialog-header">
+      <div>
+        <p class="section-kicker">Địa điểm</p>
+        <h2 id="map-dialog-title" data-venue-name>Tư gia nhà trai</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-map-dialog aria-label="Đóng bản đồ">×</button>
+    </div>
+
+    <p class="dialog-intro" id="map-dialog-intro">
+      346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai
+    </p>
+
+    <div class="embed-dialog__body map-dialog__body">
+      <div class="embed-dialog__loading" id="mapLoading" role="status" aria-live="polite">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        Đang tải bản đồ…
+      </div>
+      <iframe
+        class="embed-dialog__frame map-dialog__frame"
+        id="mapFrame"
+        title="Bản đồ đến tư gia nhà trai"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    <div class="embed-dialog__footer">
+      <a class="button" data-maps-link target="_blank" rel="noopener noreferrer">
+        Mở Google Maps để chỉ đường
+      </a>
+      <button class="button button--secondary" type="button" data-close-map-dialog>
+        Đóng
+      </button>
+    </div>
+  </dialog>
 
   <dialog class="gift-dialog" id="giftDialog" aria-labelledby="gift-title">
     <div class="dialog-header">
@@ -459,7 +638,15 @@
 
   <dialog class="lightbox" id="lightboxDialog" aria-label="Xem ảnh phóng lớn">
     <button class="icon-button lightbox__close" type="button" data-close-lightbox aria-label="Đóng ảnh">×</button>
-    <img id="lightboxImage" src="" width="1280" height="1920" alt="">
+    <button class="lightbox__nav lightbox__nav--prev" type="button" data-lightbox-prev aria-label="Xem ảnh trước">‹</button>
+    <figure class="lightbox__figure">
+      <img id="lightboxImage" width="1280" height="1920" alt="">
+      <figcaption>
+        <span id="lightboxCaption"></span>
+        <span class="lightbox__counter" id="lightboxCounter" aria-live="polite"></span>
+      </figcaption>
+    </figure>
+    <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next aria-label="Xem ảnh tiếp theo">›</button>
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

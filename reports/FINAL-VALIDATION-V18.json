@@ -1,0 +1,318 @@
+{
+  "generatedAtUtc": "2026-07-22T15:06:01.702290+00:00",
+  "buildId": "v18-20260722",
+  "release": "v18",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v17.zip",
+  "verdict": "PASS_RELEASE_CANDIDATE",
+  "skillIntegrity": {
+    "expectedArchives": 13,
+    "priorIntegrityReport": "13/13 PASS",
+    "workflow": "brainstorm → planning → architecture/design → UI/UX → code review → debug → fix/cook → tests → optimization → Fable judge"
+  },
+  "features": {
+    "rsvp": "native dialog + lazy Google Forms iframe + full-screen fallback",
+    "map": "native dialog + lazy Google Maps iframe + external directions",
+    "motion": "local selective keyframes + prefers-reduced-motion",
+    "fonts": "Google Fonts: Be Vietnam Pro, Lora, Dancing Script",
+    "music": {
+      "primary": "assets/audio/music.mp3",
+      "fallback": "Pancake URL supplied by user",
+      "initialAutoplay": false
+    },
+    "sharing": "general URL by default; personalized link copied explicitly",
+    "dataConsistency": "wedding-data.json + sync script + CI gate"
+  },
+  "confirmedFixes": [
+    "RSVP helper scripts now use 10h00, 28/07/2026 and the full address.",
+    "HTML RSVP fallback now shows 28.07.2026.",
+    "Horizontal overflow from left/right motion is clipped at the root.",
+    "The lazy iframe remains renderable behind its loading overlay, avoiding a hidden+lazy deadlock."
+  ],
+  "pendingExternalConfiguration": {
+    "guestNameEntry": "empty; Google Forms name prefill is not active",
+    "googleFormAccess": "must be tested live in an incognito browser",
+    "mapPin": "must be compared with the exact family pin",
+    "icsEndTimes": "not supplied",
+    "remoteMusic": "third-party availability cannot be guaranteed"
+  },
+  "checks": {
+    "consistency": {
+      "command": [
+        "python",
+        "tests/consistency_check.py"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "PASS: wedding data consistency",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "release": {
+      "command": [
+        "python",
+        "tests/verify_release.py"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "PASS: release source checks",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "wishes_contract": {
+      "command": [
+        "node",
+        "tests/contract_check.js"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": ""
+    },
+    "personalization": {
+      "command": [
+        "node",
+        "tests/personalization_check.js"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "PASS: personalization utilities",
+      "stderr": ""
+    },
+    "assets_qr": {
+      "command": [
+        "python",
+        "tests/verify_assets.py"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "PASS: images and QR decode",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "app_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "app.js"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "config_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "config.js"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "guest_utils_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "guest-utils.js"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "browser_test_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "tests/browser_smoke.mjs"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "create-google-forms-rsvp.gs_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "create-google-forms-rsvp.gs"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "update-google-forms-rsvp-contact.gs_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "update-google-forms-rsvp-contact.gs"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "wedding-wishes-webapp.gs_syntax": {
+      "command": [
+        "node",
+        "--check",
+        "wedding-wishes-webapp.gs"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    "browser_smoke_inline": {
+      "command": [
+        "python-playwright",
+        "inline real-source harness"
+      ],
+      "returncode": 0,
+      "pass": true,
+      "stdout": "{\"verdict\": \"PASS\", \"viewports\": [{\"viewport\": [360, 800], \"initial\": {\"build\": \"v18-20260722\", \"guestName\": \"Gia đình cô Lan\", \"deadline\": \"28.07.2026\", \"ceremony\": \"08h30\", \"reception\": \"10h00\", \"audioPaused\": true, \"audioSources\": 2, \"scrollWidth\": 360, \"clientWidth\": 360, \"albumCount\": 9, \"personalizedCopyHidden\": false, \"motionReady\": true, \"rsvpSrc\": null, \"mapSrc\": null}, \"rsvpSrcAfterClick\": \"https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true\", \"mapSrcAfterClick\": \"https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed\", \"wishesRequests\": 1, \"lightboxCounter\": \"2 / 9\"}, {\"viewport\": [390, 844], \"initial\": {\"build\": \"v18-20260722\", \"guestName\": \"Gia đình cô Lan\", \"deadline\": \"28.07.2026\", \"ceremony\": \"08h30\", \"reception\": \"10h00\", \"audioPaused\": true, \"audioSources\": 2, \"scrollWidth\": 390, \"clientWidth\": 390, \"albumCount\": 9, \"personalizedCopyHidden\": false, \"motionReady\": true, \"rsvpSrc\": null, \"mapSrc\": null}, \"rsvpSrcAfterClick\": \"https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true\", \"mapSrcAfterClick\": \"https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed\", \"wishesRequests\": 1, \"lightboxCounter\": \"2 / 9\"}, {\"viewport\": [430, 932], \"initial\": {\"build\": \"v18-20260722\", \"guestName\": \"Gia đình cô Lan\", \"deadline\": \"28.07.2026\", \"ceremony\": \"08h30\", \"reception\": \"10h00\", \"audioPaused\": true, \"audioSources\": 2, \"scrollWidth\": 430, \"clientWidth\": 430, \"albumCount\": 9, \"personalizedCopyHidden\": false, \"motionReady\": true, \"rsvpSrc\": null, \"mapSrc\": null}, \"rsvpSrcAfterClick\": \"https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true\", \"mapSrcAfterClick\": \"https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed\", \"wishesRequests\": 1, \"lightboxCounter\": \"2 / 9\"}, {\"viewport\": [768, 1024], \"initial\": {\"build\": \"v18-20260722\", \"guestName\": \"Gia đình cô Lan\", \"deadline\": \"28.07.2026\", \"ceremony\": \"08h30\", \"reception\": \"10h00\", \"audioPaused\": true, \"audioSources\": 2, \"scrollWidth\": 768, \"clientWidth\": 768, \"albumCount\": 9, \"personalizedCopyHidden\": false, \"motionReady\": true, \"rsvpSrc\": null, \"mapSrc\": null}, \"rsvpSrcAfterClick\": \"https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true\", \"mapSrcAfterClick\": \"https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed\", \"wishesRequests\": 1, \"lightboxCounter\": \"2 / 9\"}, {\"viewport\": [1440, 900], \"initial\": {\"build\": \"v18-20260722\", \"guestName\": \"Gia đình cô Lan\", \"deadline\": \"28.07.2026\", \"ceremony\": \"08h30\", \"reception\": \"10h00\", \"audioPaused\": true, \"audioSources\": 2, \"scrollWidth\": 1440, \"clientWidth\": 1440, \"albumCount\": 9, \"personalizedCopyHidden\": false, \"motionReady\": true, \"rsvpSrc\": null, \"mapSrc\": null}, \"rsvpSrcAfterClick\": \"https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true\", \"mapSrcAfterClick\": \"https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed\", \"wishesRequests\": 1, \"lightboxCounter\": \"2 / 9\"}], \"limitations\": [\"Inline real-source harness used because localhost navigation is blocked.\", \"External Forms/Maps frames were mocked; lazy loading is proven by src assignment timing.\", \"Google Fonts rendered with fallbacks.\", \"Live responder access, exact map pin and physical devices remain external gates.\"]}",
+      "stderr": ""
+    }
+  },
+  "browserSmoke": {
+    "verdict": "PASS",
+    "viewports": [
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "initial": {
+          "build": "v18-20260722",
+          "guestName": "Gia đình cô Lan",
+          "deadline": "28.07.2026",
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "audioSources": 2,
+          "scrollWidth": 360,
+          "clientWidth": 360,
+          "albumCount": 9,
+          "personalizedCopyHidden": false,
+          "motionReady": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "rsvpSrcAfterClick": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true",
+        "mapSrcAfterClick": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed",
+        "wishesRequests": 1,
+        "lightboxCounter": "2 / 9"
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "initial": {
+          "build": "v18-20260722",
+          "guestName": "Gia đình cô Lan",
+          "deadline": "28.07.2026",
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "audioSources": 2,
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "albumCount": 9,
+          "personalizedCopyHidden": false,
+          "motionReady": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "rsvpSrcAfterClick": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true",
+        "mapSrcAfterClick": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed",
+        "wishesRequests": 1,
+        "lightboxCounter": "2 / 9"
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "initial": {
+          "build": "v18-20260722",
+          "guestName": "Gia đình cô Lan",
+          "deadline": "28.07.2026",
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "audioSources": 2,
+          "scrollWidth": 430,
+          "clientWidth": 430,
+          "albumCount": 9,
+          "personalizedCopyHidden": false,
+          "motionReady": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "rsvpSrcAfterClick": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true",
+        "mapSrcAfterClick": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed",
+        "wishesRequests": 1,
+        "lightboxCounter": "2 / 9"
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "initial": {
+          "build": "v18-20260722",
+          "guestName": "Gia đình cô Lan",
+          "deadline": "28.07.2026",
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "audioSources": 2,
+          "scrollWidth": 768,
+          "clientWidth": 768,
+          "albumCount": 9,
+          "personalizedCopyHidden": false,
+          "motionReady": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "rsvpSrcAfterClick": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true",
+        "mapSrcAfterClick": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed",
+        "wishesRequests": 1,
+        "lightboxCounter": "2 / 9"
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "initial": {
+          "build": "v18-20260722",
+          "guestName": "Gia đình cô Lan",
+          "deadline": "28.07.2026",
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "audioSources": 2,
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "albumCount": 9,
+          "personalizedCopyHidden": false,
+          "motionReady": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "rsvpSrcAfterClick": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform?embedded=true",
+        "mapSrcAfterClick": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed",
+        "wishesRequests": 1,
+        "lightboxCounter": "2 / 9"
+      }
+    ],
+    "limitations": [
+      "Inline real-source harness used because localhost navigation is blocked.",
+      "External Forms/Maps frames were mocked; lazy loading is proven by src assignment timing.",
+      "Google Fonts rendered with fallbacks.",
+      "Live responder access, exact map pin and physical devices remain external gates."
+    ]
+  }
+}

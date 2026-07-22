@@ -1,0 +1,139 @@
+{
+  "generatedAtUtc": "2026-07-22T12:00:11.794071+00:00",
+  "buildId": "v17-20260722",
+  "verdict": "PASS",
+  "viewports": [
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "initial": {
+        "build": "v17-20260722",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "ceremony": "08h30",
+        "reception": "10h00",
+        "audioPaused": true,
+        "lightboxDisplay": "none",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+        "albumCount": 9
+      },
+      "wishRequests": 1,
+      "lightboxCounters": [
+        "1 / 9",
+        "2 / 9",
+        "3 / 9"
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "initial": {
+        "build": "v17-20260722",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "ceremony": "08h30",
+        "reception": "10h00",
+        "audioPaused": true,
+        "lightboxDisplay": "none",
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+        "albumCount": 9
+      },
+      "wishRequests": 1,
+      "lightboxCounters": [
+        "1 / 9",
+        "2 / 9",
+        "3 / 9"
+      ]
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "initial": {
+        "build": "v17-20260722",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "ceremony": "08h30",
+        "reception": "10h00",
+        "audioPaused": true,
+        "lightboxDisplay": "none",
+        "scrollWidth": 430,
+        "clientWidth": 430,
+        "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+        "albumCount": 9
+      },
+      "wishRequests": 1,
+      "lightboxCounters": [
+        "1 / 9",
+        "2 / 9",
+        "3 / 9"
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "initial": {
+        "build": "v17-20260722",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "ceremony": "08h30",
+        "reception": "10h00",
+        "audioPaused": true,
+        "lightboxDisplay": "none",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+        "albumCount": 9
+      },
+      "wishRequests": 1,
+      "lightboxCounters": [
+        "1 / 9",
+        "2 / 9",
+        "3 / 9"
+      ]
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "initial": {
+        "build": "v17-20260722",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "ceremony": "08h30",
+        "reception": "10h00",
+        "audioPaused": true,
+        "lightboxDisplay": "none",
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+        "albumCount": 9
+      },
+      "wishRequests": 1,
+      "lightboxCounters": [
+        "1 / 9",
+        "2 / 9",
+        "3 / 9"
+      ]
+    }
+  ],
+  "limitations": [
+    "Google Fonts removed in harness; fallback fonts rendered.",
+    "Apps Script JSONP intercepted with sample approved wish.",
+    "No physical iOS Safari or Android device.",
+    "Web Share UI and Google Forms prefill entry ID not exercised.",
+    "Harness used page.set_content because sandbox navigation is restricted."
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "generatedAtUtc": "2026-07-22T12:04:18.580565+00:00",
+  "buildId": "v17-20260722",
+  "release": "v17",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v16.zip",
+  "verdict": "PASS_READY_FOR_DEPLOYMENT",
+  "skillWorkflow": {
+    "expectedArchives": 13,
+    "integrityFromPriorReport": "13/13 PASS",
+    "matrixFile": "reports/13-SKILL-IMPLEMENTATION-V17.md"
+  },
+  "features": {
+    "personalization": true,
+    "offlineGuestLinkTool": true,
+    "optionalFamilies": true,
+    "rsvpPrefillReady": true,
+    "calendarIcsTwoEvents": true,
+    "nativeShareFallback": true,
+    "timeline": true,
+    "venueActions": true,
+    "lightboxNavigation": true,
+    "ciBrowserAssetsQr": true,
+    "backendCacheFix": true,
+    "initialAutoplayRemoved": true
+  },
+  "optionalConfigPending": {
+    "familyNames": "hidden until supplied",
+    "googleFormGuestNameEntry": "empty",
+    "venueNotes": "empty and hidden",
+    "eventEndTime": "not supplied; ICS omits DTEND"
+  },
+  "checks": {
+    "verify_release": {
+      "command": [
+        "python",
+        "tests/verify_release.py"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: release source checks",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "contract": {
+      "command": [
+        "node",
+        "tests/contract_check.js"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": ""
+    },
+    "personalization": {
+      "command": [
+        "node",
+        "tests/personalization_check.js"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: personalization utilities",
+      "stderr": ""
+    },
+    "assets_qr": {
+      "command": [
+        "python",
+        "tests/verify_assets.py"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: images and QR decode",
+      "stderr": "Spreadsheet runtime warmup failed during python startup\nTraceback (most recent call last):\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py\", line 26, in warm_spreadsheet_runtime_on_startup\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 785, in warm_spreadsheet_runtime\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 720, in _warm_feature_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py\", line 704, in _warm_collaboration_flows\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py\", line 30820, in hydrate_crdt_from_proto\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py\", line 749, in __call__\n  File \"/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py\", line 150, in call\nartifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document."
+    },
+    "node_app": {
+      "command": [
+        "node",
+        "--check",
+        "app.js"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_config": {
+      "command": [
+        "node",
+        "--check",
+        "config.js"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_guest_utils": {
+      "command": [
+        "node",
+        "--check",
+        "guest-utils.js"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_browser_smoke": {
+      "command": [
+        "node",
+        "--check",
+        "tests/browser_smoke.mjs"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_create-google-forms-rsvp.gs": {
+      "command": [
+        "node",
+        "--check",
+        "create-google-forms-rsvp.gs"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_update-google-forms-rsvp-contact.gs": {
+      "command": [
+        "node",
+        "--check",
+        "update-google-forms-rsvp-contact.gs"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "node_wedding-wishes-webapp.gs": {
+      "command": [
+        "node",
+        "--check",
+        "wedding-wishes-webapp.gs"
+      ],
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "staticInspection": {
+    "duplicateIds": [],
+    "missingLocalRefs": [],
+    "cssParseErrors": [],
+    "decodedRasterImages": 30,
+    "imageFailures": [],
+    "unsafePatterns": {
+      "innerHTMLAssignment": 0,
+      "documentWrite": 0,
+      "eval": 0,
+      "newFunction": 0
+    }
+  },
+  "browserSmoke": {
+    "generatedAtUtc": "2026-07-22T12:00:11.794071+00:00",
+    "buildId": "v17-20260722",
+    "verdict": "PASS",
+    "viewports": [
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "initial": {
+          "build": "v17-20260722",
+          "guestName": "Gia đình cô Lan",
+          "familiesHidden": true,
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "lightboxDisplay": "none",
+          "scrollWidth": 360,
+          "clientWidth": 360,
+          "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+          "albumCount": 9
+        },
+        "wishRequests": 1,
+        "lightboxCounters": [
+          "1 / 9",
+          "2 / 9",
+          "3 / 9"
+        ]
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "initial": {
+          "build": "v17-20260722",
+          "guestName": "Gia đình cô Lan",
+          "familiesHidden": true,
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "lightboxDisplay": "none",
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+          "albumCount": 9
+        },
+        "wishRequests": 1,
+        "lightboxCounters": [
+          "1 / 9",
+          "2 / 9",
+          "3 / 9"
+        ]
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "initial": {
+          "build": "v17-20260722",
+          "guestName": "Gia đình cô Lan",
+          "familiesHidden": true,
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "lightboxDisplay": "none",
+          "scrollWidth": 430,
+          "clientWidth": 430,
+          "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+          "albumCount": 9
+        },
+        "wishRequests": 1,
+        "lightboxCounters": [
+          "1 / 9",
+          "2 / 9",
+          "3 / 9"
+        ]
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "initial": {
+          "build": "v17-20260722",
+          "guestName": "Gia đình cô Lan",
+          "familiesHidden": true,
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "lightboxDisplay": "none",
+          "scrollWidth": 768,
+          "clientWidth": 768,
+          "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+          "albumCount": 9
+        },
+        "wishRequests": 1,
+        "lightboxCounters": [
+          "1 / 9",
+          "2 / 9",
+          "3 / 9"
+        ]
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "initial": {
+          "build": "v17-20260722",
+          "guestName": "Gia đình cô Lan",
+          "familiesHidden": true,
+          "ceremony": "08h30",
+          "reception": "10h00",
+          "audioPaused": true,
+          "lightboxDisplay": "none",
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "calendarHref": "assets/calendar/thanh-xuan-thi-phuong.ics",
+          "albumCount": 9
+        },
+        "wishRequests": 1,
+        "lightboxCounters": [
+          "1 / 9",
+          "2 / 9",
+          "3 / 9"
+        ]
+      }
+    ],
+    "limitations": [
+      "Google Fonts removed in harness; fallback fonts rendered.",
+      "Apps Script JSONP intercepted with sample approved wish.",
+      "No physical iOS Safari or Android device.",
+      "Web Share UI and Google Forms prefill entry ID not exercised.",
+      "Harness used page.set_content because sandbox navigation is restricted."
+    ]
+  }
+}

@@ -18,14 +18,14 @@ const RSVP_UPDATE_CONFIG = Object.freeze({
 
   weddingDate: "Thứ Năm, ngày 30/07/2026",
   lunarDate: "Ngày 17 tháng 6 năm Bính Ngọ",
-  guestTime: "08h00",
+  guestTime: "10h00",
   ceremonyTime: "08h30",
 
   venueName: "Tư gia nhà trai",
-  address: "Xã Bình Dương, Tỉnh Gia Lai",
+  address: "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
   mapsUrl: "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6",
 
-  rsvpDeadline: "24/07/2026",
+  rsvpDeadline: "28/07/2026",
 });
 
 

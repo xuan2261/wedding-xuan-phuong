@@ -1,5 +1,61 @@
 # Changelog
 
+## v18 — RSVP popup, bản đồ lazy, motion và dữ liệu nhất quán
+
+- Chuyển Google Forms RSVP từ tab mới sang native dialog.
+- Chỉ tải iframe RSVP sau lần bấm đầu tiên; giữ nút mở toàn màn hình.
+- Thêm Google Maps dialog lazy-load và nút chỉ đường bên ngoài.
+- Đồng bộ 10h00, 28/07/2026 và địa chỉ 346 Nguyễn Huệ trong hai Apps Script.
+- Thêm `tools/wedding-data.json`, script đồng bộ và consistency test.
+- Thêm bộ animation local có reduced-motion; không hotlink Webcake CSS.
+- Giữ Google Fonts hiện tại, không thêm family thứ tư.
+- Giữ MP3 Váy Cưới local làm nguồn chính và URL Pancake làm fallback.
+- Share mặc định dùng URL chung; link cá nhân hóa có nút copy riêng.
+- Mở rộng CSP có giới hạn cho Forms, Maps và nguồn media Pancake.
+- Nâng browser smoke để chứng minh Form/Map/Wishes đều lazy-load.
+
+## v17 — Cá nhân hóa và trải nghiệm khách mời
+
+- Sửa CacheService TTL từ 86400 xuống 21600 giây.
+- Biến cache lời chúc thành best-effort sau khi Sheet đã lưu và xác minh.
+- Bỏ lần thử autoplay khi initial load; nhạc chỉ phát sau thao tác người dùng.
+- Sửa `sizes` của ảnh wide và loại bỏ `src=""` khỏi lightbox.
+- Thêm lời mời theo tên khách bằng URL fragment.
+- Thêm công cụ offline tạo link khách mời.
+- Thêm prefill Google Forms theo entry ID tùy chọn.
+- Thêm timeline Lễ Thành Hôn 08h30 và đón khách 10h00.
+- Thêm file ICS hai sự kiện, chia sẻ native và fallback copy.
+- Thêm khối gia đình tùy chọn và ghi chú đường đi tùy chọn.
+- Nâng cấp lightbox: trước/sau, counter, keyboard và swipe.
+- Bổ sung CI browser smoke, image decode và QR decode.
+- Cập nhật build marker `v17-20260722`.
+
+## v16 — Bộ ảnh mới và ba ảnh bổ sung
+
+- Thay toàn bộ 8 ảnh cũ bằng bản chỉnh mới.
+- Thêm ảnh cảm xúc `DRS06828`.
+- Thêm ảnh ngồi áo dài `DRS07290`.
+- Đổi ảnh kết sang `DRS07446`.
+- Tổ chức album theo nhịp trang trọng → gần gũi → truyền thống → kết cảm xúc.
+- Xuất 22 ảnh WebP responsive.
+- Cập nhật lightbox và cache version.
+- Giữ nguyên RSVP, QR, nhạc, Apps Script và cấu hình production.
+
+## Release v15 — v15-20260722
+
+- Xác nhận giờ đón khách dự tiệc là 10h00; giữ Lễ Thành Hôn lúc 08h30.
+- Đổi nhãn giao diện thành “Đón khách dự tiệc”.
+- Frontend chỉ báo gửi thành công khi `stored === true`.
+- Thêm lỗi rõ ràng khi server phản hồi nhưng chưa xác nhận lưu.
+- Chuẩn hóa backend production thành `tools/wedding-wishes-webapp.gs` version 1.4.0.
+- Đồng bộ WISHES-SETUP, README và tools README.
+- Thêm build marker `v15-20260722` và công cụ kiểm tra trang live.
+- Thêm CSP host hẹp cho subdomain động `*.script.googleusercontent.com`.
+- Thêm cấu hình lazy-load tường minh.
+- Thay hai SVG placeholder bằng SVG nhúng đúng PNG VietQR.
+- Thêm test/CI tái lập và validation v15.
+- Chuyển tài liệu/báo cáo lịch sử sang `docs/history/`.
+
 ## Bản sửa postMessage v13
 
 - Sửa timeout sau khi gửi lời chúc.

@@ -1,0 +1,48 @@
+{
+  "build": {
+    "buildId": "v18-20260722",
+    "release": "v18",
+    "backendVersion": "1.5.0"
+  },
+  "couple": {
+    "groomFullName": "Bùi Thanh Xuân",
+    "groomDisplayName": "Thanh Xuân",
+    "brideFullName": "Trần Thị Phượng",
+    "brideDisplayName": "Thị Phượng"
+  },
+  "event": {
+    "dateIso": "2026-07-30",
+    "isoDateTime": "2026-07-30T08:30:00+07:00",
+    "weekday": "Thứ Năm",
+    "dateDisplay": "30.07.2026",
+    "weddingDateLong": "Thứ Năm, ngày 30/07/2026",
+    "lunarDate": "Ngày 17 tháng 6 năm Bính Ngọ",
+    "ceremonyTime": "08h30",
+    "guestTime": "10h00",
+    "ceremonyLabel": "Lễ Thành Hôn",
+    "receptionLabel": "Đón khách và dùng tiệc",
+    "venueName": "Tư gia nhà trai",
+    "addressLine1": "346 Nguyễn Huệ",
+    "addressLine2": "Xã Bình Dương, Tỉnh Gia Lai",
+    "address": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
+    "mapsUrl": "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6",
+    "mapEmbedUrl": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed"
+  },
+  "rsvp": {
+    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
+    "deadlineDisplay": "28.07.2026",
+    "deadlineSlash": "28/07/2026",
+    "guestNameEntry": "",
+    "formId": "1_ei237lBMBctR5vm971a4GEN5Q2_xmPBr5D1sQSMM4E"
+  },
+  "contact": {
+    "groomPhone": "0374037026",
+    "bridePhone": "0906878461"
+  },
+  "music": {
+    "title": "Váy Cưới — Erik",
+    "local": "assets/audio/music.mp3",
+    "remoteFallback": "https://statics.pancake.vn/web-media-262/80/79/16/63/c3d171f86975dc7197c9c2031c739b0ef172a024b237d6156af08760-w:0-h:0-l:3821592-t:audio/mpeg.mp3",
+    "volume": 0.8
+  }
+}

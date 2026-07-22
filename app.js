@@ -10,6 +10,12 @@
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const guestUtils = window.WEDDING_GUEST_UTILS;
+
+  const guestState = {
+    name: "",
+    isPersonalized: false
+  };
 
   function setText(selector, value) {
     $$(selector).forEach((element) => {
@@ -42,6 +48,281 @@
     setText("[data-invitation-heading-line2]", words.slice(splitAt).join(" "));
   }
 
+
+
+  function setupPersonalization() {
+    const personalization = config.personalization || {};
+    const fallbackName = String(
+      personalization.fallbackName || "Quý vị"
+    ).trim();
+
+    if (!personalization.enabled || !guestUtils) {
+      guestState.name = fallbackName;
+      setText("[data-guest-name]", guestState.name);
+      return;
+    }
+
+    const fromUrl = guestUtils.readGuestName(window.location, {
+      parameter: personalization.parameter,
+      maxLength: personalization.maxLength
+    });
+
+    let fromSession = "";
+
+    if (!fromUrl && personalization.persistSession) {
+      try {
+        fromSession = guestUtils.sanitizeGuestName(
+          window.sessionStorage.getItem(personalization.sessionKey),
+          personalization.maxLength
+        );
+      } catch {
+        // sessionStorage có thể bị chặn trong chế độ riêng tư.
+      }
+    }
+
+    guestState.name = fromUrl || fromSession || fallbackName;
+    guestState.isPersonalized = Boolean(fromUrl || fromSession);
+
+    if (fromUrl && personalization.persistSession) {
+      try {
+        window.sessionStorage.setItem(
+          personalization.sessionKey,
+          fromUrl
+        );
+      } catch {
+        // Không ảnh hưởng đến khả năng hiển thị tên trong lượt truy cập này.
+      }
+    }
+
+    setText("[data-guest-name]", guestState.name);
+  }
+
+  function buildRsvpUrl() {
+    if (!config.rsvp?.url) return "";
+
+    if (!guestUtils) {
+      return config.rsvp.url;
+    }
+
+    return guestUtils.buildRsvpUrl(
+      config.rsvp.url,
+      guestState.isPersonalized ? guestState.name : "",
+      config.rsvp.guestNameEntry
+    );
+  }
+
+  function buildEmbeddedRsvpUrl() {
+    const regularUrl = buildRsvpUrl();
+    if (!regularUrl) return "";
+
+    try {
+      const url = new URL(regularUrl, window.location.href);
+      if (config.rsvp?.embedded !== false) {
+        url.searchParams.set("embedded", "true");
+      }
+      return url.toString();
+    } catch {
+      return regularUrl;
+    }
+  }
+
+  function setupFamilies() {
+    const section = $("#families");
+    const families = config.families;
+
+    if (!section || !families?.enabled) {
+      if (section) section.hidden = true;
+      return;
+    }
+
+    const values = {
+      "groom-father": families.groom?.father,
+      "groom-mother": families.groom?.mother,
+      "groom-location": families.groom?.location,
+      "bride-father": families.bride?.father,
+      "bride-mother": families.bride?.mother,
+      "bride-location": families.bride?.location
+    };
+
+    let hasAnyValue = false;
+
+    Object.entries(values).forEach(([key, rawValue]) => {
+      const element = document.querySelector(
+        `[data-family-field="${key}"]`
+      );
+      const value = String(rawValue || "").trim();
+
+      if (!element || !value) return;
+
+      hasAnyValue = true;
+      element.hidden = false;
+
+      const detail = $("dd", element);
+      if (detail) {
+        detail.textContent = value;
+      } else {
+        element.textContent = value;
+      }
+    });
+
+    section.hidden = !hasAnyValue;
+  }
+
+  function setupEventActions() {
+    const event = config.event;
+    const copyAddressButton = $("#copyAddressButton");
+    const directionContactButton = $("#directionContactButton");
+    const venueNotes = $("#venueNotes");
+
+    const fullAddress = [
+      event.addressLine1,
+      event.addressLine2
+    ].filter(Boolean).join(", ");
+
+    copyAddressButton?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(fullAddress);
+        showToast("Đã sao chép địa chỉ.");
+      } catch {
+        window.prompt("Sao chép địa chỉ:", fullAddress);
+      }
+    });
+
+    if (directionContactButton && config.contact?.groomPhone) {
+      directionContactButton.href =
+        `tel:${String(config.contact.groomPhone).replace(/\s+/g, "")}`;
+    } else if (directionContactButton) {
+      directionContactButton.hidden = true;
+    }
+
+    const noteMap = {
+      landmark: event.landmarkNote,
+      entrance: event.entranceNote,
+      parking: event.parkingNote
+    };
+
+    let hasNote = false;
+    Object.entries(noteMap).forEach(([key, rawValue]) => {
+      const element = document.querySelector(
+        `[data-venue-note="${key}"]`
+      );
+      const value = String(rawValue || "").trim();
+
+      if (!element || !value) return;
+      hasNote = true;
+      element.hidden = false;
+      element.textContent = value;
+    });
+
+    if (venueNotes) venueNotes.hidden = !hasNote;
+  }
+
+  function setupShareAndCalendar() {
+    const shareButton = $("#shareButton");
+    const personalizedCopyButton = $("#copyPersonalizedLinkButton");
+    const calendarButton = $("#calendarButton");
+    const personalization = config.personalization || {};
+
+    if (calendarButton) {
+      if (config.calendar?.enabled && config.calendar.file) {
+        calendarButton.href = config.calendar.file;
+      } else {
+        calendarButton.hidden = true;
+      }
+    }
+
+    const getGeneralShareUrl = () => {
+      try {
+        const url = new URL(
+          config.site?.domain || window.location.href,
+          window.location.href
+        );
+        url.hash = "";
+        return url.toString();
+      } catch {
+        return String(config.site?.domain || window.location.href).split("#")[0];
+      }
+    };
+
+    const getPersonalizedShareUrl = () => {
+      if (!guestUtils || !guestState.isPersonalized) {
+        return getGeneralShareUrl();
+      }
+
+      return guestUtils.buildPersonalizedUrl(
+        getGeneralShareUrl(),
+        guestState.name,
+        personalization.parameter
+      );
+    };
+
+    if (personalizedCopyButton) {
+      const personalizedCopyEnabled =
+        config.sharing?.personalizedCopyEnabled !== false;
+
+      personalizedCopyButton.hidden =
+        !personalizedCopyEnabled || !guestState.isPersonalized;
+
+      personalizedCopyButton.addEventListener("click", async () => {
+        const url = getPersonalizedShareUrl();
+
+        try {
+          await navigator.clipboard.writeText(url);
+          showToast("Đã sao chép link có tên khách mời.");
+        } catch {
+          window.prompt("Sao chép link có tên khách mời:", url);
+        }
+      });
+    }
+
+    if (!shareButton) return;
+
+    if (!config.sharing?.enabled) {
+      shareButton.hidden = true;
+      return;
+    }
+
+    shareButton.addEventListener("click", async () => {
+      const shouldSharePersonalized =
+        config.sharing.sharePersonalizedByDefault === true &&
+        guestState.isPersonalized;
+      const shareUrl = shouldSharePersonalized
+        ? getPersonalizedShareUrl()
+        : getGeneralShareUrl();
+
+      const shareData = {
+        title:
+          config.sharing.title ||
+          document.title,
+        text:
+          config.sharing.text ||
+          "Trân trọng kính mời Quý vị đến chung vui.",
+        url: shareUrl
+      };
+
+      try {
+        if (
+          typeof navigator.share === "function" &&
+          (!navigator.canShare || navigator.canShare(shareData))
+        ) {
+          await navigator.share(shareData);
+          return;
+        }
+
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("Đã sao chép đường dẫn thiệp chung.");
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          showToast("Đã sao chép đường dẫn thiệp chung.");
+        } catch {
+          window.prompt("Sao chép đường dẫn thiệp chung:", shareUrl);
+        }
+      }
+    });
+  }
 
   function wishesAreReady() {
     const wishes = config.wishes;
@@ -83,6 +364,10 @@
     setText("[data-weekday]", event.weekday);
     setText("[data-guest-time]", event.guestTime);
     setText("[data-ceremony-time]", event.ceremonyTime);
+    setText("[data-ceremony-label]", event.ceremonyLabel);
+    setText("[data-ceremony-note]", event.ceremonyNote);
+    setText("[data-reception-label]", event.receptionLabel);
+    setText("[data-reception-note]", event.receptionNote);
     setText("[data-lunar-date]", event.lunarDate);
     setText("[data-venue-name]", event.venueName);
     setText("[data-address-line1]", event.addressLine1);
@@ -93,8 +378,9 @@
     setText("[data-rsvp-deadline]", rsvp.deadline);
     setText("[data-footer]", site.footer);
 
-    const mapsLink = $("[data-maps-link]");
-    mapsLink.href = event.mapsUrl;
+    $$("[data-maps-link]").forEach((link) => {
+      link.href = event.mapsUrl;
+    });
 
     const rsvpButton = $("#rsvpButton");
     const rsvpNote = $("#rsvpNote");
@@ -109,35 +395,58 @@
     wishesSection.hidden = !wishesReady;
 
     if (rsvp.url) {
-      rsvpButton.href = rsvp.url;
+      rsvpButton.disabled = false;
       rsvpButton.removeAttribute("aria-disabled");
       rsvpButton.textContent = "Xác nhận tham dự";
     } else {
-      rsvpButton.removeAttribute("target");
+      rsvpButton.disabled = true;
       rsvpButton.setAttribute("aria-disabled", "true");
       rsvpButton.textContent = "RSVP sẽ cập nhật";
       rsvpNote.hidden = false;
-      rsvpButton.addEventListener("click", (event) => {
-        event.preventDefault();
-        showToast("Chưa có link Google Forms. Hãy cập nhật trong config.js.");
-      });
     }
   }
 
   function setupReveal() {
+    const motion = config.motion || {};
     const elements = $$(".reveal");
+    const loadElements = $$(".motion-load");
+    const reduceMotion =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      elements.forEach((element) => element.classList.add("is-visible"));
+    if (!motion.enabled || reduceMotion) {
+      document.documentElement.classList.add("motion-ready");
+      [...elements, ...loadElements].forEach((element) => {
+        element.classList.add("is-visible");
+      });
       return;
     }
+
+    document.documentElement.classList.add("motion-ready");
+
+    [...elements, ...loadElements].forEach((element, index) => {
+      const explicit = Number(element.dataset.motionDelay);
+      const delay = Number.isFinite(explicit)
+        ? explicit
+        : Math.min(index * Number(motion.staggerMs || 70), 350);
+      element.style.setProperty("--motion-delay", `${delay}ms`);
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        loadElements.forEach((element) => {
+          element.classList.add("is-visible");
+        });
+      });
+    });
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
+          if (motion.revealOnce !== false) {
+            observer.unobserve(entry.target);
+          }
         });
       },
       { threshold: 0.12, rootMargin: "0px 0px -5% 0px" }
@@ -507,6 +816,14 @@
       openedAt.value = String(Date.now());
       requestId.value = "";
       setWishFormStatus("");
+
+      if (
+        guestState.isPersonalized &&
+        !displayName.value.trim()
+      ) {
+        displayName.value = guestState.name;
+      }
+
       dialog.showModal();
       window.setTimeout(() => displayName.focus(), 0);
     };
@@ -650,10 +967,10 @@
       wishState.submitting = false;
       submitButton.disabled = false;
 
-      if (payload.ok) {
+      if (payload.ok && payload.stored === true) {
         rememberWishSubmission();
         setWishFormStatus(
-          "Cảm ơn Quý vị! Lời chúc đã được gửi và sẽ xuất hiện sau khi được hai gia đình duyệt.",
+          "Cảm ơn Quý vị! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt.",
           "success"
         );
         form.reset();
@@ -662,6 +979,15 @@
         openedAt.value = String(Date.now());
         requestId.value = "";
         updateCounter();
+        return;
+      }
+
+      if (payload.ok) {
+        setWishFormStatus(
+          payload.message ||
+            "Máy chủ đã phản hồi nhưng chưa xác nhận lưu lời chúc. Vui lòng thử lại sau.",
+          "error"
+        );
         return;
       }
 
@@ -676,6 +1002,96 @@
       "Những lời chúc sẽ được tải khi Quý vị cuộn đến gần khu vực này."
     );
     setupWishLazyLoading(wishesSection);
+  }
+
+  function setupRsvpDialog() {
+    const trigger = $("#rsvpButton");
+    const dialog = $("#rsvpDialog");
+    const frame = $("#rsvpFrame");
+    const loading = $("#rsvpLoading");
+    const externalLink = $("#rsvpExternalLink");
+    const closeButtons = $$("[data-close-rsvp-dialog]", dialog);
+
+    if (!trigger || !dialog || !frame || !config.rsvp?.url) return;
+
+    let loaded = false;
+
+    const close = () => {
+      dialog.close();
+      trigger.focus();
+    };
+
+    trigger.addEventListener("click", () => {
+      const regularUrl = buildRsvpUrl();
+      const embeddedUrl = buildEmbeddedRsvpUrl();
+
+      externalLink.href = regularUrl;
+
+      if (!loaded) {
+        loading.hidden = false;
+        frame.src = embeddedUrl;
+        loaded = true;
+      }
+
+      dialog.showModal();
+    });
+
+    frame.addEventListener("load", () => {
+      loading.hidden = true;
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", close);
+    });
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) close();
+    });
+  }
+
+  function setupMapDialog() {
+    const trigger = $("#mapButton");
+    const dialog = $("#mapDialog");
+    const frame = $("#mapFrame");
+    const loading = $("#mapLoading");
+    const closeButtons = $$("[data-close-map-dialog]", dialog);
+    const embedUrl = String(config.event?.mapEmbedUrl || "").trim();
+
+    if (!trigger || !dialog || !frame) return;
+
+    if (!embedUrl) {
+      trigger.hidden = true;
+      return;
+    }
+
+    let loaded = false;
+
+    const close = () => {
+      dialog.close();
+      trigger.focus();
+    };
+
+    trigger.addEventListener("click", () => {
+      if (!loaded) {
+        loading.hidden = false;
+        frame.src = embedUrl;
+        loaded = true;
+      }
+
+      dialog.showModal();
+    });
+
+    frame.addEventListener("load", () => {
+      loading.hidden = true;
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", close);
+    });
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) close();
+    });
   }
 
   function setupGiftDialog() {
@@ -738,21 +1154,103 @@
   function setupLightbox() {
     const dialog = $("#lightboxDialog");
     const image = $("#lightboxImage");
+    const caption = $("#lightboxCaption");
+    const counter = $("#lightboxCounter");
     const closeButton = $("[data-close-lightbox]", dialog);
+    const previousButton = $("[data-lightbox-prev]", dialog);
+    const nextButton = $("[data-lightbox-next]", dialog);
+    const items = $$("[data-lightbox]");
+    let currentIndex = -1;
+    let touchStartX = null;
 
-    $$("[data-lightbox]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const key = button.dataset.lightbox;
-        const sourceImage = $("img", button);
-        image.src = `assets/images/${key}-1280.webp?v=5`;
-        image.alt = sourceImage.alt;
-        dialog.showModal();
-      });
+    const normalizeIndex = (index) =>
+      (index + items.length) % items.length;
+
+    const preloadNext = (index) => {
+      if (items.length < 2) return;
+
+      const nextIndex = normalizeIndex(index + 1);
+      const key = items[nextIndex].dataset.lightbox;
+      const preload = new Image();
+      preload.src = `assets/images/${key}-1280.webp?v=16`;
+    };
+
+    const render = (index) => {
+      currentIndex = normalizeIndex(index);
+      const button = items[currentIndex];
+      const key = button.dataset.lightbox;
+      const sourceImage = $("img", button);
+
+      image.src = `assets/images/${key}-1280.webp?v=16`;
+      image.alt = sourceImage.alt;
+      caption.textContent = sourceImage.alt;
+      counter.textContent = `${currentIndex + 1} / ${items.length}`;
+      preloadNext(currentIndex);
+    };
+
+    const open = (index) => {
+      render(index);
+      dialog.showModal();
+    };
+
+    items.forEach((button, index) => {
+      button.addEventListener("click", () => open(index));
+    });
+
+    previousButton.addEventListener("click", () => {
+      render(currentIndex - 1);
+    });
+
+    nextButton.addEventListener("click", () => {
+      render(currentIndex + 1);
     });
 
     closeButton.addEventListener("click", () => dialog.close());
+
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        render(currentIndex - 1);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        render(currentIndex + 1);
+      }
+    });
+
+    dialog.addEventListener(
+      "touchstart",
+      (event) => {
+        touchStartX = event.changedTouches[0]?.clientX ?? null;
+      },
+      { passive: true }
+    );
+
+    dialog.addEventListener(
+      "touchend",
+      (event) => {
+        if (touchStartX === null) return;
+
+        const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
+        const distance = touchEndX - touchStartX;
+        touchStartX = null;
+
+        if (Math.abs(distance) < 45) return;
+        render(currentIndex + (distance < 0 ? 1 : -1));
+      },
+      { passive: true }
+    );
+
+    dialog.addEventListener("close", () => {
+      image.removeAttribute("src");
+      caption.textContent = "";
+      counter.textContent = "";
+      currentIndex = -1;
     });
   }
 
@@ -768,7 +1266,30 @@
     if (!music.enabled) return;
 
     button.hidden = false;
-    audio.src = music.file;
+
+    const configuredSources = Array.isArray(music.sources)
+      ? music.sources.filter((source) => source?.src)
+      : music.file
+        ? [{ src: music.file, type: "audio/mpeg" }]
+        : [];
+
+    if (configuredSources.length === 0) {
+      button.hidden = true;
+      return;
+    }
+
+    audio.replaceChildren(
+      ...configuredSources.map((sourceConfig) => {
+        const source = document.createElement("source");
+        source.src = sourceConfig.src;
+        source.type = sourceConfig.type || "audio/mpeg";
+        if (sourceConfig.role) {
+          source.dataset.role = sourceConfig.role;
+        }
+        return source;
+      })
+    );
+
     audio.setAttribute("aria-label", music.title);
 
     // Âm lượng mặc định vừa phải. Có thể đặt music.volume trong config.js.
@@ -802,7 +1323,7 @@
         // NotAllowedError thường là do chính sách autoplay của trình duyệt.
         if (!silent && error?.name !== "NotAllowedError") {
           showToast(
-            "Không phát được nhạc. Hãy kiểm tra assets/audio/music.mp3."
+            "Không phát được nhạc. Vui lòng thử lại hoặc kiểm tra kết nối."
           );
         }
 
@@ -837,10 +1358,6 @@
     });
 
     syncMusicButton();
-
-    // Thử autoplay trên các trình duyệt/tài khoản đã cấp quyền trước đó.
-    // Nếu bị chặn, code sẽ im lặng chờ khách bấm "Mở thiệp".
-    void playMusic({ silent: true });
   }
 
   let toastTimer;
@@ -855,7 +1372,13 @@
     }, 2600);
   }
 
+  setupPersonalization();
   applyConfig();
+  setupFamilies();
+  setupEventActions();
+  setupShareAndCalendar();
+  setupRsvpDialog();
+  setupMapDialog();
   setupReveal();
   setupCountdown();
   setupGiftDialog();
