@@ -14,7 +14,7 @@ window.WEDDING_CONFIG = {
     isoDateTime: "2026-07-30T08:30:00+07:00",
     weekday: "Thứ Năm",
     dateDisplay: "30.07.2026",
-    guestTime: "08h00", // Dự kiến: đón khách trước giờ làm lễ 30 phút
+    guestTime: "10h00", // Dự kiến: đón khách trước giờ làm lễ 30 phút
     ceremonyTime: "08h30",
     lunarDate: "Ngày 17 tháng 6 năm Bính Ngọ",
     venueName: "Tư gia nhà trai",
@@ -36,7 +36,7 @@ window.WEDDING_CONFIG = {
 
   rsvp: {
     url: "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
-    deadline: "24.07.2026"
+    deadline: "28.07.2026"
   },
 
   gifts: [
@@ -44,14 +44,14 @@ window.WEDDING_CONFIG = {
       label: "Mừng cưới nhà trai",
       accountName: "BÙI THANH XUÂN",
       bankName: "MB Bank",
-      accountNumber: "11111111",
+      accountNumber: "0374037026",
       qrImage: "assets/qr/qr-nha-trai.svg"
     },
     {
       label: "Mừng cưới nhà gái",
       accountName: "TRẦN THỊ PHƯỢNG",
       bankName: "SHB Bank",
-      accountNumber: "222222",
+      accountNumber: "0976699400",
       qrImage: "assets/qr/qr-nha-gai.svg"
     }
   ],
@@ -60,8 +60,8 @@ window.WEDDING_CONFIG = {
     // Sau khi deploy tools/wedding-wishes-webapp.gs:
     // 1) dán URL kết thúc bằng /exec vào apiUrl
     // 2) đổi enabled thành true
-    enabled: false,
-    apiUrl: "",
+    enabled: true,
+    apiUrl: "https://script.google.com/macros/s/AKfycbzQN36EPuVLINaK4FPeQzJYFqf-iqob_FN5Ov0eUMmMZ2Yuxbw8YiW8L64pT3AjFT5o/exec",
     initialDisplayLimit: 6,
     pageSize: 6,
     maxNameLength: 50,
@@ -75,8 +75,8 @@ window.WEDDING_CONFIG = {
   music: {
     enabled: true, // Giữ file assets/audio/music.mp3 hiện có trên GitHub
     file: "assets/audio/music.mp3",
-    title: "Ngày Đầu Tiên — Đức Phúc",
-    volume: 0.72
+    title: "Váy Cưới — Erik",
+    volume: 0.8
   },
 
   site: {
