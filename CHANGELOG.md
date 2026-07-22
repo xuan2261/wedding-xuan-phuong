@@ -1,5 +1,52 @@
 # Changelog
 
+## Bản Sổ lời chúc v10
+
+- Thêm guestbook có kiểm duyệt bằng Apps Script + Google Sheet.
+- Thêm nút và dialog Gửi lời chúc.
+- Thêm section Những lời chúc yêu thương.
+- Chỉ hiển thị hàng `approved`.
+- Thêm honeypot, consent, rate limit, duplicate check và formula-injection guard.
+- Dùng JSONP approved-only và form POST vào iframe.
+- Đổi mừng cưới thành hành động phụ.
+- Tách lời nhắn RSVP thành lời nhắn riêng.
+- Cập nhật CSP và cache version.
+- Thêm hướng dẫn deploy, security review và skill workflow.
+
+## Bản cách xưng hô v9
+
+- Website đổi cách gọi khách mời thành “Quý vị”.
+- Lời ngỏ dùng tên riêng và “hai gia đình” thay cho “chúng tôi”.
+- Đổi “Chúng tôi” thành “Đôi uyên ương”.
+- Đổi tiêu đề sự kiện thành “Hân hạnh đón tiếp Quý vị”.
+- Đổi tiêu đề RSVP thành “Sự hiện diện của Quý vị là niềm vui quý giá”.
+- Cập nhật Open Graph và Twitter description.
+- Google Forms dùng “Quý khách” nhất quán.
+- Script cập nhật Form hiện có sửa cả câu hỏi và phần trợ giúp.
+- Tăng cache version `config.js` lên 1.8.
+
+## Bản hero v8
+
+- Tách tên chú rể và cô dâu thành hai cụm hai dòng ở hai bên ảnh hero.
+- Giữ ký tự theo hướng ngang; không dùng writing-mode dọc.
+- Giữ vùng trung tâm thông thoáng để không che khuôn mặt.
+- Cân lại gradient nền, ngày cưới và nút Mở thiệp.
+- Ép tiêu đề lời mời thành `Trân trọng` / `kính mời`.
+- Giảm line-height đoạn lời mời và tinh chỉnh chữ ký.
+- Bổ sung cấu trúc H1 thân thiện với trình đọc màn hình.
+
+## Bản review v7
+
+- Thêm Be Vietnam Pro, Lora và Dancing Script với `display=swap`.
+- Cải thiện line-height, font-weight và độ tương phản tiếng Việt.
+- Thêm `[hidden] { display:none !important; }`.
+- Sửa icon nhạc bằng SVG và đồng bộ play/pause.
+- Phát nhạc sau click “Mở thiệp” nếu autoplay bị chặn.
+- Ẩn quà mừng khi số tài khoản/QR còn placeholder.
+- Sửa tràn ngang ở phần lời mời trên mobile.
+- Cập nhật CSP, Open Graph URL và Twitter image.
+- Thêm báo cáo review, font và test.
+
 ## Bản ảnh mới v5
 
 - Thay toàn bộ 8 ảnh bằng các bản JPG đã chỉnh sửa mới.

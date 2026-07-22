@@ -11,7 +11,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self'; connect-src 'self'; frame-src https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action https://script.google.com https://script.googleusercontent.com; upgrade-insecure-requests">
 
   <title>Lễ Thành Hôn · Thanh Xuân & Thị Phượng</title>
 
@@ -39,10 +39,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="styles.css?v=1.5">
+  <link rel="stylesheet" href="styles.css?v=1.6">
 
-  <script src="config.js?v=1.8" defer></script>
-  <script src="app.js?v=1.6" defer></script>
+  <script src="config.js?v=1.9" defer></script>
+  <script src="app.js?v=1.7" defer></script>
 </head>
 
 <body>
@@ -207,10 +207,13 @@
         <a class="button" id="rsvpButton" href="#" target="_blank" rel="noopener noreferrer">
           Xác nhận tham dự
         </a>
-        <button class="button button--secondary" type="button" id="giftButton">
-          Gửi quà mừng
+        <button class="button button--secondary" type="button" id="wishButton" hidden>
+          Gửi lời chúc
         </button>
       </div>
+      <button class="actions__gift-link" type="button" id="giftButton" hidden>
+        Thông tin mừng cưới dành cho khách ở xa
+      </button>
       <p class="actions__note" id="rsvpNote" hidden>Link xác nhận tham dự sẽ được cập nhật sau.</p>
     </section>
 
@@ -277,6 +280,28 @@
       </div>
     </section>
 
+    <section class="section wishes" id="wishes" aria-labelledby="wishes-title" hidden>
+      <p class="section-kicker reveal">Yêu thương gửi lại</p>
+      <h2 id="wishes-title" class="reveal">Những lời chúc yêu thương</h2>
+      <p class="wishes__intro reveal">
+        Mỗi lời chúc là một kỷ niệm đẹp mà Thanh Xuân, Thị Phượng và hai gia đình luôn trân quý.
+      </p>
+
+      <div class="wishes-grid" id="wishesGrid" aria-live="off"></div>
+      <p class="wishes__status" id="wishesStatus" role="status" aria-live="polite">
+        Đang tải những lời chúc đã được duyệt…
+      </p>
+
+      <div class="wishes__controls reveal">
+        <button class="button button--secondary" type="button" id="wishesLoadMore" hidden>
+          Xem thêm lời chúc
+        </button>
+        <button class="button" type="button" id="wishesSectionButton">
+          Gửi lời chúc
+        </button>
+      </div>
+    </section>
+
     <section class="closing">
       <img
         src="assets/images/couple-hands-720.webp?v=5"
@@ -323,14 +348,111 @@
   <dialog class="gift-dialog" id="giftDialog" aria-labelledby="gift-title">
     <div class="dialog-header">
       <div>
-        <p class="section-kicker">Gửi lời chúc</p>
-        <h2 id="gift-title">Mừng cưới</h2>
+        <p class="section-kicker">Khách ở xa</p>
+        <h2 id="gift-title">Thông tin mừng cưới</h2>
       </div>
       <button class="icon-button" type="button" data-close-dialog aria-label="Đóng cửa sổ">×</button>
     </div>
     <p class="dialog-intro">Thông tin mừng cưới dành cho khách ở xa.</p>
     <div class="gift-grid" id="giftGrid"></div>
   </dialog>
+
+
+  <dialog class="wish-dialog" id="wishDialog" aria-labelledby="wish-dialog-title" aria-describedby="wish-dialog-intro">
+    <div class="dialog-header">
+      <div>
+        <p class="section-kicker">Sổ lưu niệm</p>
+        <h2 id="wish-dialog-title">Gửi lời chúc đến đôi uyên ương</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-wish-dialog aria-label="Đóng cửa sổ">×</button>
+    </div>
+
+    <p class="dialog-intro" id="wish-dialog-intro">
+      Lời chúc sẽ được lưu ở trạng thái chờ duyệt và chỉ xuất hiện công khai sau khi được hai gia đình duyệt.
+    </p>
+
+    <form class="wish-form" id="wishForm" method="post" target="wishSubmitFrame" novalidate>
+      <input type="hidden" name="action" value="submit">
+      <input type="hidden" name="clientKey" id="wishClientKey">
+      <input type="hidden" name="openedAt" id="wishOpenedAt">
+      <input type="hidden" name="requestId" id="wishRequestId">
+      <input type="hidden" name="siteOrigin" id="wishSiteOrigin">
+
+      <div class="form-field">
+        <label for="wishDisplayName">Tên hiển thị <span aria-hidden="true">*</span></label>
+        <input
+          id="wishDisplayName"
+          name="displayName"
+          type="text"
+          minlength="2"
+          maxlength="50"
+          autocomplete="name"
+          required
+        >
+        <small>Ví dụ: Gia đình cô Lan, Anh Minh, Nhóm bạn đại học…</small>
+      </div>
+
+      <div class="form-field">
+        <label for="wishRelationship">Mối quan hệ <span class="form-optional">(không bắt buộc)</span></label>
+        <input
+          id="wishRelationship"
+          name="relationship"
+          type="text"
+          maxlength="40"
+          autocomplete="off"
+          placeholder="Ví dụ: Bạn của chú rể"
+        >
+      </div>
+
+      <div class="form-field">
+        <div class="form-field__heading">
+          <label for="wishMessage">Lời chúc <span aria-hidden="true">*</span></label>
+          <span class="form-counter" id="wishMessageCount">0/280</span>
+        </div>
+        <textarea
+          id="wishMessage"
+          name="message"
+          rows="5"
+          minlength="5"
+          maxlength="280"
+          required
+          placeholder="Gửi đôi lời yêu thương đến Thanh Xuân và Thị Phượng…"
+        ></textarea>
+      </div>
+
+      <div class="form-honeypot" aria-hidden="true">
+        <label for="wishWebsite">Không điền trường này</label>
+        <input id="wishWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <label class="form-consent">
+        <input id="wishConsent" name="consent" type="checkbox" value="yes" required>
+        <span>
+          Tôi đồng ý để tên hiển thị và lời chúc có thể xuất hiện công khai trên website sau khi được duyệt.
+        </span>
+      </label>
+
+      <p class="form-status" id="wishFormStatus" role="status" aria-live="polite"></p>
+
+      <div class="wish-form__actions">
+        <button class="button" type="submit" id="wishSubmitButton">
+          Gửi lời chúc
+        </button>
+        <button class="button button--secondary" type="button" data-close-wish-dialog>
+          Để sau
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <iframe
+    class="wish-submit-frame"
+    id="wishSubmitFrame"
+    name="wishSubmitFrame"
+    title="Kết quả gửi lời chúc"
+    aria-hidden="true"
+    tabindex="-1"
+  ></iframe>
 
   <dialog class="lightbox" id="lightboxDialog" aria-label="Xem ảnh phóng lớn">
     <button class="icon-button lightbox__close" type="button" data-close-lightbox aria-label="Đóng ảnh">×</button>

@@ -1,0 +1,96 @@
+{
+  "generated_at_utc": "2026-07-21T11:53:36.279544+00:00",
+  "source_version": "v8",
+  "verdict": "PASS_WITH_EXPLICIT_EXTERNAL_CAVEATS",
+  "checks": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/create-google-forms-rsvp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "markers": {
+      "html_lang_vi": true,
+      "single_h1": true,
+      "no_duplicate_ids": true,
+      "hero_accessible_text": true,
+      "two_visual_names_hidden": true,
+      "invitation_two_lines": true,
+      "no_image_issues": true,
+      "safe_blank_links": true,
+      "css_parse_pass": true,
+      "hero_grid_present": true,
+      "no_vertical_writing_mode": true,
+      "split_display_name": true,
+      "set_hero_names": true,
+      "balanced_heading": true,
+      "breakpoint_460": true,
+      "breakpoint_350": true,
+      "invitation_line_height": true
+    },
+    "duplicate_ids": [],
+    "image_issues": [],
+    "target_blank_issues": [],
+    "css_parse_errors": [],
+    "missing_local_references": []
+  },
+  "responsive_layout": [
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "horizontal_overflow": false,
+      "all_key_elements_inside_viewport": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "horizontal_overflow": false,
+      "all_key_elements_inside_viewport": true
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "horizontal_overflow": false,
+      "all_key_elements_inside_viewport": true
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "horizontal_overflow": false,
+      "all_key_elements_inside_viewport": true
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "horizontal_overflow": false,
+      "all_key_elements_inside_viewport": true
+    }
+  ],
+  "caveats": [
+    "Google Fonts could not be fetched in the sandbox.",
+    "Preview uses a local fallback font.",
+    "Lighthouse was not run against production.",
+    "Real iOS Safari and Android Chrome were unavailable.",
+    "The ZIP does not redistribute assets/audio/music.mp3."
+  ]
+}

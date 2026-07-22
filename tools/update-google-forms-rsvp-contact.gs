@@ -103,7 +103,11 @@ function updateGuestFacingWording_(form) {
     "Cảm ơn bạn đã phản hồi":
       "Cảm ơn Quý khách đã phản hồi",
     "Bạn có lời nhắn nào dành cho cô dâu và chú rể không?":
-      "Quý khách có lời nhắn nào dành cho cô dâu và chú rể không?",
+      "Lời nhắn riêng dành cho cô dâu và chú rể",
+    "Quý khách có lời nhắn nào dành cho cô dâu và chú rể không?":
+      "Lời nhắn riêng dành cho cô dâu và chú rể",
+    "Lời nhắn dành cho cô dâu và chú rể":
+      "Lời nhắn riêng dành cho cô dâu và chú rể",
   });
 
   const helpTextUpdates = Object.freeze({
@@ -111,6 +115,8 @@ function updateGuestFacingWording_(form) {
       "Quý khách vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.",
     "Dù không thể hiện diện, tình cảm và lời chúc của bạn vẫn rất quý giá đối với chúng tôi.":
       "Dù không thể hiện diện, tình cảm và lời chúc của Quý khách vẫn là niềm trân quý đối với hai gia đình.",
+    "Nội dung này không hiển thị công khai trên website.":
+      "Nội dung này không hiển thị công khai trên website.",
   });
 
   form.getItems().forEach((item) => {
@@ -123,6 +129,10 @@ function updateGuestFacingWording_(form) {
 
     if (helpTextUpdates[currentHelpText]) {
       item.setHelpText(helpTextUpdates[currentHelpText]);
+    }
+
+    if (item.getTitle() === "Lời nhắn riêng dành cho cô dâu và chú rể") {
+      item.setHelpText("Nội dung này không hiển thị công khai trên website.");
     }
 
     // Câu hỏi phân nhóm khách không dùng điều hướng theo câu trả lời.

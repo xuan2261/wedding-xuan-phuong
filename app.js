@@ -42,6 +42,16 @@
     setText("[data-invitation-heading-line2]", words.slice(splitAt).join(" "));
   }
 
+
+  function wishesAreReady() {
+    const wishes = config.wishes;
+    if (!wishes || !wishes.enabled) return false;
+
+    return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec(?:\?.*)?$/.test(
+      String(wishes.apiUrl || "").trim()
+    );
+  }
+
   function giftsAreReady() {
     if (!Array.isArray(config.gifts) || config.gifts.length === 0) return false;
 
@@ -89,10 +99,14 @@
     const rsvpButton = $("#rsvpButton");
     const rsvpNote = $("#rsvpNote");
     const giftButton = $("#giftButton");
+    const wishButton = $("#wishButton");
+    const wishesSection = $("#wishes");
 
-    if (!giftsAreReady()) {
-      giftButton.hidden = true;
-    }
+    giftButton.hidden = !giftsAreReady();
+
+    const wishesReady = wishesAreReady();
+    wishButton.hidden = !wishesReady;
+    wishesSection.hidden = !wishesReady;
 
     if (rsvp.url) {
       rsvpButton.href = rsvp.url;
@@ -162,6 +176,378 @@
 
     update();
     timer = window.setInterval(update, 1000);
+  }
+
+
+  const wishState = {
+    items: [],
+    visibleCount: 0,
+    loadingScript: null,
+    loadingTimer: null,
+    submitTimer: null,
+    submitting: false
+  };
+
+  function getWishClientKey() {
+    const storageKey = "wedding-wish-client-key-v1";
+
+    try {
+      const existing = window.localStorage.getItem(storageKey);
+      if (existing) return existing;
+
+      const generated =
+        window.crypto?.randomUUID?.() ||
+        `client-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+
+      window.localStorage.setItem(storageKey, generated);
+      return generated;
+    } catch {
+      return `session-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+    }
+  }
+
+  function getLastWishSubmittedAt() {
+    try {
+      return Number(window.localStorage.getItem("wedding-wish-submitted-at-v1")) || 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  function rememberWishSubmission() {
+    try {
+      window.localStorage.setItem(
+        "wedding-wish-submitted-at-v1",
+        String(Date.now())
+      );
+    } catch {
+      // Chế độ riêng tư có thể từ chối localStorage; server vẫn có rate limit.
+    }
+  }
+
+  function setWishFormStatus(message, state = "") {
+    const status = $("#wishFormStatus");
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function createWishCard(wish) {
+    const card = document.createElement("article");
+    card.className = "wish-card";
+    if (wish.featured) card.classList.add("wish-card--featured");
+
+    const message = document.createElement("p");
+    message.className = "wish-card__message";
+    message.textContent = wish.message;
+
+    const author = document.createElement("p");
+    author.className = "wish-card__author";
+    author.textContent = `— ${wish.displayName}`;
+
+    if (wish.relationship) {
+      const relationship = document.createElement("span");
+      relationship.className = "wish-card__relationship";
+      relationship.textContent = wish.relationship;
+      author.append(relationship);
+    }
+
+    card.append(message, author);
+    return card;
+  }
+
+  function renderWishes() {
+    const wishes = config.wishes;
+    const grid = $("#wishesGrid");
+    const status = $("#wishesStatus");
+    const loadMore = $("#wishesLoadMore");
+    const visible = wishState.items.slice(0, wishState.visibleCount);
+
+    grid.replaceChildren(...visible.map(createWishCard));
+
+    if (wishState.items.length === 0) {
+      status.textContent =
+        "Hãy là người đầu tiên gửi lời chúc đến Thanh Xuân và Thị Phượng.";
+      status.hidden = false;
+    } else {
+      status.hidden = true;
+    }
+
+    loadMore.hidden = wishState.visibleCount >= wishState.items.length;
+    loadMore.textContent = `Xem thêm lời chúc (${wishState.items.length - wishState.visibleCount})`;
+  }
+
+  function cleanupWishJsonp(callbackName) {
+    window.clearTimeout(wishState.loadingTimer);
+    wishState.loadingTimer = null;
+
+    if (wishState.loadingScript) {
+      wishState.loadingScript.remove();
+      wishState.loadingScript = null;
+    }
+
+    if (window.__weddingWishCallbacks) {
+      delete window.__weddingWishCallbacks[callbackName];
+    }
+  }
+
+  function loadApprovedWishes() {
+    if (!wishesAreReady()) return;
+
+    const wishes = config.wishes;
+    const status = $("#wishesStatus");
+    status.hidden = false;
+    status.textContent = "Đang tải những lời chúc đã được duyệt…";
+
+    window.__weddingWishCallbacks ||= {};
+    const callbackName = `cb_${Date.now()}_${Math.random()
+      .toString(36)
+      .slice(2, 9)}`;
+    const callbackPath = `__weddingWishCallbacks.${callbackName}`;
+
+    window.__weddingWishCallbacks[callbackName] = (payload) => {
+      cleanupWishJsonp(callbackName);
+
+      if (!payload?.ok || !Array.isArray(payload.wishes)) {
+        status.textContent =
+          "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới.";
+        return;
+      }
+
+      wishState.items = payload.wishes
+        .filter(
+          (wish) =>
+            wish &&
+            typeof wish.displayName === "string" &&
+            typeof wish.message === "string"
+        )
+        .map((wish) => ({
+          id: String(wish.id || ""),
+          displayName: wish.displayName.trim(),
+          relationship: String(wish.relationship || "").trim(),
+          message: wish.message.trim(),
+          featured: Boolean(wish.featured)
+        }));
+
+      wishState.visibleCount = Math.min(
+        wishes.initialDisplayLimit,
+        wishState.items.length
+      );
+      renderWishes();
+    };
+
+    const url = new URL(wishes.apiUrl);
+    url.searchParams.set("action", "list");
+    url.searchParams.set("callback", callbackPath);
+    url.searchParams.set("_", String(Date.now()));
+
+    const script = document.createElement("script");
+    script.src = url.toString();
+    script.async = true;
+    script.referrerPolicy = "no-referrer";
+    script.addEventListener("error", () => {
+      cleanupWishJsonp(callbackName);
+      status.textContent =
+        "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới.";
+    });
+
+    wishState.loadingScript = script;
+    wishState.loadingTimer = window.setTimeout(() => {
+      cleanupWishJsonp(callbackName);
+      status.textContent =
+        "Máy chủ lời chúc phản hồi chậm. Vui lòng thử lại sau.";
+    }, wishes.requestTimeoutMs);
+
+    document.head.append(script);
+  }
+
+  function setupWishes() {
+    if (!wishesAreReady()) return;
+
+    const wishes = config.wishes;
+    const dialog = $("#wishDialog");
+    const form = $("#wishForm");
+    const displayName = $("#wishDisplayName");
+    const relationship = $("#wishRelationship");
+    const message = $("#wishMessage");
+    const counter = $("#wishMessageCount");
+    const consent = $("#wishConsent");
+    const submitButton = $("#wishSubmitButton");
+    const clientKey = $("#wishClientKey");
+    const openedAt = $("#wishOpenedAt");
+    const requestId = $("#wishRequestId");
+    const siteOrigin = $("#wishSiteOrigin");
+    const openButtons = [$("#wishButton"), $("#wishesSectionButton")];
+    const closeButtons = $$("[data-close-wish-dialog]", dialog);
+    const loadMore = $("#wishesLoadMore");
+
+    form.action = wishes.apiUrl;
+    displayName.maxLength = wishes.maxNameLength;
+    relationship.maxLength = wishes.maxRelationshipLength;
+    message.minLength = wishes.minMessageLength;
+    message.maxLength = wishes.maxMessageLength;
+    clientKey.value = getWishClientKey();
+    siteOrigin.value = window.location.origin;
+
+    const updateCounter = () => {
+      counter.textContent = `${message.value.length}/${wishes.maxMessageLength}`;
+    };
+
+    const openDialog = () => {
+      openedAt.value = String(Date.now());
+      requestId.value = "";
+      setWishFormStatus("");
+      dialog.showModal();
+      window.setTimeout(() => displayName.focus(), 0);
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", openDialog);
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", () => dialog.close());
+    });
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener("close", () => {
+      window.clearTimeout(wishState.submitTimer);
+      wishState.submitTimer = null;
+      wishState.submitting = false;
+      submitButton.disabled = false;
+    });
+
+    message.addEventListener("input", updateCounter);
+    updateCounter();
+
+    loadMore.addEventListener("click", () => {
+      wishState.visibleCount = Math.min(
+        wishState.visibleCount + wishes.pageSize,
+        wishState.items.length
+      );
+      renderWishes();
+    });
+
+    form.addEventListener("submit", (event) => {
+      const normalizedName = displayName.value.trim();
+      const normalizedRelationship = relationship.value.trim();
+      const normalizedMessage = message.value.trim();
+      const elapsed = Date.now() - Number(openedAt.value || 0);
+      const cooldownMs = wishes.cooldownSeconds * 1000;
+      const lastSubmittedAt = getLastWishSubmittedAt();
+
+      displayName.value = normalizedName;
+      relationship.value = normalizedRelationship;
+      message.value = normalizedMessage;
+      updateCounter();
+
+      if (
+        !form.checkValidity() ||
+        normalizedName.length < 2 ||
+        normalizedMessage.length < wishes.minMessageLength ||
+        normalizedMessage.length > wishes.maxMessageLength ||
+        !consent.checked
+      ) {
+        event.preventDefault();
+        form.reportValidity();
+        setWishFormStatus(
+          "Vui lòng kiểm tra lại các trường bắt buộc.",
+          "error"
+        );
+        return;
+      }
+
+      if (elapsed < 1200) {
+        event.preventDefault();
+        setWishFormStatus(
+          "Vui lòng dành thêm một chút thời gian cho lời chúc.",
+          "error"
+        );
+        return;
+      }
+
+      if (Date.now() - lastSubmittedAt < cooldownMs) {
+        event.preventDefault();
+        const seconds = Math.ceil(
+          (cooldownMs - (Date.now() - lastSubmittedAt)) / 1000
+        );
+        setWishFormStatus(
+          `Quý vị vừa gửi lời chúc. Vui lòng chờ khoảng ${seconds} giây trước khi gửi lại.`,
+          "error"
+        );
+        return;
+      }
+
+      if (wishState.submitting) {
+        event.preventDefault();
+        return;
+      }
+
+      wishState.submitting = true;
+      submitButton.disabled = true;
+      requestId.value =
+        window.crypto?.randomUUID?.() ||
+        `request-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+      setWishFormStatus("Đang gửi lời chúc…");
+
+      wishState.submitTimer = window.setTimeout(() => {
+        wishState.submitting = false;
+        submitButton.disabled = false;
+        setWishFormStatus(
+          "Chưa nhận được phản hồi từ máy chủ. Vui lòng kiểm tra kết nối và thử lại.",
+          "error"
+        );
+      }, wishes.requestTimeoutMs);
+    });
+
+    const allowedMessageOrigins = new Set([
+      "https://script.google.com",
+      "https://script.googleusercontent.com"
+    ]);
+
+    window.addEventListener("message", (event) => {
+      if (!allowedMessageOrigins.has(event.origin)) return;
+
+      const payload = event.data;
+      if (
+        !payload ||
+        payload.type !== "wedding-wish-result-v1" ||
+        payload.requestId !== requestId.value
+      ) {
+        return;
+      }
+
+      window.clearTimeout(wishState.submitTimer);
+      wishState.submitTimer = null;
+      wishState.submitting = false;
+      submitButton.disabled = false;
+
+      if (payload.ok) {
+        rememberWishSubmission();
+        setWishFormStatus(
+          "Cảm ơn Quý vị! Lời chúc đã được gửi và sẽ xuất hiện sau khi được hai gia đình duyệt.",
+          "success"
+        );
+        form.reset();
+        clientKey.value = getWishClientKey();
+        siteOrigin.value = window.location.origin;
+        openedAt.value = String(Date.now());
+        requestId.value = "";
+        updateCounter();
+        return;
+      }
+
+      setWishFormStatus(
+        payload.message ||
+          "Chưa thể gửi lời chúc. Vui lòng thử lại sau.",
+        "error"
+      );
+    });
+
+    loadApprovedWishes();
   }
 
   function setupGiftDialog() {
@@ -345,6 +731,7 @@
   setupReveal();
   setupCountdown();
   setupGiftDialog();
+  setupWishes();
   setupLightbox();
   setupMusic();
 })();

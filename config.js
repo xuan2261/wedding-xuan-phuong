@@ -56,6 +56,22 @@ window.WEDDING_CONFIG = {
     }
   ],
 
+  wishes: {
+    // Sau khi deploy tools/wedding-wishes-webapp.gs:
+    // 1) dán URL kết thúc bằng /exec vào apiUrl
+    // 2) đổi enabled thành true
+    enabled: false,
+    apiUrl: "",
+    initialDisplayLimit: 6,
+    pageSize: 6,
+    maxNameLength: 50,
+    maxRelationshipLength: 40,
+    minMessageLength: 5,
+    maxMessageLength: 280,
+    cooldownSeconds: 180,
+    requestTimeoutMs: 15000
+  },
+
   music: {
     enabled: true, // Giữ file assets/audio/music.mp3 hiện có trên GitHub
     file: "assets/audio/music.mp3",

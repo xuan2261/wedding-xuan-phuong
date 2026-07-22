@@ -1,0 +1,140 @@
+{
+  "generated_at_utc": "2026-07-21T10:06:15.447286+00:00",
+  "source": "wedding-xuan-phuong-reviewed-v7",
+  "checks": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/create-google-forms-rsvp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "markers": {
+      "lang_vi": true,
+      "google_fonts_link": true,
+      "display_swap": true,
+      "font_be_vietnam_pro": true,
+      "font_lora": true,
+      "font_dancing_script": true,
+      "hidden_rule": true,
+      "music_svg": true,
+      "music_toggle_attribute": true,
+      "gift_placeholder_guard": true,
+      "rsvp_deadline_24": true,
+      "production_domain": true,
+      "csp": true,
+      "noindex": true
+    },
+    "missing_local_refs": []
+  },
+  "font_review": {
+    "sans": "Be Vietnam Pro",
+    "serif": "Lora",
+    "script": "Dancing Script",
+    "google_fonts_display_swap": true,
+    "vietnamese_fallbacks_present": true,
+    "contrast_ratios": {
+      "old_gold_on_paper": 2.67,
+      "new_gold_text_on_paper": 4.77,
+      "muted_on_paper": 5.36,
+      "muted_on_cream": 4.88
+    }
+  },
+  "browser_smoke": {
+    "mobile": {
+      "title": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
+      "horizontal_overflow": false,
+      "document_widths": {
+        "scroll": 390,
+        "client": 390
+      },
+      "hero_font_family": "\"Dancing Script\", \"Segoe Script\", cursive",
+      "body_font_family": "\"Be Vietnam Pro\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "heading_font_family": "Lora, \"Noto Serif\", Georgia, serif",
+      "hero_box": {
+        "x": 39.5,
+        "y": 319.703125,
+        "width": 311,
+        "height": 286.25
+      },
+      "hero_scroll_size": {
+        "scrollWidth": 311,
+        "clientWidth": 311,
+        "scrollHeight": 290,
+        "clientHeight": 286
+      },
+      "gift_hidden": true,
+      "rsvp_href": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
+      "initial_music_pressed": "false",
+      "initial_muted_visible": true,
+      "initial_playing_visible": false,
+      "after_open_pressed": "true",
+      "after_open_muted_visible": false,
+      "after_open_playing_visible": true,
+      "after_pause_pressed": "false",
+      "after_pause_muted_visible": true,
+      "after_pause_playing_visible": false,
+      "after_resume_pressed": "true",
+      "lightbox_open": true,
+      "lightbox_src": "assets/images/couple-hands-1280.webp?v=5",
+      "lightbox_closed": true,
+      "console_errors": []
+    },
+    "desktop": {
+      "title": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
+      "horizontal_overflow": false,
+      "document_widths": {
+        "scroll": 1440,
+        "client": 1440
+      },
+      "hero_font_family": "\"Dancing Script\", \"Segoe Script\", cursive",
+      "body_font_family": "\"Be Vietnam Pro\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "heading_font_family": "Lora, \"Noto Serif\", Georgia, serif",
+      "hero_box": {
+        "x": 430,
+        "y": 278.09375,
+        "width": 580,
+        "height": 377.125
+      },
+      "hero_scroll_size": {
+        "scrollWidth": 580,
+        "clientWidth": 580,
+        "scrollHeight": 386,
+        "clientHeight": 377
+      },
+      "gift_hidden": true,
+      "rsvp_href": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
+      "initial_music_pressed": "false",
+      "initial_muted_visible": true,
+      "initial_playing_visible": false,
+      "after_open_pressed": "true",
+      "after_open_muted_visible": false,
+      "after_open_playing_visible": true,
+      "after_pause_pressed": "false",
+      "after_pause_muted_visible": true,
+      "after_pause_playing_visible": false,
+      "after_resume_pressed": "true",
+      "lightbox_open": true,
+      "lightbox_src": "assets/images/couple-hands-1280.webp?v=5",
+      "lightbox_closed": true,
+      "console_errors": []
+    }
+  },
+  "known_caveats": [
+    "Google Fonts network loading was not observable in the sandbox.",
+    "Lighthouse was not run against the production URL.",
+    "Real iOS Safari and Android Chrome were not available.",
+    "Gift account numbers and QR images are placeholders; the UI hides the gift feature.",
+    "assets/audio/music.mp3 is intentionally not redistributed in the full ZIP."
+  ],
+  "verdict": "PASS_WITH_EXPLICIT_EXTERNAL_CAVEATS"
+}

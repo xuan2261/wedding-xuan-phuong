@@ -1,0 +1,35 @@
+{
+  "generated_at_utc": "2026-07-21T12:15:52.241791+00:00",
+  "source_version": "v9",
+  "verdict": "PASS",
+  "wording_policy": {
+    "website": "Quý vị",
+    "google_forms": "Quý khách",
+    "couple": "Tên riêng",
+    "organizers": "Hai gia đình"
+  },
+  "checks": {
+    "node_app.js": {
+      "pass": true,
+      "error": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "error": ""
+    },
+    "node_tools/create-google-forms-rsvp.gs": {
+      "pass": true,
+      "error": ""
+    },
+    "node_tools/update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "error": ""
+    }
+  },
+  "remaining_old_phrases_in_display_output": [],
+  "missing_required_phrases": [],
+  "missing_local_assets": [],
+  "config_cache_version": "1.8",
+  "form_update_function": "updateWeddingRsvpContactInfo",
+  "note": "Script cập nhật Form giữ các chuỗi cũ trong bảng ánh xạ kỹ thuật để nhận diện và thay thế nội dung hiện có."
+}

@@ -12,3 +12,7 @@ Thông tin hiện tại:
 - Địa điểm: Tư gia nhà trai.
 - Chú rể: 0374037026.
 - Cô dâu: 0906878461.
+
+
+- `wedding-wishes-webapp.gs`: backend sổ lời chúc có kiểm duyệt.
+- `../WISHES-SETUP.md`: hướng dẫn deploy và kết nối website.

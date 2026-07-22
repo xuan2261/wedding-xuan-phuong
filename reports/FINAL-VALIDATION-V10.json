@@ -1,0 +1,127 @@
+{
+  "generated_at_utc": "2026-07-22T03:57:07.843935+00:00",
+  "source_version": "v10",
+  "verdict": "PASS_WITH_LIVE_APPS_SCRIPT_DEPLOYMENT_REQUIRED",
+  "static": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/create-google-forms-rsvp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/update-google-forms-rsvp-contact.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/wedding-wishes-webapp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "duplicate_ids": [],
+    "image_issues": [],
+    "target_blank_issues": [],
+    "css_parse_errors": [],
+    "missing_local_refs": [],
+    "markers": {
+      "html_lang_vi": true,
+      "single_h1": true,
+      "unique_ids": true,
+      "wish_section": true,
+      "wish_dialog": true,
+      "wish_form_labels": true,
+      "wish_consent": true,
+      "wish_honeypot": true,
+      "wish_lengths": true,
+      "csp_google_script_only": true,
+      "no_inner_html": true,
+      "approved_filter_backend": true,
+      "server_pending_default": true,
+      "lock_service": true,
+      "cache_service": true,
+      "formula_guard": true,
+      "callback_validation": true,
+      "fixed_postmessage_origin": true,
+      "request_id_check_client": true,
+      "event_origin_check_client": true,
+      "jsonp_textcontent_only": true,
+      "rsvp_private_message": true
+    }
+  },
+  "browser_smoke": [
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "horizontal_overflow": false,
+      "initial_cards": 6,
+      "after_load_more": 7,
+      "submit_success": true,
+      "gift_placeholder_hidden": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "horizontal_overflow": false,
+      "initial_cards": 6,
+      "after_load_more": 7,
+      "submit_success": true,
+      "gift_placeholder_hidden": true
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "horizontal_overflow": false,
+      "initial_cards": 6,
+      "after_load_more": 7,
+      "submit_success": true,
+      "gift_placeholder_hidden": true
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "horizontal_overflow": false,
+      "initial_cards": 6,
+      "after_load_more": 7,
+      "submit_success": true,
+      "gift_placeholder_hidden": true
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "horizontal_overflow": false,
+      "initial_cards": 6,
+      "after_load_more": 7,
+      "submit_success": true,
+      "gift_placeholder_hidden": true
+    }
+  ],
+  "known_caveats": [
+    "Chưa deploy Google Apps Script Web App thật nên integration live chưa được xác minh.",
+    "Browser smoke dùng backend Google giả lập ở lớp network.",
+    "Google Fonts có thể fallback trong sandbox.",
+    "Full ZIP không phân phối lại assets/audio/music.mp3.",
+    "Số tài khoản và QR mừng cưới vẫn là placeholder và tiếp tục bị ẩn."
+  ],
+  "browser_errors": [],
+  "reports": [
+    "WISHES-SETUP.md",
+    "reports/SKILL-WORKFLOW-V10.md",
+    "reports/SECURITY-REVIEW-V10.md",
+    "reports/TEST-REPORT-V10.md"
+  ]
+}

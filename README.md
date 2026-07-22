@@ -116,7 +116,7 @@ Mỗi ảnh có hai kích thước:
 Ảnh bìa mới:
 
 ```text
-assets/images/meta-v2.jpg
+assets/images/meta-v3.jpg
 ```
 
 Thông số 1200 × 630, có đầy đủ hai khuôn mặt, họ tên đầy đủ và ngày cưới.
@@ -126,8 +126,8 @@ Khi có tên miền chính thức, hãy đổi `og:image` và `twitter:image` tr
 `index.html` thành URL tuyệt đối, ví dụ:
 
 ```html
-<meta property="og:image" content="https://xuanphuong.id.vn/assets/images/meta-v2.jpg">
-<meta name="twitter:image" content="https://xuanphuong.id.vn/assets/images/meta-v2.jpg">
+<meta property="og:image" content="https://xuanphuong.id.vn/assets/images/meta-v3.jpg">
+<meta name="twitter:image" content="https://xuanphuong.id.vn/assets/images/meta-v3.jpg">
 ```
 
 Sau khi triển khai, hãy thử chia sẻ URL ở chế độ riêng tư trước khi gửi khách.
@@ -149,3 +149,79 @@ Header Google Forms mới:
 ```text
 assets/images/google-forms-header-xuan-phuong-v2.jpg
 ```
+
+
+## Bản review v7 — font, UX và correctness
+
+Bản này đã được review theo chuỗi:
+
+```text
+brainstorm → architecture/design → UI/UX → code review → debug
+→ static test → optimization → Fable evidence judge
+```
+
+Thay đổi chính:
+
+- Font tiếng Việt nhất quán: Be Vietnam Pro, Lora, Dancing Script.
+- Sửa line-height và độ tương phản.
+- Sửa lỗi thuộc tính `hidden` bị CSS ghi đè.
+- Icon nhạc phát/tắt đồng bộ bằng SVG.
+- Nhạc bắt đầu khi khách bấm **Mở thiệp** nếu autoplay bị chặn.
+- Ẩn tính năng quà mừng khi tài khoản/QR còn placeholder.
+- Sửa tràn ngang trên mobile.
+- Bổ sung CSP và metadata URL production.
+
+Báo cáo:
+
+- `reports/FULL-REVIEW-V7.md`
+- `reports/FONT-REVIEW-V7.md`
+- `reports/TEST-REPORT-V7.md`
+- `reports/DEPLOY-V7.md`
+
+> Full source không kèm `assets/audio/music.mp3`. Khi deploy, giữ file nhạc
+> hiện có trên repository.
+
+## Bản hero v8
+
+Hero dùng hai cụm tên đọc ngang nhưng xếp hai dòng ở hai bên:
+
+```text
+Thanh                     Thị
+Xuân         &          Phượng
+```
+
+Cách này giữ trống vùng trung tâm cho khuôn mặt, đồng thời vẫn đọc tự nhiên bằng tiếng Việt. Tiêu đề lời mời được cân thành hai dòng `Trân trọng` / `kính mời`. Xem `reports/HERO-REVIEW-V8.md`.
+
+
+## Cách xưng hô v9
+
+- Website dùng **Quý vị** cho khách mời thuộc nhiều độ tuổi.
+- Google Forms dùng **Quý khách** cho câu hỏi và hướng dẫn thao tác.
+- Khi nói về cô dâu chú rể, nội dung dùng tên riêng hoặc **hai gia đình** thay
+  cho “chúng tôi”.
+- Các từ “bạn” trong tài liệu kỹ thuật chỉ hướng đến người quản trị source và
+  không xuất hiện trên thiệp dành cho khách.
+
+Cập nhật Google Form hiện có bằng cách chạy:
+
+```javascript
+updateWeddingRsvpContactInfo()
+```
+
+Hàm sửa mô tả, thông báo xác nhận, tiêu đề câu hỏi, help text và lựa chọn phân
+nhóm khách mà không xóa phản hồi cũ.
+
+
+## Sổ lời chúc v10
+
+Source có đầy đủ frontend và Google Apps Script backend cho sổ lời chúc có kiểm
+duyệt. Tính năng mặc định tắt để website production không hiển thị nút chưa hoạt
+động.
+
+Thiết lập theo `WISHES-SETUP.md`, sau đó dán URL `/exec` vào `config.js` và đổi:
+
+```javascript
+enabled: true
+```
+
+Lời nhắn trong RSVP được đổi thành **Lời nhắn riêng** và không hiển thị công khai.

@@ -168,7 +168,8 @@ function createWeddingRsvpForm() {
     .setRequired(false);
 
   form.addParagraphTextItem()
-    .setTitle("Lời nhắn dành cho cô dâu và chú rể")
+    .setTitle("Lời nhắn riêng dành cho cô dâu và chú rể")
+    .setHelpText("Nội dung này không hiển thị công khai trên website.")
     .setRequired(false);
 
   const decliningPage = form.addPageBreakItem()
@@ -178,7 +179,8 @@ function createWeddingRsvpForm() {
   decliningPage.setGoToPage(FormApp.PageNavigationType.SUBMIT);
 
   form.addParagraphTextItem()
-    .setTitle("Quý khách có lời nhắn nào dành cho cô dâu và chú rể không?")
+    .setTitle("Lời nhắn riêng dành cho cô dâu và chú rể")
+    .setHelpText("Nội dung này không hiển thị công khai trên website.")
     .setRequired(false);
 
   attendanceItem.setChoices([
