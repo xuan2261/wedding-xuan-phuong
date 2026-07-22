@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-07-22T04:32:13.235966+00:00",
+  "source_version": "v11",
+  "verdict": "PASS",
+  "banking": {
+    "groom": {
+      "bank": "MB Bank",
+      "account_name": "BÙI THANH XUÂN",
+      "account_number": "0374037026",
+      "qr_file": "assets/qr/qr-nha-trai.png",
+      "decoded_payload": "00020101021138570010A000000727012700069704220113VQRQAKQFO14760208QRIBFTTA53037045802VN62110107NPS686963041C2D",
+      "matrix_modules": [
+        41,
+        41
+      ],
+      "scan_tests": {
+        "1024": true,
+        "512": true,
+        "340": true,
+        "240": true
+      }
+    },
+    "bride": {
+      "bank": "SHB Bank",
+      "account_name": "TRẦN THỊ PHƯỢNG",
+      "account_number": "0976699400",
+      "qr_file": "assets/qr/qr-nha-gai.png",
+      "decoded_payload": "00020101021138540010A00000072701240006970443011009766994000208QRIBFTTA53037045802VN6304F85F",
+      "matrix_modules": [
+        33,
+        33
+      ],
+      "scan_tests": {
+        "1024": true,
+        "512": true,
+        "340": true,
+        "240": true
+      }
+    }
+  },
+  "checks": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "missing_local_refs": [],
+    "placeholder_svgs_removed": true,
+    "config_cache_version": "2.0",
+    "gift_feature_ready": true
+  }
+}

@@ -45,14 +45,14 @@ window.WEDDING_CONFIG = {
       accountName: "BÙI THANH XUÂN",
       bankName: "MB Bank",
       accountNumber: "0374037026",
-      qrImage: "assets/qr/qr-nha-trai.svg"
+      qrImage: "assets/qr/qr-nha-trai.png"
     },
     {
       label: "Mừng cưới nhà gái",
       accountName: "TRẦN THỊ PHƯỢNG",
       bankName: "SHB Bank",
       accountNumber: "0976699400",
-      qrImage: "assets/qr/qr-nha-gai.svg"
+      qrImage: "assets/qr/qr-nha-gai.png"
     }
   ],
 

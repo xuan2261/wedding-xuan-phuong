@@ -225,3 +225,24 @@ enabled: true
 ```
 
 Lời nhắn trong RSVP được đổi thành **Lời nhắn riêng** và không hiển thị công khai.
+
+
+## Mã QR ngân hàng v11
+
+Đã thay hai QR placeholder bằng mã thật:
+
+```text
+Nhà trai — MB Bank
+BÙI THANH XUÂN
+0374037026
+assets/qr/qr-nha-trai.png
+
+Nhà gái — SHB Bank
+TRẦN THỊ PHƯỢNG
+0976699400
+assets/qr/qr-nha-gai.png
+```
+
+QR được lưu ở PNG lossless và đã kiểm tra giải mã ở nhiều kích thước. Nút
+“Thông tin mừng cưới dành cho khách ở xa” sẽ tự xuất hiện vì dữ liệu placeholder
+đã được thay đầy đủ.

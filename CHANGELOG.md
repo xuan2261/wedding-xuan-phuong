@@ -1,5 +1,16 @@
 # Changelog
 
+## Bản QR ngân hàng v11
+
+- Thay QR placeholder bằng hai VietQR thật.
+- Cập nhật MB Bank: BÙI THANH XUÂN — 0374037026.
+- Cập nhật SHB Bank: TRẦN THỊ PHƯỢNG — 0976699400.
+- Dựng lại QR thành PNG lossless 1024 × 1024.
+- Giữ vùng trắng bốn module.
+- Xóa hai SVG placeholder.
+- Tăng cache version `config.js` lên 2.0.
+- Xác minh quét được ở 1024, 512, 340 và 240 px.
+
 ## Bản Sổ lời chúc v10
 
 - Thêm guestbook có kiểm duyệt bằng Apps Script + Google Sheet.
