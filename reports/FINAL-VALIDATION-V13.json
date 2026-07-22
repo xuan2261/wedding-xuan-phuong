@@ -1,0 +1,39 @@
+{
+  "generated_at_utc": "2026-07-22T06:31:14.253746+00:00",
+  "source_version": "v13",
+  "verdict": "PASS_DEPLOY_APPS_SCRIPT_NEW_VERSION_REQUIRED",
+  "root_causes": [
+    "Backend posted to window.parent, which is the Google HtmlService wrapper rather than the GitHub Pages top window.",
+    "Frontend exact-origin Set did not match Google's dynamic *-script.googleusercontent.com origin."
+  ],
+  "unrelated_console_message": "Edge lazy-image intervention is informational and not the cause.",
+  "checks": {
+    "node_app.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_config.js": {
+      "pass": true,
+      "stderr": ""
+    },
+    "node_tools/wedding-wishes-webapp.gs": {
+      "pass": true,
+      "stderr": ""
+    },
+    "origin_predicate": {
+      "pass": true,
+      "stdout": "origin-tests-pass"
+    }
+  },
+  "markers": {
+    "uses_window_top": true,
+    "no_window_parent": true,
+    "exact_target_origin": true,
+    "dynamic_googleusercontent_origin": true,
+    "https_required": true,
+    "request_id_check_preserved": true,
+    "payload_type_check_preserved": true,
+    "app_cache_1_9": true,
+    "backend_version_1_2": true
+  }
+}

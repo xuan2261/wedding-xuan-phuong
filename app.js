@@ -616,13 +616,25 @@
       }, wishes.requestTimeoutMs);
     });
 
-    const allowedMessageOrigins = new Set([
-      "https://script.google.com",
-      "https://script.googleusercontent.com"
-    ]);
+    function isAllowedWishMessageOrigin(origin) {
+      try {
+        const url = new URL(origin);
+        if (url.protocol !== "https:") return false;
+
+        const hostname = url.hostname.toLowerCase();
+
+        return (
+          hostname === "script.google.com" ||
+          hostname === "script.googleusercontent.com" ||
+          hostname.endsWith("-script.googleusercontent.com")
+        );
+      } catch {
+        return false;
+      }
+    }
 
     window.addEventListener("message", (event) => {
-      if (!allowedMessageOrigins.has(event.origin)) return;
+      if (!isAllowedWishMessageOrigin(event.origin)) return;
 
       const payload = event.data;
       if (

@@ -1,5 +1,28 @@
 # Changelog
 
+## Bản sửa postMessage v13
+
+- Sửa timeout sau khi gửi lời chúc.
+- Đổi `window.parent.postMessage` thành `window.top.postMessage`.
+- Chấp nhận origin động `*-script.googleusercontent.com`.
+- Giữ target origin GitHub chính xác, không dùng `*`.
+- Tăng app.js cache version lên 1.9.
+- Tăng backend version lên 1.2.0.
+- Bổ sung root-cause report và test report.
+
+## Bản lazy-load lời chúc v12
+
+- Bỏ tải danh sách lời chúc khi trang vừa mở.
+- Thêm IntersectionObserver với preload margin 1200px.
+- Tải ngay khi khách bấm Gửi lời chúc.
+- Thêm state `idle/loading/loaded` chống gọi trùng.
+- Thêm retry khi JSONP lỗi hoặc timeout.
+- Thêm fallback scroll/resize cho trình duyệt cũ.
+- Thêm `content-visibility` và `contain-intrinsic-size`.
+- Tăng Apps Script cache từ 90 lên 300 giây.
+- Tăng cache version CSS/JS/config.
+- Thêm browser-smoke chứng minh không request ở initial load.
+
 ## Bản QR ngân hàng v11
 
 - Thay QR placeholder bằng hai VietQR thật.

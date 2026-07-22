@@ -246,3 +246,25 @@ assets/qr/qr-nha-gai.png
 QR được lưu ở PNG lossless và đã kiểm tra giải mã ở nhiều kích thước. Nút
 “Thông tin mừng cưới dành cho khách ở xa” sẽ tự xuất hiện vì dữ liệu placeholder
 đã được thay đầy đủ.
+
+
+## Lazy-load lời chúc v12
+
+Danh sách lời chúc không còn gọi Google Apps Script khi trang vừa mở.
+
+Nó được tải một lần khi:
+
+- section cách viewport khoảng `1200px`; hoặc
+- khách bấm một trong các nút **Gửi lời chúc**.
+
+Nếu request lỗi hoặc timeout, nút **Thử tải lại** xuất hiện. Backend cache danh
+sách đã duyệt trong 300 giây; trigger kiểm duyệt vẫn xóa cache khi status thay đổi.
+
+
+## Sửa phản hồi gửi lời chúc v13
+
+- Backend đổi từ `window.parent.postMessage` sang `window.top.postMessage`.
+- Frontend chấp nhận hostname Apps Script động dạng
+  `*-script.googleusercontent.com`.
+- Vẫn kiểm tra HTTPS, payload type và requestId.
+- Cần tạo version mới cho Apps Script deployment hiện tại.
