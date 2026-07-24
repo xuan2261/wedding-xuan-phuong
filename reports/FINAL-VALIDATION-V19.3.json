@@ -1,0 +1,407 @@
+{
+  "generatedAtUtc": "2026-07-24T05:37:00.897030+00:00",
+  "build": {
+    "buildId": "v19.3-20260724",
+    "release": "v19.3",
+    "generatedAtUtc": "2026-07-24T05:30:00+00:00",
+    "backendVersion": "1.5.0",
+    "status": "release-candidate-share-story-hardening",
+    "defaultEventId": "groom",
+    "eventIds": [
+      "bride",
+      "groom",
+      "nhatrang",
+      "saigon"
+    ],
+    "knownBlockers": [
+      "Multi-event RSVP Form has not been created and URLs are empty.",
+      "Nha Trang and Sài Gòn addresses/maps are incomplete.",
+      "Bride map pin is not verified.",
+      "RSVP deadlines and event end times are not supplied.",
+      "Guest grouping is not supplied.",
+      "Public GitHub Pages is still serving an older single-event build until v19.3 is deployed.",
+      "Physical Android/iPhone and Zalo/Messenger tests have not been completed."
+    ]
+  },
+  "verdict": "LOCAL_RELEASE_CANDIDATE_BLOCKED_BY_LIVE_DATA_AND_DEPLOYMENT",
+  "skillIntegrity": {
+    "status": "PASS",
+    "archives": 13,
+    "source": "uploaded SKILL_INTEGRITY_REPORT.txt"
+  },
+  "workflowApplied": [
+    "integrity gate",
+    "requirements and multi-event audit",
+    "online research",
+    "brainstorm",
+    "architecture/planning",
+    "visual and motion review",
+    "mobile UI/UX",
+    "accessibility/privacy",
+    "code review",
+    "root-cause debug",
+    "fix/cook",
+    "static and Chromium tests",
+    "optimization loop",
+    "Fable evidence judge"
+  ],
+  "freshStaticChecks": [
+    {
+      "command": "python tests/consistency_check.py",
+      "returncode": 0,
+      "stdout": "PASS: multi-event wedding data consistency",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "python tests/verify_release.py",
+      "returncode": 0,
+      "stdout": "PASS: v19 multi-event release checks",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/multi_event_check.mjs",
+      "returncode": 0,
+      "stdout": "PASS: multi-event config resolution",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/opening_experience_check.mjs",
+      "returncode": 0,
+      "stdout": "PASS: cinematic opening and guided story contract",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/audio_story_regression_check.mjs",
+      "returncode": 0,
+      "stdout": "PASS: audio fade and story autostart regression contract",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/story_asset_preload_check.mjs",
+      "returncode": 0,
+      "stdout": "PASS: guided story asset preload contract",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/lifecycle_check.js",
+      "returncode": 0,
+      "stdout": "PASS: multi-event lifecycle contract",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/contract_check.js",
+      "returncode": 0,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node tests/personalization_check.js",
+      "returncode": 0,
+      "stdout": "PASS: personalization utilities",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "python tests/verify_assets.py",
+      "returncode": 0,
+      "stdout": "PASS: images and QR decode",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "python tests/share_entry_pages_check.py",
+      "returncode": 0,
+      "stdout": "PASS: four static event share entry pages",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "python tests/verify_dist.py",
+      "returncode": 0,
+      "stdout": "PASS: clean multi-event dist",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check app.js",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check config.js",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check guest-utils.js",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check event-entry.js",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check tools/create-google-forms-rsvp-multi-event.gs",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "command": "node --check tools/wedding-wishes-webapp.gs",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    }
+  ],
+  "freshChromiumAudit": {
+    "build": "v19.3-20260724",
+    "harness": "set_content + routed local assets",
+    "results": [
+      {
+        "viewport": "320x568",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "360x800",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 360,
+          "clientWidth": 360,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "390x844",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "430x932",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 430,
+          "clientWidth": 430,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "568x320",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 568,
+          "clientWidth": 568,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "768x1024",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 768,
+          "clientWidth": 768,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "viewport": "1440x900",
+        "ok": true,
+        "metrics": {
+          "build": "v19.3-20260724",
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "album": 9,
+          "coverOpen": false,
+          "audioPaused": true,
+          "qrLoaded": false,
+          "mapSrc": "",
+          "rsvpSrc": "",
+          "storyAria": "polite"
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "case": "autostory-asset-audio-share",
+        "ok": true,
+        "story": {
+          "state": "running",
+          "autostart": "started",
+          "chapter": 4,
+          "assetState": "ready",
+          "preloaded": 3,
+          "volume": 0.349972,
+          "paused": false,
+          "label": "Cô dâu và chú rể",
+          "coverOpen": false
+        },
+        "shareUrl": "https://xuan2261.github.io/wedding-xuan-phuong/events/groom/#to=Gia+%C4%91%C3%ACnh+c%C3%B4+Lan&event=groom",
+        "pageErrors": [],
+        "consoleErrors": []
+      }
+    ],
+    "allPass": true
+  },
+  "sourceAudit": {
+    "sourceFiles": 221,
+    "sourceBytes": 16226747,
+    "distFiles": 47,
+    "distBytes": 7883973,
+    "htmlIds": 95,
+    "duplicateHtmlIds": [],
+    "missingLocalRefs": [],
+    "innerHtmlAssignments": 0,
+    "evalMentions": 0,
+    "eventEntryPages": [
+      "events/bride/",
+      "events/groom/",
+      "events/nhatrang/",
+      "events/saigon/"
+    ],
+    "changedOrNewFiles": 44,
+    "removedFiles": []
+  },
+  "rootCausesFound": [
+    {
+      "id": "R1-SOCIAL-METADATA",
+      "finding": "Hash-only event URLs and runtime meta changes do not provide a dependable event-specific preview for link crawlers.",
+      "fix": "Generate four static event entry pages with OG/Twitter metadata and redirect to the main app."
+    },
+    {
+      "id": "R2-STORY-LAZY-PLACEHOLDER",
+      "finding": "Auto-story could arrive at a lazy section before its images were fetched/decoded.",
+      "fix": "Promote and decode up to four images for the current/next chapter with a bounded wait."
+    },
+    {
+      "id": "R3-AUDIO-TIME-ORIGIN",
+      "finding": "The prior clamp prevented invalid volume, but the fade still mixed performance.now() with rAF callback timestamps.",
+      "fix": "Use the first rAF callback timestamp as the only fade origin."
+    },
+    {
+      "id": "R4-HIDDEN-TAB-AUDIO",
+      "finding": "Music could continue after the page became hidden.",
+      "fix": "Pause on visibilitychange/pagehide and require explicit user action to resume."
+    },
+    {
+      "id": "R5-STORY-DATA-COLLISION",
+      "finding": "Body debug data-story-chapter collided with the Story Player live-region selector.",
+      "fix": "Rename debug state to data-story-chapter-index and keep aria-live on the actual chapter label."
+    },
+    {
+      "id": "R6-DEPLOY-NOT-PROVEN",
+      "finding": "The workflow deployed Pages but did not prove the new build was live.",
+      "fix": "Poll root marker, release.json and all four event entry pages after deploy."
+    },
+    {
+      "id": "R7-GUEST-LINK-TOOL",
+      "finding": "The offline guest-link generator still produced root hash links.",
+      "fix": "Generate event entry URLs so shared previews match the invited event."
+    }
+  ],
+  "implemented": [
+    "Four static social entry pages and release.json",
+    "Event-aware sharing and guest-link generation",
+    "Guided-story image eager promotion, fetch priority and decode",
+    "Single rAF time origin for audio fade",
+    "Pause music on hidden tab/pagehide",
+    "Accessible live chapter label without selector collision",
+    "Post-deploy GitHub Pages verification",
+    "New contract tests for share pages, story assets and lockfile parity"
+  ],
+  "knownBlockers": [
+    "Multi-event RSVP Form has not been created and URLs are empty.",
+    "Nha Trang and Sài Gòn addresses/maps are incomplete.",
+    "Bride map pin is not verified.",
+    "RSVP deadlines and event end times are not supplied.",
+    "Guest grouping is not supplied.",
+    "Public GitHub Pages is still serving an older single-event build until v19.3 is deployed.",
+    "Physical Android/iPhone and Zalo/Messenger tests have not been completed."
+  ],
+  "limitations": [
+    "Direct localhost and custom-host navigation are blocked in this sandbox; the fresh Chromium audit used set_content with routed local runtime assets.",
+    "Google Forms, live Apps Script, Google Maps, Zalo, Messenger and physical phones were not exercised in this environment.",
+    "The public GitHub Pages URL is still an older single-event version until the user deploys v19.3."
+  ]
+}

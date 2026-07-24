@@ -1,17 +1,21 @@
 {
   "name": "wedding-xuan-phuong",
   "private": true,
-  "version": "19.2.1",
+  "version": "19.4.0",
   "scripts": {
     "test:browser": "node tests/browser_smoke.mjs",
     "test:consistency": "python tests/consistency_check.py",
-    "test": "python tests/consistency_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/audio_story_regression_check.mjs && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && python tools/build-dist.py && python tests/verify_dist.py && node tests/browser_smoke.mjs && node tests/audio_story_browser_regression.mjs",
+    "test": "python tests/consistency_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/audio_story_regression_check.mjs && node tests/story_asset_preload_check.mjs && node tests/release_hardening_check.mjs && python tests/guest_tool_check.py && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && python tools/build-dist.py && python tests/share_entry_pages_check.py && python tests/verify_dist.py && node tests/browser_smoke.mjs && node tests/audio_story_browser_regression.mjs",
     "test:dist": "python tools/build-dist.py && python tests/verify_dist.py",
     "test:lifecycle": "node tests/lifecycle_check.js",
     "test:multi-event": "node tests/multi_event_check.mjs",
     "test:opening": "node tests/opening_experience_check.mjs",
     "test:audio-story": "node tests/audio_story_regression_check.mjs",
-    "test:audio-story-browser": "node tests/audio_story_browser_regression.mjs"
+    "test:audio-story-browser": "node tests/audio_story_browser_regression.mjs",
+    "test:story-assets": "node tests/story_asset_preload_check.mjs",
+    "test:share-pages": "python tests/share_entry_pages_check.py",
+    "test:hardening": "node tests/release_hardening_check.mjs",
+    "test:guest-tool": "python tests/guest_tool_check.py"
   },
   "devDependencies": {
     "playwright": "1.61.1"

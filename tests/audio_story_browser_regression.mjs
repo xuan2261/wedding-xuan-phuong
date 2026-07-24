@@ -99,7 +99,7 @@ try {
   await page.locator("#coverOpenButton").click();
   await page.waitForFunction(() => document.body.classList.contains("invitation-opened"));
   await page.waitForFunction(() => document.body.dataset.storyAutostart === "started");
-  await page.waitForFunction(() => Number(document.body.dataset.storyChapter || 0) >= 2);
+  await page.waitForFunction(() => Number(document.body.dataset.storyChapterIndex || 0) >= 2);
   await page.waitForTimeout(1200);
 
   const result = await page.evaluate(() => ({
@@ -107,15 +107,15 @@ try {
     volume: document.querySelector("#weddingMusic")?.volume,
     storyState: document.body.dataset.storyState,
     storyAutostart: document.body.dataset.storyAutostart,
-    storyChapter: Number(document.body.dataset.storyChapter || 0),
+    storyChapterIndex: Number(document.body.dataset.storyChapterIndex || 0),
     scrollY: window.scrollY
   }));
 
-  assert(result.build === "v19.2.1-20260724", `Sai build: ${result.build}`);
+  assert(result.build === "v19.4-20260724", `Sai build: ${result.build}`);
   assert(result.volume >= 0 && result.volume <= 1, `Volume ngoài [0,1]: ${result.volume}`);
   assert(result.storyState === "running", `Story không running: ${result.storyState}`);
   assert(result.storyAutostart === "started", `Autostart lỗi: ${result.storyAutostart}`);
-  assert(result.storyChapter >= 2, `Story chưa chuyển chương: ${result.storyChapter}`);
+  assert(result.storyChapterIndex >= 2, `Story chưa chuyển chương: ${result.storyChapterIndex}`);
   assert(result.scrollY > 0, `Story chưa cuộn trang: ${result.scrollY}`);
   assert(pageErrors.length === 0, `Page errors: ${pageErrors.join(" | ")}`);
   assert(consoleErrors.length === 0, `Console errors: ${consoleErrors.join(" | ")}`);

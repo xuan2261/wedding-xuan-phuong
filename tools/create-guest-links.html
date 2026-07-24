@@ -72,6 +72,12 @@
       font-size: .88rem;
     }
     .status { min-height: 1.5em; color: #37654f; }
+    .import-panel { margin-bottom: 20px; padding: 16px; border: 1px dashed rgba(32,75,58,.28); border-radius: 14px; background: rgba(255,255,255,.55); }
+    .import-panel h2 { margin: 0 0 6px; font-size: 1.1rem; color: var(--green); }
+    .import-panel p { margin: 0 0 12px; }
+    .file-label { display: inline-grid; margin: 0; padding: 10px 15px; border-radius: 999px; background: var(--green); color: white; cursor: pointer; }
+    .file-label input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
+    code { overflow-wrap: anywhere; }
     @media (max-width: 700px) {
       .guest-row { grid-template-columns: 1fr; }
     }
@@ -92,6 +98,18 @@
           value="https://xuan2261.github.io/wedding-xuan-phuong/"
           required>
       </label>
+
+      <section class="import-panel" aria-labelledby="csv-import-title">
+        <h2 id="csv-import-title">Nhập danh sách khách theo từng sự kiện</h2>
+        <p>CSV hỗ trợ các cột: <code>invitationCode, displayName, phone, events, defaultEvent, maxGuestCount, note</code>.</p>
+        <div class="actions">
+          <label class="file-label">
+            Chọn CSV
+            <input id="guestCsvFile" type="file" accept=".csv,text/csv">
+          </label>
+          <button class="secondary" type="button" id="downloadTemplateButton">Tải CSV mẫu</button>
+        </div>
+      </section>
 
       <label>
         Tên khách mời — mỗi dòng một tên
@@ -145,7 +163,10 @@
       const status = document.querySelector("#status");
       const copyAllButton = document.querySelector("#copyAllButton");
       const downloadCsvButton = document.querySelector("#downloadCsvButton");
+      const guestCsvFile = document.querySelector("#guestCsvFile");
+      const downloadTemplateButton = document.querySelector("#downloadTemplateButton");
       let generated = [];
+      let importedRows = [];
 
       const sanitize = (value) =>
         String(value || "")
@@ -155,12 +176,93 @@
           .slice(0, 80);
 
       const buildLink = (baseUrl, guestName, eventIds, activeEventId) => {
-        const url = new URL(baseUrl);
+        const root = new URL(baseUrl);
+        root.hash = "";
+        root.search = "";
+        const rootHref = root.href.endsWith("/") ? root.href : `${root.href}/`;
+        const url = new URL(`events/${encodeURIComponent(activeEventId)}/`, rootHref);
         const params = new URLSearchParams({ to: guestName });
         if (eventIds.length > 1) params.set("events", eventIds.join(","));
         params.set("event", activeEventId);
         url.hash = params.toString();
         return url.toString();
+      };
+
+      const parseCsv = (text) => {
+        const rows = [];
+        let row = [];
+        let cell = "";
+        let quoted = false;
+        for (let index = 0; index < text.length; index += 1) {
+          const char = text[index];
+          const next = text[index + 1];
+          if (quoted) {
+            if (char === '"' && next === '"') {
+              cell += '"';
+              index += 1;
+            } else if (char === '"') {
+              quoted = false;
+            } else {
+              cell += char;
+            }
+          } else if (char === '"') {
+            quoted = true;
+          } else if (char === ',') {
+            row.push(cell.trim());
+            cell = "";
+          } else if (char === "\n") {
+            row.push(cell.trim());
+            rows.push(row);
+            row = [];
+            cell = "";
+          } else if (char !== "\r") {
+            cell += char;
+          }
+        }
+        if (cell || row.length) {
+          row.push(cell.trim());
+          rows.push(row);
+        }
+        return rows.filter((item) => item.some(Boolean));
+      };
+
+      const normalizeEventIds = (value) => [...new Set(
+        String(value || "")
+          .split(/[|;,\s]+/)
+          .map((item) => item.trim().toLowerCase())
+          .filter((item) => ["bride", "groom", "nhatrang", "saigon"].includes(item))
+      )];
+
+      const importGuestCsv = (text) => {
+        const rows = parseCsv(text.replace(/^\uFEFF/, ""));
+        if (rows.length < 2) return [];
+        const headers = rows[0].map((header) => header.trim().toLowerCase());
+        const indexOf = (...names) => names.map((name) => headers.indexOf(name)).find((index) => index >= 0) ?? -1;
+        const displayIndex = indexOf("displayname", "name", "tên khách", "ten khach");
+        const eventsIndex = indexOf("events", "sự kiện", "su kien");
+        const defaultIndex = indexOf("defaultevent", "default event", "mở mặc định", "mo mac dinh");
+        const codeIndex = indexOf("invitationcode", "code", "mã lời mời", "ma loi moi");
+        const phoneIndex = indexOf("phone", "điện thoại", "dien thoai");
+        const maxIndex = indexOf("maxguestcount", "max guests", "số người tối đa", "so nguoi toi da");
+        const noteIndex = indexOf("note", "ghi chú", "ghi chu");
+        if (displayIndex < 0) throw new Error("CSV thiếu cột displayName.");
+
+        return rows.slice(1).map((row) => {
+          const name = sanitize(row[displayIndex]);
+          const eventIds = normalizeEventIds(eventsIndex >= 0 ? row[eventsIndex] : "groom");
+          const defaultEvent = defaultIndex >= 0 && eventIds.includes(String(row[defaultIndex] || "").toLowerCase())
+            ? String(row[defaultIndex]).toLowerCase()
+            : eventIds[0] || "groom";
+          return {
+            invitationCode: codeIndex >= 0 ? sanitize(row[codeIndex]) : "",
+            name,
+            phone: phoneIndex >= 0 ? sanitize(row[phoneIndex]) : "",
+            eventIds: eventIds.length ? eventIds : ["groom"],
+            activeEvent: defaultEvent,
+            maxGuestCount: maxIndex >= 0 ? sanitize(row[maxIndex]) : "",
+            note: noteIndex >= 0 ? sanitize(row[noteIndex]) : ""
+          };
+        }).filter((item) => item.name);
       };
 
       const copyText = async (text) => {
@@ -233,12 +335,22 @@
           ? activeEventInput.value
           : eventIds[0];
 
-        generated = uniqueNames.map((name) => ({
-          name,
-          events: eventIds.join("|"),
-          activeEvent: activeEventId,
-          url: buildLink(baseUrl, name, eventIds, activeEventId)
-        }));
+        generated = importedRows.length
+          ? importedRows.map((item) => ({
+              ...item,
+              events: item.eventIds.join("|"),
+              url: buildLink(baseUrl, item.name, item.eventIds, item.activeEvent)
+            }))
+          : uniqueNames.map((name) => ({
+              invitationCode: "",
+              name,
+              phone: "",
+              events: eventIds.join("|"),
+              activeEvent: activeEventId,
+              maxGuestCount: "",
+              note: "",
+              url: buildLink(baseUrl, name, eventIds, activeEventId)
+            }));
 
         render();
         status.textContent = `Đã tạo ${generated.length} link cá nhân hóa.`;
@@ -252,12 +364,53 @@
         status.textContent = "Đã xử lý danh sách link.";
       });
 
+      guestCsvFile.addEventListener("change", async () => {
+        const file = guestCsvFile.files?.[0];
+        if (!file) return;
+        try {
+          importedRows = importGuestCsv(await file.text());
+          namesInput.value = importedRows.map((item) => item.name).join("\n");
+          status.textContent = `Đã nhập ${importedRows.length} khách từ CSV. Bấm Tạo link để tiếp tục.`;
+        } catch (error) {
+          importedRows = [];
+          status.textContent = error?.message || "Không đọc được CSV.";
+        }
+      });
+
+      downloadTemplateButton.addEventListener("click", () => {
+        const template = [
+          ["invitationCode", "displayName", "phone", "events", "defaultEvent", "maxGuestCount", "note"],
+          ["GD-LAN", "Gia đình cô Lan", "", "bride|groom", "groom", "4", "Người thân"],
+          ["NT-HUONG", "Chị Hương", "", "nhatrang", "nhatrang", "2", "Bạn bè Nha Trang"]
+        ].map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\n");
+        const blob = new Blob(["﻿", template], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "wedding-guest-list-template.csv";
+        anchor.click();
+        URL.revokeObjectURL(url);
+      });
+
+      namesInput.addEventListener("input", () => {
+        if (importedRows.length) importedRows = [];
+      });
+
       downloadCsvButton.addEventListener("click", () => {
         const escapeCsv = (value) =>
           `"${String(value).replace(/"/g, '""')}"`;
         const csv = [
-          ["Tên khách", "Sự kiện", "Mở mặc định", "Link thiệp"],
-          ...generated.map((item) => [item.name, item.events, item.activeEvent, item.url])
+          ["invitationCode", "displayName", "phone", "events", "defaultEvent", "maxGuestCount", "note", "url"],
+          ...generated.map((item) => [
+            item.invitationCode || "",
+            item.name,
+            item.phone || "",
+            item.events,
+            item.activeEvent,
+            item.maxGuestCount || "",
+            item.note || "",
+            item.url
+          ])
         ]
           .map((row) => row.map(escapeCsv).join(","))
           .join("\r\n");

@@ -58,7 +58,7 @@ volume luôn trong [0,1]
 không có pageerror/console error
 storyAutostart = started
 storyState = running
-storyChapter >= 2
+storyChapterIndex >= 2
 trang tự cuộn tới lời mời
 ```
 

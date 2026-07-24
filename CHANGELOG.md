@@ -1,3 +1,26 @@
+# v19.4 — Adaptive Guest-Ready Hardening (2026-07-24)
+
+- Sửa cover bị cắt khi tên khách dài ở màn hình ngang thấp; cover có thể cuộn nội bộ an toàn.
+- Chuyển focus tới tiêu đề hero sau khi mở thiệp.
+- Thêm chế độ thích ứng với Data Saver/2G: tắt auto-story và auto-music mặc định, giảm preload ảnh.
+- Thay RSVP vô hiệu bằng dialog liên hệ xác nhận qua điện thoại, vẫn tự chuyển về Google Form khi URL được cấu hình.
+- Nâng công cụ tạo link khách: nhập/xuất CSV theo từng khách và từng sự kiện.
+- Bổ sung test hardening, guest-tool và cache bust `v=5.5`.
+
+# v19.3 — Share Preview & Guided Story Hardening (2026-07-24)
+
+- Tạo bốn trang chia sẻ tĩnh theo sự kiện với Open Graph/Twitter metadata chính xác.
+- Link Chia sẻ thiệp, link có tên khách và công cụ tạo link đều dùng `events/<event>/`.
+- Thêm `release.json` để xác minh build và danh sách sự kiện sau deploy.
+- Auto-story promote tối đa bốn ảnh của chương kế sang eager/high priority và gọi `decode()` trước khi chuyển.
+- Dùng timeout 700ms để ảnh lỗi hoặc mạng chậm không chặn story.
+- Fade âm lượng dùng timestamp của callback `requestAnimationFrame` làm mốc thời gian duy nhất.
+- Tự pause nhạc khi tab bị ẩn hoặc pagehide; không tự phát lại khi quay về tab.
+- Sửa xung đột `data-story-chapter` giữa body debug state và live-region của Story Player.
+- Thêm `aria-live="polite"` cho tên chương.
+- Workflow sau deploy kiểm tra marker live, `release.json` và đủ bốn entry page.
+- Thêm contract tests cho story assets, share entry pages và package-lock parity.
+
 # v19.2.1 — Audio Fade & Auto Story Hotfix (2026-07-24)
 
 - Sửa `IndexSizeError` khi Edge cung cấp timestamp `requestAnimationFrame` nhỏ hơn `performance.now()`.

@@ -18,6 +18,7 @@ verify source
 → verify dist
 → upload-pages-artifact
 → deploy-pages
+→ kiểm tra marker live + release.json + 4 trang chia sẻ sự kiện
 ```
 
 ## Kiểm tra build live
@@ -29,7 +30,7 @@ powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
 Marker cần thấy:
 
 ```html
-<meta name="wedding-build" content="v19.2.1-20260724">
+<meta name="wedding-build" content="v19.4-20260724">
 ```
 
 ## Cổng phát hành
@@ -40,3 +41,19 @@ Không gửi link khách khi còn một trong các điều kiện:
 - Nha Trang/Sài Gòn chưa có địa chỉ và map chính xác.
 - Link nhà gái chưa xác minh pin.
 - Chưa test Android, iPhone, Zalo và Messenger.
+
+
+Có thể kiểm tra bằng Python:
+
+```powershell
+python tools/check-live-build.py
+```
+
+Trang chia sẻ cần tồn tại:
+
+```text
+events/bride/
+events/groom/
+events/nhatrang/
+events/saigon/
+```

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#214b3a">
-  <meta name="wedding-build" content="v19.2.1-20260724">
+  <meta name="wedding-build" content="v19.4-20260724">
   <meta name="description" content="Trân trọng kính mời Quý vị đến chung vui trong hành trình cưới của Thanh Xuân và Thị Phượng tại Gia Lai, Nha Trang và Sài Gòn.">
 
   <!-- Không cho phép lập chỉ mục; không phải là cơ chế đặt mật khẩu. -->
@@ -40,12 +40,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="styles.css?v=5.3">
+  <link rel="stylesheet" href="styles.css?v=5.5">
   <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.3">
 
-  <script src="config.js?v=5.3" defer></script>
+  <script src="config.js?v=5.5" defer></script>
   <script src="guest-utils.js?v=1.0" defer></script>
-  <script src="app.js?v=5.3" defer></script>
+  <script src="app.js?v=5.5" defer></script>
 </head>
 
 <body>
@@ -98,6 +98,9 @@
         <p class="invitation-cover__hint" id="invitation-cover-description">
           Chạm vào con dấu để mở thiệp.
         </p>
+        <p class="invitation-cover__data-hint" id="coverDataHint" role="status" hidden>
+          Chế độ tiết kiệm dữ liệu đang bật: thiệp sẽ không tự chạy hoặc tự phát nhạc.
+        </p>
 
         <div class="invitation-cover__actions">
           <button
@@ -142,7 +145,7 @@
 
     <div class="hero__content">
       <p class="eyebrow motion-load" data-motion="fade-down" data-motion-delay="80" data-hero-kicker>Lễ Thành Hôn</p>
-      <h1 class="hero-names" id="hero-title">
+      <h1 class="hero-names" id="hero-title" tabindex="-1">
         <span class="sr-only" data-hero-accessible>Thanh Xuân và Thị Phượng</span>
         <span class="hero-name hero-name--groom motion-load" data-motion="fade-left" data-motion-delay="160" aria-hidden="true">
           <span data-hero-groom-line1>Thanh</span>
@@ -362,11 +365,11 @@
         <a
           class="button"
           id="rsvpButton"
-          href="#"
+          href="tel:0374037026"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Xác nhận tham dự
+          Liên hệ xác nhận
         </a>
         <a class="button button--secondary" id="calendarButton" href="#" type="text/calendar">
           <span data-calendar-label>Thêm vào lịch</span>
@@ -565,7 +568,7 @@
     </button>
 
     <span class="story-player__copy">
-      <span data-story-chapter>Ảnh mở đầu</span>
+      <span data-story-chapter aria-live="polite" aria-atomic="true">Ảnh mở đầu</span>
       <small><span data-story-label>Tự xem</span> · <span data-story-counter>1/1</span></small>
     </span>
 
@@ -584,6 +587,51 @@
     </span>
   </div>
 
+
+  <dialog
+    class="contact-dialog"
+    id="attendanceContactDialog"
+    aria-labelledby="attendance-contact-title"
+    aria-describedby="attendance-contact-description"
+  >
+    <header class="dialog-header">
+      <div>
+        <p class="section-kicker">Xác nhận tham dự</p>
+        <h2 id="attendance-contact-title">Liên hệ với cô dâu hoặc chú rể</h2>
+        <p class="dialog-event-label" data-attendance-contact-event></p>
+      </div>
+      <button class="icon-button" type="button" data-close-attendance-contact aria-label="Đóng thông tin liên hệ">×</button>
+    </header>
+    <p class="dialog-intro" id="attendance-contact-description">
+      Biểu mẫu trực tuyến đang được hoàn thiện. Quý vị có thể gọi điện hoặc sao chép số điện thoại để xác nhận tham dự.
+    </p>
+    <div class="attendance-contact-grid">
+      <article class="attendance-contact-card" data-contact-card="groom">
+        <p>Chú rể</p>
+        <h3 data-groom-full>Bùi Thanh Xuân</h3>
+        <a class="button" data-attendance-call="groom" href="tel:0374037026">
+          Gọi <span data-groom-phone>0374 037 026</span>
+        </a>
+        <button class="button button--secondary" type="button" data-attendance-copy="groom">
+          Sao chép số chú rể
+        </button>
+      </article>
+      <article class="attendance-contact-card" data-contact-card="bride">
+        <p>Cô dâu</p>
+        <h3 data-bride-full>Trần Thị Phượng</h3>
+        <a class="button" data-attendance-call="bride" href="tel:0906878461">
+          Gọi <span data-bride-phone>0906 878 461</span>
+        </a>
+        <button class="button button--secondary" type="button" data-attendance-copy="bride">
+          Sao chép số cô dâu
+        </button>
+      </article>
+    </div>
+    <p class="attendance-contact__recommendation" id="attendanceContactRecommendation"></p>
+    <footer class="dialog-footer">
+      <button class="button button--secondary" type="button" data-close-attendance-contact>Đóng</button>
+    </footer>
+  </dialog>
 
   <dialog
     class="embed-dialog rsvp-dialog"

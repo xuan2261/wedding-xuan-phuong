@@ -1,9 +1,9 @@
 {
   "build": {
-    "buildId": "v19.2.1-20260724",
-    "release": "v19.2.1",
+    "buildId": "v19.4-20260724",
+    "release": "v19.4",
     "backendVersion": "1.5.0",
-    "status": "draft-multi-event-cinematic-v2"
+    "status": "release-candidate-adaptive-rsvp-guest-tool-hardening"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",

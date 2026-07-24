@@ -72,6 +72,21 @@
     return url.toString();
   }
 
+  function buildEventEntryUrl(baseUrl, eventId, options = {}) {
+    const normalizedEventId = String(eventId || options.activeEventId || "").trim().toLowerCase();
+    const siteRoot = new URL(String(baseUrl || ""), window.location.href);
+    siteRoot.hash = "";
+    siteRoot.search = "";
+    const rootHref = siteRoot.href.endsWith("/") ? siteRoot.href : `${siteRoot.href}/`;
+    const entryBase = normalizedEventId
+      ? new URL(`events/${encodeURIComponent(normalizedEventId)}/`, rootHref).toString()
+      : rootHref;
+    return buildInvitationUrl(entryBase, {
+      ...options,
+      activeEventId: normalizedEventId || options.activeEventId
+    });
+  }
+
   function buildPersonalizedUrl(baseUrl, guestName, parameter = "to") {
     return buildInvitationUrl(baseUrl, {
       guestName,
@@ -85,6 +100,7 @@
     readEventContext,
     buildRsvpUrl,
     buildInvitationUrl,
+    buildEventEntryUrl,
     buildPersonalizedUrl
   });
 })();

@@ -1,0 +1,19 @@
+{
+  "buildId": "v19.4-20260724",
+  "release": "v19.4",
+  "generatedAtUtc": "2026-07-24T09:30:00+00:00",
+  "status": "release-candidate-adaptive-rsvp-guest-tool-hardening",
+  "defaultEventId": "groom",
+  "eventIds": [
+    "bride",
+    "groom",
+    "nhatrang",
+    "saigon"
+  ],
+  "shareEntryPages": {
+    "bride": "events/bride/",
+    "groom": "events/groom/",
+    "nhatrang": "events/nhatrang/",
+    "saigon": "events/saigon/"
+  }
+}

@@ -12,7 +12,9 @@ function assert(condition, message) {
 
 assert(app.includes("const clampVolume"), "Thiếu clampVolume");
 assert(app.includes("Math.min(1, Math.max(0"), "Volume chưa clamp [0,1]");
+assert(app.includes("let startedAt = null"), "Fade chưa dùng timestamp rAF làm mốc");
 assert(app.includes("const elapsed = Math.max(0"), "rAF elapsed chưa clamp âm");
+assert(app.includes("pausedByVisibility"), "Nhạc chưa pause khi tab ẩn");
 assert(app.includes("volumeFadeGeneration"), "Thiếu generation guard chống fade race");
 assert(app.includes("setAudioVolume(nextVolume)"), "Fade chưa dùng setter an toàn");
 assert(app.includes("wedding:story-autostarted"), "Thiếu tín hiệu autostart");

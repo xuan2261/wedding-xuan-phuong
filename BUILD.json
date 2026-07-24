@@ -1,9 +1,9 @@
 {
-  "buildId": "v19.2.1-20260724",
-  "release": "v19.2.1",
-  "generatedAtUtc": "2026-07-24T04:30:00+00:00",
+  "buildId": "v19.4-20260724",
+  "release": "v19.4",
+  "generatedAtUtc": "2026-07-24T09:30:00+00:00",
   "backendVersion": "1.5.0",
-  "status": "release-candidate-audio-story-hotfix",
+  "status": "release-candidate-adaptive-rsvp-guest-tool-hardening",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",
@@ -12,10 +12,12 @@
     "saigon"
   ],
   "knownBlockers": [
-    "Multi-event RSVP Form has not been created and URLs are empty.",
+    "Multi-event Google Form URLs are not configured; phone contact fallback is active.",
     "Nha Trang and Sài Gòn addresses/maps are incomplete.",
     "Bride map pin is not verified.",
     "RSVP deadlines and event end times are not supplied.",
-    "Guest grouping is not supplied."
+    "Final guest grouping data has not been supplied.",
+    "Public GitHub Pages remains stale until v19.4 is deployed.",
+    "Physical Android/iPhone and Zalo/Messenger tests have not been completed."
   ]
 }

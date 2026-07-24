@@ -1,0 +1,531 @@
+{
+  "generatedAtUtc": "2026-07-24T08:25:45+00:00",
+  "build": {
+    "buildId": "v19.4-20260724",
+    "release": "v19.4",
+    "source": "wedding-xuan-phuong-reviewed-v19.3.zip"
+  },
+  "skillWorkflow": {
+    "integrity": "13/13 PASS according to uploaded SKILL_INTEGRITY_REPORT.txt",
+    "chain": [
+      "integrity gate",
+      "requirements and live parity audit",
+      "online invitation research",
+      "brainstorm",
+      "architecture/planning",
+      "visual/motion and mobile UI/UX",
+      "accessibility/privacy",
+      "code review",
+      "root-cause debug",
+      "fix/cook",
+      "static/contract/browser testing",
+      "optimization loop",
+      "Fable evidence judge"
+    ],
+    "boundary": "Skill archive workflows were used as the review method; archives are not embedded in the release."
+  },
+  "verdict": "LOCAL_RELEASE_CANDIDATE_BLOCKED_BY_LIVE_RSVP_MAP_AND_PHYSICAL_DEVICE_GATES",
+  "checks": [
+    {
+      "name": "JavaScript syntax: app.js/config.js/guest-utils.js/event-entry.js",
+      "status": "PASS"
+    },
+    {
+      "name": "Wedding data consistency",
+      "status": "PASS"
+    },
+    {
+      "name": "Release/source verification",
+      "status": "PASS"
+    },
+    {
+      "name": "Multi-event resolution",
+      "status": "PASS"
+    },
+    {
+      "name": "Opening experience contract",
+      "status": "PASS"
+    },
+    {
+      "name": "Audio fade/story autostart regression",
+      "status": "PASS"
+    },
+    {
+      "name": "Guided-story asset preload contract",
+      "status": "PASS"
+    },
+    {
+      "name": "v19.4 adaptive/contact/focus hardening contract",
+      "status": "PASS"
+    },
+    {
+      "name": "Guest CSV import/export tool",
+      "status": "PASS"
+    },
+    {
+      "name": "Multi-event lifecycle contract",
+      "status": "PASS"
+    },
+    {
+      "name": "Wishes storage contract",
+      "status": "PASS"
+    },
+    {
+      "name": "Personalization utilities",
+      "status": "PASS"
+    },
+    {
+      "name": "Image and QR decode",
+      "status": "PASS"
+    },
+    {
+      "name": "Clean dist build",
+      "status": "PASS"
+    },
+    {
+      "name": "Four event share pages",
+      "status": "PASS"
+    },
+    {
+      "name": "Clean dist verification",
+      "status": "PASS"
+    },
+    {
+      "name": "Fresh Chromium four-event/contact audit",
+      "status": "PASS"
+    },
+    {
+      "name": "Fresh Chromium 7-viewport audit",
+      "status": "PASS"
+    }
+  ],
+  "freshFindingsFixed": [
+    {
+      "id": "A01",
+      "severity": "HIGH",
+      "finding": "Disabled multi-event RSVP was a dead end.",
+      "fix": "Functional contact fallback opens a native dialog with both phone numbers and event-specific recommendation."
+    },
+    {
+      "id": "A02",
+      "severity": "HIGH",
+      "finding": "Auto-story/music ignored Data Saver and very slow network signals.",
+      "fix": "Adaptive constrained-data mode disables automatic story/music and reduces chapter preloading to one image."
+    },
+    {
+      "id": "A03",
+      "severity": "MEDIUM",
+      "finding": "Focus after cinematic cover close was not moved to the revealed content.",
+      "fix": "Hero heading is programmatically focusable and receives focus after the cover closes."
+    },
+    {
+      "id": "A04",
+      "severity": "MEDIUM",
+      "finding": "Long personalized guest names could stress short landscape layouts.",
+      "fix": "Cover content is scroll-safe, guest names wrap anywhere, and short-landscape typography/action layout is hardened."
+    },
+    {
+      "id": "A05",
+      "severity": "HIGH",
+      "finding": "Offline guest-link tool applied one event combination to the whole list.",
+      "fix": "CSV per-guest import/export supports event list, default event, invitation code, phone, maximum guests and notes."
+    }
+  ],
+  "browserAudit": {
+    "viewportCases": [
+      {
+        "viewport": [
+          320,
+          568
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.34998133333333337,
+          "heroWidth": 320,
+          "viewport": 320
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.3499824999999999,
+          "heroWidth": 360,
+          "viewport": 360
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.3499725833333333,
+          "heroWidth": 390,
+          "viewport": 390
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.34997141666666665,
+          "heroWidth": 430,
+          "viewport": 430
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          568,
+          320
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.3499615,
+          "heroWidth": 568,
+          "viewport": 568
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.34998075000000006,
+          "heroWidth": 760,
+          "viewport": 768
+        },
+        "errors": []
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "cover": {
+          "overflow": false,
+          "buttonVisible": true,
+          "active": "coverOpenButton"
+        },
+        "opened": {
+          "overflow": false,
+          "active": "hero-title",
+          "story": "running",
+          "autostart": "started",
+          "volume": 0.3499725833333333,
+          "heroWidth": 760,
+          "viewport": 1440
+        },
+        "errors": []
+      }
+    ],
+    "eventAndAdaptiveCases": [
+      {
+        "case": "event",
+        "event": "bride",
+        "init": {
+          "build": "v19.4-20260724",
+          "event": "bride",
+          "dataMode": "standard",
+          "coverOpen": true,
+          "active": "coverOpenButton",
+          "rsvpText": "Liên hệ xác nhận",
+          "rsvpFallback": "contact",
+          "overflow": false
+        },
+        "after": {
+          "active": "hero-title",
+          "coverOpen": false,
+          "storyState": "running",
+          "autostart": "started",
+          "chapter": "1",
+          "music": "requested",
+          "volume": 0.3499620833333333,
+          "overflow": false
+        },
+        "contact": {
+          "open": true,
+          "calls": [
+            "tel:0374037026",
+            "tel:0906878461"
+          ],
+          "recommendation": "Đối với Nhà gái · 29/07, Quý vị có thể ưu tiên liên hệ cô dâu."
+        },
+        "returnedFocus": "rsvpButton",
+        "errors": [],
+        "requests": 9
+      },
+      {
+        "case": "event",
+        "event": "groom",
+        "init": {
+          "build": "v19.4-20260724",
+          "event": "groom",
+          "dataMode": "standard",
+          "coverOpen": true,
+          "active": "coverOpenButton",
+          "rsvpText": "Liên hệ xác nhận",
+          "rsvpFallback": "contact",
+          "overflow": false
+        },
+        "after": {
+          "active": "hero-title",
+          "coverOpen": false,
+          "storyState": "running",
+          "autostart": "started",
+          "chapter": "1",
+          "music": "requested",
+          "volume": 0.34999066666666667,
+          "overflow": false
+        },
+        "contact": {
+          "open": true,
+          "calls": [
+            "tel:0374037026",
+            "tel:0906878461"
+          ],
+          "recommendation": "Đối với Nhà trai · 30/07, Quý vị có thể ưu tiên liên hệ chú rể."
+        },
+        "returnedFocus": "rsvpButton",
+        "errors": [],
+        "requests": 9
+      },
+      {
+        "case": "event",
+        "event": "nhatrang",
+        "init": {
+          "build": "v19.4-20260724",
+          "event": "nhatrang",
+          "dataMode": "standard",
+          "coverOpen": true,
+          "active": "coverOpenButton",
+          "rsvpText": "Liên hệ xác nhận",
+          "rsvpFallback": "contact",
+          "overflow": false
+        },
+        "after": {
+          "active": "hero-title",
+          "coverOpen": false,
+          "storyState": "running",
+          "autostart": "started",
+          "chapter": "1",
+          "music": "requested",
+          "volume": 0.3499615,
+          "overflow": false
+        },
+        "contact": {
+          "open": true,
+          "calls": [
+            "tel:0374037026",
+            "tel:0906878461"
+          ],
+          "recommendation": "Đối với Nha Trang · 15/08, Quý vị có thể ưu tiên liên hệ chú rể."
+        },
+        "returnedFocus": "rsvpButton",
+        "errors": [],
+        "requests": 9
+      },
+      {
+        "case": "event",
+        "event": "saigon",
+        "init": {
+          "build": "v19.4-20260724",
+          "event": "saigon",
+          "dataMode": "standard",
+          "coverOpen": true,
+          "active": "coverOpenButton",
+          "rsvpText": "Liên hệ xác nhận",
+          "rsvpFallback": "contact",
+          "overflow": false
+        },
+        "after": {
+          "active": "hero-title",
+          "coverOpen": false,
+          "storyState": "running",
+          "autostart": "started",
+          "chapter": "1",
+          "music": "requested",
+          "volume": 0.3499708333333333,
+          "overflow": false
+        },
+        "contact": {
+          "open": true,
+          "calls": [
+            "tel:0374037026",
+            "tel:0906878461"
+          ],
+          "recommendation": "Đối với Sài Gòn · 22/08, Quý vị có thể ưu tiên liên hệ chú rể."
+        },
+        "returnedFocus": "rsvpButton",
+        "errors": [],
+        "requests": 9
+      },
+      {
+        "case": "constrained",
+        "init": {
+          "dataMode": "constrained",
+          "checked": false,
+          "hintHidden": false,
+          "hint": "Chế độ tiết kiệm dữ liệu đang bật: thiệp sẽ không tự chạy hoặc tự phát nhạc."
+        },
+        "after": {
+          "autostart": "disabled",
+          "storyState": "paused",
+          "music": "data-saver-blocked",
+          "audioPaused": true,
+          "chapter": "1"
+        },
+        "errors": [],
+        "requests": 4
+      },
+      {
+        "case": "long-landscape",
+        "init": {
+          "clientHeight": 320,
+          "scrollHeight": 320,
+          "scrollable": false,
+          "buttonTop": 69.6875,
+          "buttonBottom": 173.6875,
+          "viewportH": 320,
+          "active": "coverOpenButton",
+          "guest": "Gia đình ông Nguyễn Văn Thành và bà Trần Thị Kim Phượng cùng các con cháu thân y",
+          "overflow": false
+        },
+        "after": {
+          "coverOpen": false,
+          "active": "hero-title",
+          "autostart": "started",
+          "state": "running",
+          "overflow": false
+        },
+        "errors": [],
+        "requests": 4
+      }
+    ],
+    "summary": {
+      "viewports": "7/7 PASS",
+      "eventProfiles": "4/4 PASS",
+      "horizontalOverflow": 0,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "audioVolumeRange": "PASS [0,1]",
+      "focusAfterOpening": "PASS -> hero-title",
+      "contactFallback": "PASS -> two tel links and trigger focus restore",
+      "constrainedData": "PASS -> auto-story/music disabled",
+      "longLandscapeGuest": "PASS"
+    }
+  },
+  "sourceMetrics": {
+    "sourceFileCount": 175,
+    "sourceBytes": 8377638,
+    "distFileCount": 47,
+    "distBytes": 7893227,
+    "htmlIdCount": 100,
+    "duplicateIds": [],
+    "localRefCount": 14,
+    "missingLocalRefs": [],
+    "innerHTMLAssignments": 0,
+    "evalMentions": 0,
+    "newFunctionMentions": 0,
+    "eventPages": [
+      "bride",
+      "groom",
+      "nhatrang",
+      "saigon"
+    ]
+  },
+  "researchApplied": [
+    "Guests should see only events relevant to their invitation; guest CSV now supports event-specific rows.",
+    "Auto-moving content keeps pause/restart controls; existing Story Player remains.",
+    "Motion remains based primarily on transform and opacity.",
+    "Data Saver and slow connection hints now reduce automatic media work."
+  ],
+  "knownBlockers": [
+    "Multi-event Google Form URLs are not configured; phone contact fallback is active.",
+    "Nha Trang and Sài Gòn venue addresses/maps remain incomplete.",
+    "Bride-home map pin remains unverified.",
+    "RSVP deadlines and event end times are not supplied.",
+    "Final guest segmentation data is not yet supplied.",
+    "Public GitHub Pages is still an older single-event build until v19.4 is deployed.",
+    "Physical Android/iPhone and Zalo/Messenger tests have not been completed.",
+    "Live RSVP submit and wishes pending/approve/display E2E have not been completed."
+  ],
+  "fableVerdict": {
+    "accept": [
+      "v19.4 adaptive network mode",
+      "RSVP contact fallback",
+      "post-cover focus management",
+      "long-name landscape hardening",
+      "per-guest CSV link tool",
+      "existing cinematic/story controls"
+    ],
+    "reject": [
+      "more decorative animation before live-data completion",
+      "showing every event to every guest",
+      "claiming production readiness from local tests only"
+    ],
+    "final": "ACCEPT_LOCAL_RELEASE_CANDIDATE_NOT_YET_GUEST_READY"
+  }
+}

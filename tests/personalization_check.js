@@ -51,6 +51,23 @@ const personalized = utils.buildPersonalizedUrl(
 );
 assert(personalized.endsWith("#to=Anh+Minh"), personalized);
 
+const eventEntry = utils.buildEventEntryUrl(
+  "https://example.test/wedding/",
+  "nhatrang",
+  {
+    guestName: "Chị Hương",
+    guestParameter: "to",
+    eventParameter: "event",
+    eventsParameter: "events",
+    invitedEventIds: ["nhatrang", "saigon"],
+    activeEventId: "nhatrang"
+  }
+);
+assert(eventEntry.includes("/wedding/events/nhatrang/"), eventEntry);
+assert(eventEntry.includes("to=Ch%E1%BB%8B+H%C6%B0%C6%A1ng"), eventEntry);
+assert(eventEntry.includes("events=nhatrang%2Csaigon"), eventEntry);
+assert(eventEntry.includes("event=nhatrang"), eventEntry);
+
 const rsvp = utils.buildRsvpUrl(
   "https://docs.google.com/forms/d/e/example/viewform",
   "Anh Minh",

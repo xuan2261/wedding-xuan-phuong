@@ -9,9 +9,10 @@ errors = []
 def require(value, message):
     if not value: errors.append(message)
 
-require(DATA["build"]["buildId"] == "v19.2.1-20260724", "wedding-data sai build")
+require(DATA["build"]["buildId"] == "v19.4-20260724", "wedding-data sai build")
 require(BUILD["buildId"] == DATA["build"]["buildId"], "BUILD lệch wedding-data")
-require('content="v19.2.1-20260724"' in INDEX, "HTML lệch build")
+require('content="v19.4-20260724"' in INDEX, "HTML lệch build")
+require('buildId: "v19.4-20260724"' in CONFIG, "config lệch build")
 require(DATA["defaultEventId"] == "groom", "Default event phải là groom")
 require(set(DATA["events"]) == {"bride","groom","nhatrang","saigon"}, "Thiếu event")
 for event_id, event in DATA["events"].items():
@@ -19,6 +20,8 @@ for event_id, event in DATA["events"].items():
     require(event["dateDisplay"] in CONFIG, f"config lệch ngày {event_id}")
     require(event["venueName"] in CONFIG, f"config lệch địa điểm {event_id}")
     require(event["calendar"]["file"] in CONFIG, f"config thiếu calendar {event_id}")
+    require(event["sharingTitle"] in CONFIG, f"config thiếu sharing title {event_id}")
+    require(event["sharingText"] in CONFIG, f"config thiếu sharing text {event_id}")
     require((ROOT / event["calendar"]["file"]).exists(), f"thiếu ICS {event_id}")
 require(DATA["events"]["nhatrang"]["mapsUrl"] == "", "Nha Trang map phải tắt tới khi xác minh")
 require(DATA["events"]["saigon"]["mapsUrl"] == "", "Sài Gòn map phải tắt tới khi xác minh")

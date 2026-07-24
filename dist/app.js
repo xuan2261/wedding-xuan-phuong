@@ -33,6 +33,29 @@
     invitedEventIds: [...(config.eventContext?.invitedEventIds || [config.event?.id || "groom"])]
   };
 
+  function getAdaptiveDataState() {
+    const settings = config.openingExperience || {};
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const effectiveType = String(connection?.effectiveType || "").toLowerCase();
+    const constrainedTypes = Array.isArray(settings.constrainedEffectiveTypes)
+      ? settings.constrainedEffectiveTypes.map((value) => String(value).toLowerCase())
+      : ["slow-2g", "2g"];
+    const saveData = settings.respectDataSaver !== false && connection?.saveData === true;
+    const constrainedNetwork = constrainedTypes.includes(effectiveType);
+    const constrained = Boolean(saveData || constrainedNetwork);
+
+    document.body.dataset.dataMode = constrained ? "constrained" : "standard";
+    if (effectiveType) document.body.dataset.effectiveConnection = effectiveType;
+
+    return Object.freeze({
+      constrained,
+      saveData,
+      effectiveType
+    });
+  }
+
+  const adaptiveDataState = getAdaptiveDataState();
+
   function setText(selector, value) {
     $$(selector).forEach((element) => {
       element.textContent = value;
@@ -315,17 +338,22 @@
 
     const buildShareUrl = (includeGuest) => {
       const baseUrl = config.site?.domain || window.location.href;
-      if (!guestUtils?.buildInvitationUrl) {
-        return String(baseUrl).split("#")[0];
-      }
-      return guestUtils.buildInvitationUrl(baseUrl, {
+      const options = {
         guestName: includeGuest && guestState.isPersonalized ? guestState.name : "",
         guestParameter: personalization.parameter,
         eventParameter: personalization.eventParameter,
         eventsParameter: personalization.eventsParameter,
         invitedEventIds: guestState.invitedEventIds,
         activeEventId: guestState.activeEventId
-      });
+      };
+
+      if (guestUtils?.buildEventEntryUrl) {
+        return guestUtils.buildEventEntryUrl(baseUrl, guestState.activeEventId, options);
+      }
+      if (guestUtils?.buildInvitationUrl) {
+        return guestUtils.buildInvitationUrl(baseUrl, options);
+      }
+      return String(baseUrl).split("#")[0];
     };
 
     if (personalizedCopyButton) {
@@ -383,6 +411,14 @@
     );
   }
 
+  function formatPhone(value) {
+    const digits = String(value || "").replace(/\D+/g, "");
+    if (digits.length === 10) {
+      return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
+    }
+    return digits || "Chưa cập nhật";
+  }
+
   function giftsAreReady() {
     if (!Array.isArray(config.gifts) || config.gifts.length === 0) return false;
 
@@ -430,6 +466,9 @@
     setText("[data-actions-description]", labels.actionsDescription);
     setText("[data-rsvp-dialog-event]", event.shortTitle);
     setText("[data-gift-dialog-event]", event.shortTitle);
+    setText("[data-attendance-contact-event]", event.shortTitle);
+    setText("[data-groom-phone]", formatPhone(config.contact?.groomPhone));
+    setText("[data-bride-phone]", formatPhone(config.contact?.bridePhone));
 
     const coverDate = $(".invitation-cover__date time");
     if (coverDate && event.isoDateTime) {
@@ -477,9 +516,17 @@
       rsvpButton.textContent = "Xác nhận tham dự";
       rsvpNote.hidden = true;
     } else {
-      rsvpButton.removeAttribute("href");
-      rsvpButton.setAttribute("aria-disabled", "true");
-      rsvpButton.textContent = "RSVP sẽ cập nhật";
+      const fallbackPhone = String(config.contact?.directionPhone || "").replace(/\D+/g, "");
+      if (fallbackPhone) {
+        rsvpButton.href = `tel:${fallbackPhone}`;
+        rsvpButton.removeAttribute("aria-disabled");
+        rsvpButton.dataset.rsvpFallback = "contact";
+        rsvpButton.textContent = "Liên hệ xác nhận";
+      } else {
+        rsvpButton.removeAttribute("href");
+        rsvpButton.setAttribute("aria-disabled", "true");
+        rsvpButton.textContent = "RSVP sẽ cập nhật";
+      }
       rsvpNote.hidden = false;
       rsvpNote.textContent = rsvp.pendingMessage || "Biểu mẫu RSVP sẽ được cập nhật sau.";
     }
@@ -593,6 +640,48 @@
         : Number(settings.storyHoldMs || 6500);
     };
 
+    const prepareStoryAssets = async (index) => {
+      if (settings.preloadNextScene === false) return;
+      const target = stops[index];
+      if (!target) return;
+
+      const configuredLimit = adaptiveDataState.constrained
+        ? Number(settings.constrainedPreloadImageLimit) || 1
+        : Number(settings.preloadImageLimit) || 4;
+      const limit = Math.max(1, configuredLimit);
+      const waitMs = Math.max(100, Number(settings.preloadWaitMs) || 700);
+      const images = $$('img', target).slice(0, limit);
+      if (!images.length) return;
+
+      document.body.dataset.storyAssetState = "preparing";
+      images.forEach((image) => {
+        image.loading = "eager";
+        image.fetchPriority = adaptiveDataState.constrained ? "auto" : "high";
+        image.dataset.storyPreloaded = "true";
+      });
+
+      const decodeTasks = images.map(async (image) => {
+        try {
+          if (typeof image.decode === "function") {
+            await image.decode();
+          } else if (!image.complete) {
+            await new Promise((resolve) => {
+              image.addEventListener("load", resolve, { once: true });
+              image.addEventListener("error", resolve, { once: true });
+            });
+          }
+        } catch {
+          // Decode errors must not block navigation; the browser can still paint the image.
+        }
+      });
+
+      await Promise.race([
+        Promise.allSettled(decodeTasks),
+        new Promise((resolve) => window.setTimeout(resolve, waitMs))
+      ]);
+      document.body.dataset.storyAssetState = "ready";
+    };
+
     const resetProgress = (duration = 0) => {
       if (!progress) return;
       progress.style.transition = "none";
@@ -619,7 +708,7 @@
         : running
           ? "running"
           : "paused";
-      document.body.dataset.storyChapter = String(position);
+      document.body.dataset.storyChapterIndex = String(position);
       button.setAttribute("aria-pressed", String(running));
       button.setAttribute(
         "aria-label",
@@ -702,7 +791,7 @@
     const scheduleNext = (delayMs) => {
       clearTimer();
       resetProgress(delayMs);
-      timer = window.setTimeout(() => {
+      timer = window.setTimeout(async () => {
         refreshStops();
         if (!running || !stops.length) return;
         if (currentIndex >= stops.length - 1) {
@@ -711,8 +800,11 @@
         }
         currentIndex += 1;
         completed = false;
+        await prepareStoryAssets(currentIndex);
+        if (!running) return;
         scrollToCurrent();
         syncPlayer();
+        void prepareStoryAssets(currentIndex + 1);
         scheduleNext(holdFor(stops[currentIndex]));
       }, Math.max(250, delayMs));
     };
@@ -731,6 +823,8 @@
       delete document.body.dataset.storyPauseReason;
       if (fromStart) scrollToCurrent();
       syncPlayer();
+      void prepareStoryAssets(currentIndex);
+      void prepareStoryAssets(currentIndex + 1);
       scheduleNext(
         initialDelayMs > 0
           ? initialDelayMs
@@ -833,6 +927,8 @@
     const openButton = $("#coverOpenButton");
     const simpleButton = $("#coverSimpleButton");
     const autoStory = $("#coverAutoStory");
+    const dataHint = $("#coverDataHint");
+    const focusTarget = $("#hero-title");
     const reduceMotion =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const params = new URLSearchParams(window.location.search);
@@ -847,9 +943,12 @@
     }
 
     if (autoStory) {
+      const disableForData = adaptiveDataState.constrained &&
+        settings.disableAutoStoryOnConstrainedNetwork !== false;
       autoStory.checked =
-        settings.autoStoryDefault !== false && !reduceMotion;
+        settings.autoStoryDefault !== false && !reduceMotion && !disableForData;
       autoStory.disabled = reduceMotion;
+      if (dataHint) dataHint.hidden = !disableForData;
     }
 
     let openedInSession = false;
@@ -880,6 +979,12 @@
 
       window.dispatchEvent(new CustomEvent("wedding:cover-opened"));
       storyController?.show();
+
+      requestAnimationFrame(() => {
+        if (focusTarget && typeof focusTarget.focus === "function") {
+          focusTarget.focus({ preventScroll: true });
+        }
+      });
 
       if (shouldStartStory && !reduceMotion) {
         const startOptions = {
@@ -1595,6 +1700,61 @@
     setupWishLazyLoading(wishesSection);
   }
 
+  function setupAttendanceContactDialog() {
+    const trigger = $("#rsvpButton");
+    const dialog = $("#attendanceContactDialog");
+    const recommendation = $("#attendanceContactRecommendation");
+    if (!trigger || !dialog || config.rsvp?.enabled) return;
+
+    const contacts = {
+      groom: String(config.contact?.groomPhone || "").replace(/\D+/g, ""),
+      bride: String(config.contact?.bridePhone || "").replace(/\D+/g, "")
+    };
+    const preferredRole = config.event?.directionPhoneRole === "bride" ? "bride" : "groom";
+    const preferredLabel = preferredRole === "bride" ? "cô dâu" : "chú rể";
+
+    $$('[data-attendance-call]', dialog).forEach((link) => {
+      const role = link.dataset.attendanceCall;
+      const phone = contacts[role];
+      link.hidden = !phone;
+      if (phone) link.href = `tel:${phone}`;
+    });
+
+    if (recommendation) {
+      recommendation.textContent = `Đối với ${config.event.shortTitle}, Quý vị có thể ưu tiên liên hệ ${preferredLabel}.`;
+    }
+
+    $$('[data-attendance-copy]', dialog).forEach((button) => {
+      button.addEventListener("click", async () => {
+        const role = button.dataset.attendanceCopy;
+        const phone = contacts[role];
+        if (!phone) return;
+        try {
+          await navigator.clipboard.writeText(phone);
+          showToast(`Đã sao chép: ${formatPhone(phone)}`);
+        } catch {
+          window.prompt("Sao chép số điện thoại:", phone);
+        }
+      });
+    });
+
+    if (typeof dialog.showModal !== "function") return;
+    const closeButtons = $$('[data-close-attendance-contact]', dialog);
+    const close = () => {
+      if (dialog.open) dialog.close();
+      trigger.focus();
+    };
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      dialog.showModal();
+    });
+    closeButtons.forEach((button) => button.addEventListener("click", close));
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) close();
+    });
+  }
+
   function setupRsvpDialog() {
     const trigger = $("#rsvpButton");
     const dialog = $("#rsvpDialog");
@@ -1959,12 +2119,17 @@
         return;
       }
 
-      const startedAt = performance.now();
+      let startedAt = null;
       const step = (timestamp) => {
         if (generation !== volumeFadeGeneration) return;
 
-        // Clamp elapsed/ratio vì timestamp callback không được giả định luôn >= startedAt.
-        const elapsed = Math.max(0, Number(timestamp) - startedAt);
+        // Dùng timestamp của chính requestAnimationFrame làm mốc thời gian.
+        // Điều này tránh trộn hai time origin có giá trị gần nhau nhưng không hoàn toàn giống nhau.
+        const frameTime = Number.isFinite(Number(timestamp))
+          ? Number(timestamp)
+          : performance.now();
+        if (startedAt === null) startedAt = frameTime;
+        const elapsed = Math.max(0, frameTime - startedAt);
         const ratio = Math.min(1, Math.max(0, elapsed / safeDuration));
         const nextVolume = startVolume + (safeTarget - startVolume) * ratio;
         setAudioVolume(nextVolume);
@@ -2041,7 +2206,15 @@
         void seal.offsetWidth;
         seal.classList.add("is-celebrating");
       }
+      const blockAutomaticMusic = adaptiveDataState.constrained &&
+        config.openingExperience?.disableAutoMusicOnConstrainedNetwork !== false;
+      if (blockAutomaticMusic) {
+        document.body.dataset.musicAutostart = "data-saver-blocked";
+        syncMusicButton();
+        return;
+      }
       if (audio.paused) {
+        document.body.dataset.musicAutostart = "requested";
         void playMusic({ silent: true, fadeIn: true });
       }
     };
@@ -2067,6 +2240,24 @@
       }));
     }
 
+    let pausedByVisibility = false;
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && !audio.paused) {
+        pausedByVisibility = true;
+        document.body.dataset.musicPauseReason = "hidden-tab";
+        pauseMusic();
+        return;
+      }
+      if (!document.hidden && pausedByVisibility) {
+        pausedByVisibility = false;
+        document.body.dataset.musicPauseReason = "awaiting-user";
+        syncMusicButton();
+      }
+    });
+    window.addEventListener("pagehide", () => {
+      if (!audio.paused) pauseMusic();
+    });
+
     syncMusicButton();
   }
 
@@ -2088,6 +2279,7 @@
   setupFamilies();
   setupEventActions();
   setupShareAndCalendar();
+  setupAttendanceContactDialog();
   setupRsvpDialog();
   setupMapDialog();
   setupReveal();

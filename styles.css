@@ -2044,6 +2044,74 @@ body[data-event-id="saigon"] .guest-invitation__seal {
 }
 
 
+/* RSVP contact fallback — active until the multi-event Form is configured. */
+.contact-dialog {
+  width: min(92vw, 680px);
+  max-height: min(88svh, 760px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(32, 75, 58, .2);
+  border-radius: 24px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 28px 80px rgba(16, 43, 32, .28);
+}
+
+.contact-dialog::backdrop {
+  background: rgba(9, 28, 20, .72);
+  backdrop-filter: blur(5px);
+}
+
+.attendance-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 24px 20px;
+}
+
+.attendance-contact-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffdf8;
+  text-align: center;
+}
+
+.attendance-contact-card > p,
+.attendance-contact-card > h3 {
+  margin: 0;
+}
+
+.attendance-contact-card > p {
+  color: var(--gold-700);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.attendance-contact-card h3 {
+  color: var(--green-900);
+  font-size: 1.2rem;
+}
+
+.attendance-contact__recommendation {
+  margin: 0;
+  padding: 0 24px 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .attendance-contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Cinematic invitation cover + guided story — v19.2 */
 .invitation-cover {
   width: 100vw;
@@ -2172,8 +2240,16 @@ body[data-event-id="saigon"] .guest-invitation__seal {
     max(34px, env(safe-area-inset-top))
     clamp(24px, 7vw, 58px)
     max(24px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
   text-align: center;
   text-shadow: 0 2px 20px rgba(0, 0, 0, .26);
+}
+
+.invitation-cover__content::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .invitation-cover__eyebrow,
@@ -2208,7 +2284,15 @@ body[data-event-id="saigon"] .guest-invitation__seal {
   font-size: clamp(1.02rem, 4.4vw, 1.38rem);
   font-weight: 500;
   letter-spacing: .02em;
+  overflow-wrap: anywhere;
   text-transform: none;
+}
+
+.invitation-cover__data-hint {
+  max-width: 38ch;
+  margin: -4px 0 0;
+  color: #ffe6ad;
+  font: 600 .68rem/1.45 var(--sans);
 }
 
 .invitation-cover__names {
@@ -2546,6 +2630,12 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   .invitation-cover__date,
   .invitation-cover__hint {
     grid-column: 1;
+  }
+
+  .invitation-cover__guest strong {
+    max-width: 34ch;
+    font-size: clamp(.78rem, 3.5vh, 1rem);
+    line-height: 1.28;
   }
 
   .invitation-cover__names {

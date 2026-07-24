@@ -12,9 +12,9 @@
 
   const SOURCE = {
     build: {
-      buildId: "v19.2.1-20260724",
-      release: "v19.2.1",
-      status: "draft-multi-event-cinematic-v2"
+      buildId: "v19.4-20260724",
+      release: "v19.4",
+      status: "release-candidate-share-story-hardening"
     },
 
     couple: {
@@ -361,7 +361,15 @@
       storyHoldMs: 6500,
       pauseOnInteraction: true,
       pauseOnDialogs: true,
-      sealPulseIterations: 2
+      preloadNextScene: true,
+      preloadImageLimit: 4,
+      preloadWaitMs: 700,
+      sealPulseIterations: 2,
+      respectDataSaver: true,
+      constrainedEffectiveTypes: ["slow-2g", "2g"],
+      constrainedPreloadImageLimit: 1,
+      disableAutoStoryOnConstrainedNetwork: true,
+      disableAutoMusicOnConstrainedNetwork: true
     },
 
     motion: {
