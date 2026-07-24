@@ -1,0 +1,23 @@
+{
+  "generatedAtUtc": "2026-07-23T00:08:20.514628+00:00",
+  "buildId": "v18.2-20260723",
+  "release": "v18.2",
+  "implemented": [
+    "feature picture art direction with dedicated landscape crops",
+    "wedding lifecycle states and RSVP auto-close",
+    "lazy gift QR initialization",
+    "accessible wish validation focus",
+    "Google Forms prefill entry utility",
+    "canonical visual asset deduplication",
+    "clean dist builder and verifier",
+    "ICS PRODID v18.2 without invented end times"
+  ],
+  "pendingLive": [
+    "deploy GitHub Pages",
+    "run Google Form updater",
+    "run prefill utility and set entry ID",
+    "verify map pin",
+    "physical Android/iPhone and in-app browser tests",
+    "provide actual event end times"
+  ]
+}

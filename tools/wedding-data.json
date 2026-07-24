@@ -1,8 +1,9 @@
 {
   "build": {
-    "buildId": "v18-20260722",
-    "release": "v18",
-    "backendVersion": "1.5.0"
+    "buildId": "v19.2-20260724",
+    "release": "v19.2",
+    "backendVersion": "1.5.0",
+    "status": "draft-multi-event-cinematic-v2"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",
@@ -10,34 +11,307 @@
     "brideFullName": "Trần Thị Phượng",
     "brideDisplayName": "Thị Phượng"
   },
-  "event": {
-    "dateIso": "2026-07-30",
-    "isoDateTime": "2026-07-30T08:30:00+07:00",
-    "weekday": "Thứ Năm",
-    "dateDisplay": "30.07.2026",
-    "weddingDateLong": "Thứ Năm, ngày 30/07/2026",
-    "lunarDate": "Ngày 17 tháng 6 năm Bính Ngọ",
-    "ceremonyTime": "08h30",
-    "guestTime": "10h00",
-    "ceremonyLabel": "Lễ Thành Hôn",
-    "receptionLabel": "Đón khách và dùng tiệc",
-    "venueName": "Tư gia nhà trai",
-    "addressLine1": "346 Nguyễn Huệ",
-    "addressLine2": "Xã Bình Dương, Tỉnh Gia Lai",
-    "address": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
-    "mapsUrl": "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6",
-    "mapEmbedUrl": "https://www.google.com/maps?q=346%20Nguy%E1%BB%85n%20Hu%E1%BB%87%2C%20X%C3%A3%20B%C3%ACnh%20D%C6%B0%C6%A1ng%2C%20T%E1%BB%89nh%20Gia%20Lai&output=embed"
-  },
-  "rsvp": {
-    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
-    "deadlineDisplay": "28.07.2026",
-    "deadlineSlash": "28/07/2026",
-    "guestNameEntry": "",
-    "formId": "1_ei237lBMBctR5vm971a4GEN5Q2_xmPBr5D1sQSMM4E"
+  "defaultEventId": "groom",
+  "events": {
+    "bride": {
+      "id": "bride",
+      "kind": "wedding-party",
+      "status": "confirmed-partial",
+      "title": "Tiệc cưới nhà gái",
+      "shortTitle": "Nhà gái · 29/07",
+      "heroKicker": "Tiệc cưới nhà gái",
+      "dateIso": "2026-07-29",
+      "dateDisplay": "29.07.2026",
+      "weekday": "Thứ Tư",
+      "lunarDate": "Ngày 16 tháng 6 năm Bính Ngọ",
+      "isoDateTime": "2026-07-29T09:00:00+07:00",
+      "timeline": [
+        {
+          "time": "09h00",
+          "datetime": "2026-07-29T09:00:00+07:00",
+          "label": "Đón khách",
+          "note": "Gia đình nhà gái hân hạnh đón tiếp Quý vị."
+        },
+        {
+          "time": "09h30",
+          "datetime": "2026-07-29T09:30:00+07:00",
+          "label": "Làm lễ",
+          "note": "Nghi thức được cử hành tại tư gia nhà gái."
+        },
+        {
+          "time": "10h00",
+          "datetime": "2026-07-29T10:00:00+07:00",
+          "label": "Khai tiệc",
+          "note": "Kính mời Quý vị cùng chung vui trong tiệc cưới."
+        }
+      ],
+      "venueName": "Tư gia nhà gái",
+      "addressLine1": "Thôn Định Thiện Tây",
+      "addressLine2": "Xã Tuy Phước Bắc, Tỉnh Gia Lai",
+      "address": "Thôn Định Thiện Tây, Xã Tuy Phước Bắc, Tỉnh Gia Lai",
+      "mapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
+      "mapEmbedUrl": "",
+      "mapsVerified": false,
+      "venueStatusNote": "Liên kết bản đồ đã được nhập nhưng chưa xác minh điểm ghim; popup bản đồ tạm ẩn.",
+      "rsvp": {
+        "enabled": false,
+        "url": "",
+        "deadlineDisplay": "",
+        "guestNameEntry": "",
+        "pendingMessage": "RSVP cho tiệc nhà gái sẽ được cập nhật sau."
+      },
+      "calendar": {
+        "enabled": true,
+        "file": "assets/calendar/tiec-cuoi-nha-gai-2026-07-29.ics",
+        "label": "Thêm tiệc nhà gái vào lịch"
+      },
+      "lifecycle": {
+        "enabled": true,
+        "rsvpClosesAt": "",
+        "eventDayStartsAt": "2026-07-29T00:00:00+07:00",
+        "eventDayEndsAt": "2026-07-29T23:59:59+07:00",
+        "giftsHideAt": ""
+      },
+      "giftIds": [
+        "bride"
+      ],
+      "directionPhoneRole": "bride",
+      "invitationHeading": "Trân trọng kính mời",
+      "guestInvitationLead": "Đến tham dự",
+      "guestInvitationEventName": "Tiệc cưới tại nhà gái",
+      "invitationMessage": "Trong niềm hân hoan của hai gia đình, Thanh Xuân và Thị Phượng trân trọng kính mời Quý vị đến chung vui trong Tiệc cưới tại nhà gái. Sự hiện diện và lời chúc phúc của Quý vị là niềm vui quý giá đối với cô dâu, chú rể và gia đình.",
+      "eventSectionKicker": "Nhà gái",
+      "eventSectionTitle": "Lịch trình tiệc cưới nhà gái",
+      "countdownKicker": "Đếm ngược",
+      "countdownTitle": "Chờ ngày chung vui tại nhà gái",
+      "actionsTitle": "Xác nhận tham dự tiệc nhà gái",
+      "actionsDescription": "Thông tin RSVP sẽ được bổ sung khi biểu mẫu đa sự kiện hoàn tất.",
+      "sharingTitle": "Tiệc cưới nhà gái · Thanh Xuân & Thị Phượng",
+      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng."
+    },
+    "groom": {
+      "id": "groom",
+      "kind": "wedding-ceremony",
+      "status": "confirmed-partial",
+      "title": "Lễ Thành Hôn và tiệc nhà trai",
+      "shortTitle": "Nhà trai · 30/07",
+      "heroKicker": "Lễ Thành Hôn",
+      "dateIso": "2026-07-30",
+      "dateDisplay": "30.07.2026",
+      "weekday": "Thứ Năm",
+      "lunarDate": "Ngày 17 tháng 6 năm Bính Ngọ",
+      "isoDateTime": "2026-07-30T08:30:00+07:00",
+      "timeline": [
+        {
+          "time": "08h30",
+          "datetime": "2026-07-30T08:30:00+07:00",
+          "label": "Lễ Thành Hôn",
+          "note": "Nghi thức được cử hành tại tư gia nhà trai."
+        },
+        {
+          "time": "10h00",
+          "datetime": "2026-07-30T10:00:00+07:00",
+          "label": "Đón khách và dùng tiệc",
+          "note": "Hân hạnh đón Quý vị đến chung vui cùng hai gia đình."
+        }
+      ],
+      "venueName": "Tư gia nhà trai",
+      "addressLine1": "346 Nguyễn Huệ",
+      "addressLine2": "Xã Bình Dương, Tỉnh Gia Lai",
+      "address": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
+      "mapsUrl": "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6",
+      "mapEmbedUrl": "https://www.google.com/maps?q=14.2869225,109.0786394&z=17&output=embed",
+      "mapsVerified": true,
+      "venueStatusNote": "",
+      "rsvp": {
+        "enabled": false,
+        "url": "",
+        "deadlineDisplay": "",
+        "guestNameEntry": "",
+        "pendingMessage": "RSVP đa sự kiện đang được hoàn thiện. Quý vị cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể."
+      },
+      "calendar": {
+        "enabled": true,
+        "file": "assets/calendar/le-thanh-hon-nha-trai-2026-07-30.ics",
+        "label": "Thêm lễ nhà trai vào lịch"
+      },
+      "lifecycle": {
+        "enabled": true,
+        "rsvpClosesAt": "",
+        "eventDayStartsAt": "2026-07-30T00:00:00+07:00",
+        "eventDayEndsAt": "2026-07-30T23:59:59+07:00",
+        "giftsHideAt": ""
+      },
+      "giftIds": [
+        "groom"
+      ],
+      "directionPhoneRole": "groom",
+      "invitationHeading": "Trân trọng kính mời",
+      "guestInvitationLead": "Đến tham dự",
+      "guestInvitationEventName": "Lễ Thành Hôn",
+      "invitationMessage": "Thời gian đã đưa Thanh Xuân và Thị Phượng đến bên nhau, yêu thương đã dẫn lối để cùng xây dựng một mái ấm. Trong niềm hân hoan của hai gia đình, trân trọng kính mời Quý vị đến tham dự Lễ Thành Hôn và chung vui trong tiệc cưới tại nhà trai.",
+      "eventSectionKicker": "Nhà trai",
+      "eventSectionTitle": "Lịch trình Lễ Thành Hôn",
+      "countdownKicker": "Đếm ngược",
+      "countdownTitle": "Chờ ngày chung đôi",
+      "actionsTitle": "Xác nhận tham dự lễ nhà trai",
+      "actionsDescription": "Thông tin RSVP đa sự kiện sẽ được bổ sung sau khi Google Form mới được tạo.",
+      "sharingTitle": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
+      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng."
+    },
+    "nhatrang": {
+      "id": "nhatrang",
+      "kind": "wedding-reception",
+      "status": "draft",
+      "title": "Tiệc Báo Hỷ tại Nha Trang",
+      "shortTitle": "Nha Trang · 15/08",
+      "heroKicker": "Tiệc Báo Hỷ · Nha Trang",
+      "dateIso": "2026-08-15",
+      "dateDisplay": "15.08.2026",
+      "weekday": "Thứ Bảy",
+      "lunarDate": "",
+      "isoDateTime": "2026-08-15T17:00:00+07:00",
+      "timeline": [
+        {
+          "time": "17h00",
+          "datetime": "2026-08-15T17:00:00+07:00",
+          "label": "Đón khách",
+          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý vị."
+        },
+        {
+          "time": "18h00",
+          "datetime": "2026-08-15T18:00:00+07:00",
+          "label": "Bắt đầu Tiệc Báo Hỷ",
+          "note": "Kính mời Quý vị cùng chung vui trong buổi tiệc thân mật."
+        }
+      ],
+      "venueName": "Nhà hàng Nha Trang",
+      "addressLine1": "Nha Trang",
+      "addressLine2": "Địa chỉ cụ thể sẽ cập nhật",
+      "address": "Nha Trang",
+      "mapsUrl": "",
+      "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
+      "mapEmbedUrl": "",
+      "mapsVerified": false,
+      "venueStatusNote": "Tên nhà hàng, địa chỉ chi tiết và bản đồ đang chờ xác nhận. Liên kết đã cung cấp trùng với sự kiện nhà gái nên chưa được sử dụng.",
+      "rsvp": {
+        "enabled": false,
+        "url": "",
+        "deadlineDisplay": "",
+        "guestNameEntry": "",
+        "pendingMessage": "RSVP Tiệc Báo Hỷ Nha Trang sẽ cập nhật sau."
+      },
+      "calendar": {
+        "enabled": true,
+        "file": "assets/calendar/bao-hy-nha-trang-2026-08-15.ics",
+        "label": "Thêm Báo Hỷ Nha Trang vào lịch"
+      },
+      "lifecycle": {
+        "enabled": true,
+        "rsvpClosesAt": "",
+        "eventDayStartsAt": "2026-08-15T00:00:00+07:00",
+        "eventDayEndsAt": "2026-08-15T23:59:59+07:00",
+        "giftsHideAt": ""
+      },
+      "giftIds": [
+        "groom",
+        "bride"
+      ],
+      "directionPhoneRole": "groom",
+      "invitationHeading": "Trân trọng báo tin vui",
+      "guestInvitationLead": "Đến chung vui trong",
+      "guestInvitationEventName": "Tiệc Báo Hỷ tại Nha Trang",
+      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý vị đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Nha Trang. Sự hiện diện của Quý vị là niềm vui quý giá đối với hai vợ chồng.",
+      "eventSectionKicker": "Nha Trang",
+      "eventSectionTitle": "Lịch trình Tiệc Báo Hỷ",
+      "countdownKicker": "Hẹn gặp tại Nha Trang",
+      "countdownTitle": "Đếm ngược đến Tiệc Báo Hỷ",
+      "actionsTitle": "Xác nhận tham dự Báo Hỷ Nha Trang",
+      "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa điểm và danh sách khách được chốt.",
+      "sharingTitle": "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng",
+      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng."
+    },
+    "saigon": {
+      "id": "saigon",
+      "kind": "wedding-reception",
+      "status": "draft",
+      "title": "Tiệc Báo Hỷ tại Sài Gòn",
+      "shortTitle": "Sài Gòn · 22/08",
+      "heroKicker": "Tiệc Báo Hỷ · Sài Gòn",
+      "dateIso": "2026-08-22",
+      "dateDisplay": "22.08.2026",
+      "weekday": "Thứ Bảy",
+      "lunarDate": "",
+      "isoDateTime": "2026-08-22T17:00:00+07:00",
+      "timeline": [
+        {
+          "time": "17h00",
+          "datetime": "2026-08-22T17:00:00+07:00",
+          "label": "Đón khách",
+          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý vị."
+        },
+        {
+          "time": "18h00",
+          "datetime": "2026-08-22T18:00:00+07:00",
+          "label": "Bắt đầu Tiệc Báo Hỷ",
+          "note": "Kính mời Quý vị cùng chung vui trong buổi tiệc thân mật."
+        }
+      ],
+      "venueName": "Nhà hàng hải sản Seasan",
+      "addressLine1": "Sài Gòn",
+      "addressLine2": "Địa chỉ cụ thể sẽ cập nhật",
+      "address": "Sài Gòn",
+      "mapsUrl": "",
+      "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
+      "mapEmbedUrl": "",
+      "mapsVerified": false,
+      "venueStatusNote": "Địa chỉ chi tiết và bản đồ đang chờ xác nhận. Liên kết đã cung cấp trùng với sự kiện nhà gái nên chưa được sử dụng.",
+      "rsvp": {
+        "enabled": false,
+        "url": "",
+        "deadlineDisplay": "",
+        "guestNameEntry": "",
+        "pendingMessage": "RSVP Tiệc Báo Hỷ Sài Gòn sẽ cập nhật sau."
+      },
+      "calendar": {
+        "enabled": true,
+        "file": "assets/calendar/bao-hy-sai-gon-2026-08-22.ics",
+        "label": "Thêm Báo Hỷ Sài Gòn vào lịch"
+      },
+      "lifecycle": {
+        "enabled": true,
+        "rsvpClosesAt": "",
+        "eventDayStartsAt": "2026-08-22T00:00:00+07:00",
+        "eventDayEndsAt": "2026-08-22T23:59:59+07:00",
+        "giftsHideAt": ""
+      },
+      "giftIds": [
+        "groom",
+        "bride"
+      ],
+      "directionPhoneRole": "groom",
+      "invitationHeading": "Trân trọng báo tin vui",
+      "guestInvitationLead": "Đến chung vui trong",
+      "guestInvitationEventName": "Tiệc Báo Hỷ tại Sài Gòn",
+      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý vị đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Sài Gòn. Sự hiện diện của Quý vị là niềm vui quý giá đối với hai vợ chồng.",
+      "eventSectionKicker": "Sài Gòn",
+      "eventSectionTitle": "Lịch trình Tiệc Báo Hỷ",
+      "countdownKicker": "Hẹn gặp tại Sài Gòn",
+      "countdownTitle": "Đếm ngược đến Tiệc Báo Hỷ",
+      "actionsTitle": "Xác nhận tham dự Báo Hỷ Sài Gòn",
+      "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa chỉ và danh sách khách được chốt.",
+      "sharingTitle": "Tiệc Báo Hỷ Sài Gòn · Thanh Xuân & Thị Phượng",
+      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng."
+    }
   },
   "contact": {
     "groomPhone": "0374037026",
     "bridePhone": "0906878461"
+  },
+  "legacyRsvp": {
+    "formId": "1_ei237lBMBctR5vm971a4GEN5Q2_xmPBr5D1sQSMM4E",
+    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdWjs5UUj2uHvNcDDpTYBWoiTZP6maOukXgVpoSq2bFh-pVew/viewform",
+    "status": "legacy-single-event-do-not-use-in-v19"
   },
   "music": {
     "title": "Váy Cưới — Erik",

@@ -1,0 +1,637 @@
+{
+  "generatedAtUtc": "2026-07-24T02:14:26.379145+00:00",
+  "buildId": "v19.2-20260724",
+  "release": "v19.2",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v19.1.zip",
+  "verdict": "PASS_LOCAL_RELEASE_CANDIDATE_BLOCKED_BY_LIVE_CONFIGURATION",
+  "skillWorkflow": {
+    "integrity": "13/13 archives previously verified by uploaded integrity report",
+    "applied": [
+      "integrity gate",
+      "requirements and multi-event review",
+      "online invitation research",
+      "architecture/design",
+      "mobile UI/UX",
+      "accessibility/privacy",
+      "code review",
+      "root-cause debug",
+      "fix/cook",
+      "static/contract/browser test",
+      "optimization loop",
+      "Fable evidence judge"
+    ]
+  },
+  "auditFindingsFixed": [
+    "Fixed malformed nested Nha Trang sharing configuration.",
+    "Fixed guided-story completion state being overwritten from Xem lại to Tự xem.",
+    "Fixed programmatic smooth scroll being mistaken for manual interaction.",
+    "Added explicit pause when any dialog opens.",
+    "Removed infinite seal pulse; limited it to two cycles.",
+    "Added simple static invitation mode.",
+    "Added responsive 720/1280 cover art selection.",
+    "Added previous/next/chapter/progress Story Player 2.0.",
+    "Added audio fade-in and modal ducking at safer default volume.",
+    "Removed runtime-unused README, SVG QR duplicates and Google Forms header from dist."
+  ],
+  "staticChecks": [
+    {
+      "command": "node --check app.js",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check config.js",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "python tests/consistency_check.py",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: multi-event wedding data consistency",
+      "stderr": ""
+    },
+    {
+      "command": "python tests/verify_release.py",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: v19 multi-event release checks",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/multi_event_check.mjs",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: multi-event config resolution",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/opening_experience_check.mjs",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: cinematic opening and guided story contract",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/contract_check.js",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/personalization_check.js",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: personalization utilities",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/lifecycle_check.js",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: multi-event lifecycle contract",
+      "stderr": ""
+    },
+    {
+      "command": "python tests/verify_assets.py",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: images and QR decode",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/build-dist.py",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: rebuilt optimized clean dist",
+      "stderr": ""
+    },
+    {
+      "command": "python tests/verify_dist.py",
+      "pass": true,
+      "returncode": 0,
+      "stdout": "PASS: clean multi-event dist",
+      "stderr": ""
+    }
+  ],
+  "browserAudit": {
+    "build": "v19.2-20260724",
+    "covers": [
+      {
+        "event": "bride",
+        "eventId": "bride",
+        "eventText": "Tiệc cưới nhà gái",
+        "date": "29.07.2026",
+        "shareTitle": "Tiệc cưới nhà gái · Thanh Xuân & Thị Phượng",
+        "coverOpen": true,
+        "simpleVisible": true,
+        "playerHidden": true,
+        "audioPaused": true,
+        "overflow": 0,
+        "sealIterations": "2",
+        "coverImage": "https://wedding.local/assets/images/hero-720.webp?v=16",
+        "storyTitles": [
+          "Ảnh mở đầu",
+          "Lời mời dành cho Quý vị",
+          "Lời ngỏ",
+          "Cô dâu và chú rể",
+          "Lịch trình sự kiện",
+          "Album ảnh cưới",
+          "Những lời chúc",
+          "Lời cảm ơn"
+        ],
+        "errors": [],
+        "console": [],
+        "requests": {
+          "wish": 0,
+          "map": 0,
+          "form": 0,
+          "qr": 0,
+          "music": 0
+        }
+      },
+      {
+        "event": "groom",
+        "eventId": "groom",
+        "eventText": "Lễ Thành Hôn và tiệc nhà trai",
+        "date": "30.07.2026",
+        "shareTitle": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
+        "coverOpen": true,
+        "simpleVisible": true,
+        "playerHidden": true,
+        "audioPaused": true,
+        "overflow": 0,
+        "sealIterations": "2",
+        "coverImage": "https://wedding.local/assets/images/hero-720.webp?v=16",
+        "storyTitles": [
+          "Ảnh mở đầu",
+          "Lời mời dành cho Quý vị",
+          "Lời ngỏ",
+          "Cô dâu và chú rể",
+          "Lịch trình sự kiện",
+          "Album ảnh cưới",
+          "Những lời chúc",
+          "Lời cảm ơn"
+        ],
+        "errors": [],
+        "console": [],
+        "requests": {
+          "wish": 0,
+          "map": 0,
+          "form": 0,
+          "qr": 0,
+          "music": 0
+        }
+      },
+      {
+        "event": "nhatrang",
+        "eventId": "nhatrang",
+        "eventText": "Tiệc Báo Hỷ tại Nha Trang",
+        "date": "15.08.2026",
+        "shareTitle": "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng",
+        "coverOpen": true,
+        "simpleVisible": true,
+        "playerHidden": true,
+        "audioPaused": true,
+        "overflow": 0,
+        "sealIterations": "2",
+        "coverImage": "https://wedding.local/assets/images/hero-720.webp?v=16",
+        "storyTitles": [
+          "Ảnh mở đầu",
+          "Lời mời dành cho Quý vị",
+          "Lời ngỏ",
+          "Cô dâu và chú rể",
+          "Lịch trình sự kiện",
+          "Album ảnh cưới",
+          "Những lời chúc",
+          "Lời cảm ơn"
+        ],
+        "errors": [],
+        "console": [],
+        "requests": {
+          "wish": 0,
+          "map": 0,
+          "form": 0,
+          "qr": 0,
+          "music": 0
+        }
+      },
+      {
+        "event": "saigon",
+        "eventId": "saigon",
+        "eventText": "Tiệc Báo Hỷ tại Sài Gòn",
+        "date": "22.08.2026",
+        "shareTitle": "Tiệc Báo Hỷ Sài Gòn · Thanh Xuân & Thị Phượng",
+        "coverOpen": true,
+        "simpleVisible": true,
+        "playerHidden": true,
+        "audioPaused": true,
+        "overflow": 0,
+        "sealIterations": "2",
+        "coverImage": "https://wedding.local/assets/images/hero-720.webp?v=16",
+        "storyTitles": [
+          "Ảnh mở đầu",
+          "Lời mời dành cho Quý vị",
+          "Lời ngỏ",
+          "Cô dâu và chú rể",
+          "Lịch trình sự kiện",
+          "Album ảnh cưới",
+          "Những lời chúc",
+          "Lời cảm ơn"
+        ],
+        "errors": [],
+        "console": [],
+        "requests": {
+          "wish": 0,
+          "map": 0,
+          "form": 0,
+          "qr": 0,
+          "music": 0
+        }
+      }
+    ],
+    "normal": {
+      "initial": {
+        "opened": true,
+        "simple": false,
+        "coverOpen": false,
+        "playerHidden": false,
+        "running": "true",
+        "chapter": "Ảnh mở đầu",
+        "label": "Đang tự xem",
+        "audioPaused": false,
+        "audioVolume": 0.35,
+        "coverPictureWidth": 720
+      },
+      "end": {
+        "label": "Xem lại",
+        "chapter": "Lời cảm ơn",
+        "counter": "8/8",
+        "nextDisabled": true,
+        "running": "false"
+      },
+      "replay": {
+        "counter": "1/8",
+        "running": "true"
+      },
+      "dialogPause": {
+        "running": "false",
+        "reason": "interaction",
+        "mapVisible": true,
+        "volume": 0.17606250000004445
+      },
+      "errors": [],
+      "console": [],
+      "requests": {
+        "wish": 0,
+        "map": 0,
+        "form": 0,
+        "qr": 0,
+        "music": 1
+      }
+    },
+    "simple": {
+      "state": {
+        "opened": true,
+        "simple": true,
+        "playerDisplay": "none",
+        "audioPaused": true,
+        "coverOpen": false
+      },
+      "errors": [],
+      "console": [],
+      "requests": {
+        "wish": 0,
+        "map": 0,
+        "form": 0,
+        "qr": 0,
+        "music": 0
+      }
+    },
+    "reduced": {
+      "autoChecked": false,
+      "state": {
+        "simple": true,
+        "playerDisplay": "none",
+        "coverOpen": false
+      },
+      "errors": [
+        "Failed to set the 'volume' property on 'HTMLMediaElement': The volume provided (-0.00147933) is outside the range [0, 1]."
+      ],
+      "console": []
+    },
+    "viewports": [
+      {
+        "viewport": [
+          320,
+          568
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 320,
+            "height": 568,
+            "top": 0,
+            "right": 320,
+            "bottom": 568,
+            "left": 0
+          },
+          "seal": {
+            "x": 118.984375,
+            "y": 376,
+            "width": 82,
+            "height": 82,
+            "top": 376,
+            "right": 200.984375,
+            "bottom": 458,
+            "left": 118.984375
+          },
+          "simple": {
+            "x": 85.203125,
+            "y": 472,
+            "width": 149.578125,
+            "height": 38,
+            "top": 472,
+            "right": 234.78125,
+            "bottom": 510,
+            "left": 85.203125
+          }
+        },
+        "errors": [],
+        "console": []
+      },
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 360,
+            "height": 800,
+            "top": 0,
+            "right": 360,
+            "bottom": 800,
+            "left": 0
+          },
+          "seal": {
+            "x": 138.984375,
+            "y": 562,
+            "width": 82,
+            "height": 82,
+            "top": 562,
+            "right": 220.984375,
+            "bottom": 644,
+            "left": 138.984375
+          },
+          "simple": {
+            "x": 105.203125,
+            "y": 684,
+            "width": 149.578125,
+            "height": 38,
+            "top": 684,
+            "right": 254.78125,
+            "bottom": 722,
+            "left": 105.203125
+          }
+        },
+        "errors": [],
+        "console": []
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 932,
+            "top": 0,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "seal": {
+            "x": 167.6875,
+            "y": 675.40625,
+            "width": 94.59375,
+            "height": 94.59375,
+            "top": 675.40625,
+            "right": 262.28125,
+            "bottom": 770,
+            "left": 167.6875
+          },
+          "simple": {
+            "x": 140.203125,
+            "y": 810,
+            "width": 149.578125,
+            "height": 38,
+            "top": 810,
+            "right": 289.78125,
+            "bottom": 848,
+            "left": 140.203125
+          }
+        },
+        "errors": [],
+        "console": []
+      },
+      {
+        "viewport": [
+          568,
+          320
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 568,
+            "height": 320,
+            "top": 0,
+            "right": 568,
+            "bottom": 320,
+            "left": 0
+          },
+          "seal": {
+            "x": 380.015625,
+            "y": 69.703125,
+            "width": 104,
+            "height": 104,
+            "top": 69.703125,
+            "right": 484.015625,
+            "bottom": 173.703125,
+            "left": 380.015625
+          },
+          "simple": {
+            "x": 357.234375,
+            "y": 197.703125,
+            "width": 149.578125,
+            "height": 38,
+            "top": 197.703125,
+            "right": 506.8125,
+            "bottom": 235.703125,
+            "left": 357.234375
+          }
+        },
+        "errors": [],
+        "console": []
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 1024,
+            "top": 0,
+            "right": 768,
+            "bottom": 1024,
+            "left": 0
+          },
+          "seal": {
+            "x": 331.984375,
+            "y": 758,
+            "width": 104,
+            "height": 104,
+            "top": 758,
+            "right": 435.984375,
+            "bottom": 862,
+            "left": 331.984375
+          },
+          "simple": {
+            "x": 309.203125,
+            "y": 902,
+            "width": 149.578125,
+            "height": 38,
+            "top": 902,
+            "right": 458.78125,
+            "bottom": 940,
+            "left": 309.203125
+          }
+        },
+        "errors": [],
+        "console": []
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "metrics": {
+          "overflow": 0,
+          "cover": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "seal": {
+            "x": 667.984375,
+            "y": 634.40625,
+            "width": 104,
+            "height": 104,
+            "top": 634.40625,
+            "right": 771.984375,
+            "bottom": 738.40625,
+            "left": 667.984375
+          },
+          "simple": {
+            "x": 645.203125,
+            "y": 778.40625,
+            "width": 149.578125,
+            "height": 38,
+            "top": 778.40625,
+            "right": 794.78125,
+            "bottom": 816.40625,
+            "left": 645.203125
+          }
+        },
+        "errors": [],
+        "console": []
+      }
+    ]
+  },
+  "dist": {
+    "bytes": 7865312,
+    "files": 41,
+    "runtimeUnusedFilesExcluded": [
+      "assets/audio/README.txt",
+      "assets/qr/README.md",
+      "assets/qr/qr-nha-gai.svg",
+      "assets/qr/qr-nha-trai.svg",
+      "assets/images/google-forms-header-xuan-phuong-v2.jpg"
+    ]
+  },
+  "diff": {
+    "added": [],
+    "changed": [
+      "BUILD.json",
+      "CHANGELOG.md",
+      "CINEMATIC-OPENING-SETUP.md",
+      "DEPLOY-GITHUB-PAGES.md",
+      "README.md",
+      "app.js",
+      "assets/css/wedding-motion.css",
+      "config.js",
+      "dist/app.js",
+      "dist/assets/css/wedding-motion.css",
+      "dist/config.js",
+      "dist/index.html",
+      "dist/styles.css",
+      "index.html",
+      "package.json",
+      "styles.css",
+      "tests/browser_smoke.mjs",
+      "tests/consistency_check.py",
+      "tests/multi_event_check.mjs",
+      "tests/opening_experience_check.mjs",
+      "tests/verify_dist.py",
+      "tests/verify_release.py",
+      "tools/build-dist.py",
+      "tools/wedding-data.json"
+    ],
+    "removed": [
+      "dist/assets/audio/README.txt",
+      "dist/assets/images/google-forms-header-xuan-phuong-v2.jpg",
+      "dist/assets/qr/README.md",
+      "dist/assets/qr/qr-nha-gai.svg",
+      "dist/assets/qr/qr-nha-trai.svg"
+    ]
+  },
+  "knownLiveBlockers": [
+    "Public GitHub Pages still serves the old single-event invitation.",
+    "Public Google Form still contains old 08h00/placeholder venue/deadline data.",
+    "Multi-event RSVP URLs and deadlines are empty/disabled.",
+    "Bride map pin is not verified.",
+    "Nha Trang and Sài Gòn addresses/maps remain incomplete.",
+    "Physical Android/iPhone/Zalo/Messenger testing has not been performed."
+  ],
+  "limitations": [
+    "Fresh browser test used an inline Chromium harness because localhost/file navigation is administrator-blocked.",
+    "Google Fonts and external Forms/Maps endpoints were mocked or blocked during local browser testing.",
+    "The npm Playwright smoke was not rerun in this restricted environment; equivalent Python Playwright Chromium tests were run."
+  ]
+}

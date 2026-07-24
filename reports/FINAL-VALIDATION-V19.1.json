@@ -1,0 +1,179 @@
+{
+  "generatedAtUtc": "2026-07-23T09:12:58.741099+00:00",
+  "buildId": "v19.1-20260723",
+  "release": "v19.1",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v19.0.zip",
+  "verdict": "PASS_CINEMATIC_MULTI_EVENT_RELEASE_CANDIDATE",
+  "skillWorkflow": {
+    "integrity": "13/13 previously verified",
+    "applied": [
+      "integrity gate",
+      "video decomposition",
+      "brainstorm",
+      "planning",
+      "architecture/design",
+      "UI/UX",
+      "accessibility/privacy",
+      "code review",
+      "root-cause debug",
+      "fix/cook",
+      "static/browser test",
+      "optimization loop",
+      "Fable evidence judge"
+    ]
+  },
+  "videoReference": {
+    "file": "msedge_YRn82VKSXv.mp4",
+    "durationSeconds": 122.3,
+    "resolution": [
+      1912,
+      956
+    ],
+    "fps": 30,
+    "patterns": [
+      "closed green card",
+      "central fold",
+      "wax seal",
+      "split opening",
+      "photo reveal",
+      "vertical story sections"
+    ]
+  },
+  "features": {
+    "eventAwareCover": true,
+    "splitPanelOpening": true,
+    "musicStartsFromUserGesture": true,
+    "autoStoryDefault": true,
+    "manualPause": true,
+    "reducedMotion": true,
+    "externalAnimationLibrary": false,
+    "storyStops": 8
+  },
+  "staticChecks": {
+    "javascriptSyntax": "PASS",
+    "dataConsistency": "PASS",
+    "releaseVerification": "PASS",
+    "openingContract": "PASS",
+    "multiEventContract": "PASS",
+    "wishesContract": "PASS",
+    "personalization": "PASS",
+    "lifecycle": "PASS",
+    "assetsQrDecode": "PASS",
+    "distBuild": "PASS",
+    "distVerification": "PASS"
+  },
+  "browserAudit": {
+    "covers": [
+      {
+        "eventId": "bride",
+        "screenshot": "cover-bride-390x844.png",
+        "guest": "Gia đình cô Hạnh",
+        "event": "Tiệc cưới nhà gái",
+        "date": "29.07.2026",
+        "open": true,
+        "sealInside": true,
+        "overflow": 0
+      },
+      {
+        "eventId": "groom",
+        "screenshot": "cover-groom-390x844.png",
+        "guest": "Gia đình cô Lan",
+        "event": "Lễ Thành Hôn và tiệc nhà trai",
+        "date": "30.07.2026",
+        "open": true,
+        "sealInside": true,
+        "overflow": 0
+      },
+      {
+        "eventId": "nhatrang",
+        "screenshot": "cover-nhatrang-390x844.png",
+        "guest": "Nhóm bạn Nha Trang",
+        "event": "Tiệc Báo Hỷ tại Nha Trang",
+        "date": "15.08.2026",
+        "open": true,
+        "sealInside": true,
+        "overflow": 0
+      },
+      {
+        "eventId": "saigon",
+        "screenshot": "cover-saigon-390x844.png",
+        "guest": "Đồng nghiệp Sài Gòn",
+        "event": "Tiệc Báo Hỷ tại Sài Gòn",
+        "date": "22.08.2026",
+        "open": true,
+        "sealInside": true,
+        "overflow": 0
+      }
+    ],
+    "opening": {
+      "afterClick": {
+        "bodyOpened": true,
+        "storyVisible": true,
+        "storyRunning": "true",
+        "audioSources": 2,
+        "overflow": 0
+      },
+      "afterAdvance": {
+        "scrollY": 855,
+        "counter": "2/8",
+        "running": "true"
+      },
+      "afterManualScroll": {
+        "running": "false",
+        "label": "Tự xem"
+      }
+    },
+    "reducedMotion": {
+      "before": {
+        "autoDisabled": true,
+        "autoChecked": false
+      },
+      "after": {
+        "storyHidden": true,
+        "bodyOpened": true
+      }
+    },
+    "layout": [
+      {
+        "name": "desktop",
+        "viewport": [
+          1440,
+          900
+        ],
+        "screenshot": "cover-desktop-1440x900.png",
+        "contentInside": true,
+        "sealInside": true,
+        "overflow": 0
+      },
+      {
+        "name": "landscape",
+        "viewport": [
+          568,
+          320
+        ],
+        "screenshot": "cover-landscape-568x320.png",
+        "contentInside": true,
+        "sealInside": true,
+        "overflow": 0
+      },
+      {
+        "name": "small-mobile",
+        "viewport": [
+          320,
+          568
+        ],
+        "screenshot": "cover-small-mobile-320x568.png",
+        "contentInside": true,
+        "sealInside": true,
+        "overflow": 0
+      }
+    ]
+  },
+  "limitations": [
+    "localhost blocked; real source was tested through an inline Chromium harness",
+    "Google Fonts blocked in test environment",
+    "Google RSVP URLs not configured",
+    "three map profiles remain unverified",
+    "physical iOS/Android and in-app browsers not tested"
+  ]
+}

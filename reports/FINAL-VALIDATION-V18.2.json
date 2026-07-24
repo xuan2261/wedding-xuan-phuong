@@ -1,0 +1,345 @@
+{
+  "generatedAtUtc": "2026-07-23T00:23:06.474927+00:00",
+  "buildId": "v18.2-20260723",
+  "baseBuild": "v18.1-20260722",
+  "verdict": "PASS_SOURCE_RELEASE_CANDIDATE_LIVE_DEPLOYMENT_REQUIRED",
+  "skillWorkflow": {
+    "integrity": "13/13 PASS according to uploaded integrity report",
+    "chain": [
+      "brainstorm",
+      "planning",
+      "architecture/design",
+      "UI/UX",
+      "code review",
+      "debug/root cause",
+      "fix/cook",
+      "static test",
+      "visual/browser test",
+      "optimization loop",
+      "Fable evidence judge"
+    ]
+  },
+  "implemented": {
+    "featureArtDirection": true,
+    "landscapeFeatureAssets": [
+      "couple-intimate-landscape-720.webp",
+      "couple-intimate-landscape-1280.webp"
+    ],
+    "weddingLifecycle": true,
+    "rsvpAutoClose": "2026-07-29T00:00:00+07:00",
+    "giftQrLazyInit": true,
+    "accessibleWishValidation": true,
+    "googleFormsPrefillUtility": true,
+    "assetDeduplication": [
+      "assets/images/google-forms-header-xuan-phuong.jpg",
+      "assets/images/meta-v2.jpg",
+      "assets/images/meta.jpg"
+    ],
+    "cleanDist": true,
+    "icsProdId": "v18.2"
+  },
+  "tests": {
+    "consistency": "PASS",
+    "release": "PASS",
+    "wishesContract": "PASS",
+    "personalization": "PASS",
+    "lifecycleContract": "PASS",
+    "imagesQr": "PASS",
+    "cleanDist": "PASS",
+    "javascriptSyntax": "PASS",
+    "appsScriptSyntax": "PASS",
+    "packageLockParity": "PASS",
+    "pythonChromiumInlineHarness": "PASS 7 viewports + today/after states"
+  },
+  "browserReport": {
+    "verdict": "PASS",
+    "checks": [
+      {
+        "viewport": [
+          320,
+          568
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-720.webp?v=16",
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          360,
+          800
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-720.webp?v=16",
+          "scrollWidth": 360,
+          "clientWidth": 360,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-720.webp?v=16",
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          430,
+          932
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-720.webp?v=16",
+          "scrollWidth": 430,
+          "clientWidth": 430,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          568,
+          320
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-720.webp?v=16",
+          "scrollWidth": 568,
+          "clientWidth": 568,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-landscape-1280.webp?v=18.2",
+          "scrollWidth": 768,
+          "clientWidth": 768,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "viewport": [
+          1440,
+          900
+        ],
+        "initial": {
+          "build": "v18.2-20260723",
+          "phase": "before",
+          "guest": "Gia đình cô Lan",
+          "rsvpHidden": false,
+          "currentFeature": "https://wedding.local/assets/images/couple-intimate-landscape-1280.webp?v=18.2",
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "qrImages": 0,
+          "countdownHidden": false,
+          "audioPaused": true,
+          "rsvpSrc": null,
+          "mapSrc": null
+        },
+        "counts": {
+          "form": 0,
+          "map": 0,
+          "wish": 1,
+          "qr": 2,
+          "remoteMusic": 0
+        },
+        "invalid": {
+          "id": "wishMessage",
+          "aria": "true"
+        }
+      },
+      {
+        "lifecycle": "today",
+        "state": {
+          "phase": "today",
+          "title": "Hôm nay là ngày chung đôi",
+          "gridHidden": true,
+          "rsvpHidden": true,
+          "giftHidden": false,
+          "message": "Hôm nay là ngày chung đôi. Hai gia đình hân hạnh được đón tiếp Quý vị."
+        }
+      },
+      {
+        "lifecycle": "after",
+        "state": {
+          "phase": "after",
+          "title": "Cảm ơn Quý vị đã chung vui",
+          "gridHidden": true,
+          "rsvpHidden": true,
+          "giftHidden": false,
+          "message": "Thanh Xuân, Thị Phượng và hai gia đình trân trọng cảm ơn Quý vị đã hiện diện, gửi lời chúc và cùng sẻ chia niềm vui trong ngày trọng đại."
+        }
+      }
+    ]
+  },
+  "changedFiles": [
+    ".github/workflows/verify-pages.yml",
+    "BUILD.json",
+    "CHANGELOG.md",
+    "DEPLOY-GITHUB-PAGES.md",
+    "README.md",
+    "V18.2-LIVE-SETUP.md",
+    "app.js",
+    "assets/calendar/thanh-xuan-thi-phuong.ics",
+    "assets/images/couple-intimate-landscape-1280.webp",
+    "assets/images/couple-intimate-landscape-720.webp",
+    "config.js",
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "reports/IMPLEMENTATION-V18.2.json",
+    "styles.css",
+    "tests/browser_smoke.mjs",
+    "tests/consistency_check.py",
+    "tests/lifecycle_check.js",
+    "tests/verify_dist.py",
+    "tests/verify_release.py",
+    "tools/__pycache__/build-dist.cpython-313.pyc",
+    "tools/__pycache__/generate-calendar.cpython-313.pyc",
+    "tools/__pycache__/sync-wedding-data.cpython-313.pyc",
+    "tools/build-dist.py",
+    "tools/check-live-build.ps1",
+    "tools/create-google-forms-rsvp.gs",
+    "tools/generate-calendar.py",
+    "tools/get-google-form-prefill-entry.gs",
+    "tools/update-google-forms-rsvp-contact.gs",
+    "tools/wedding-data.json"
+  ],
+  "removedFiles": [
+    "assets/images/google-forms-header-xuan-phuong.jpg",
+    "assets/images/meta-v2.jpg",
+    "assets/images/meta.jpg"
+  ],
+  "pendingLive": [
+    "Deploy dist to GitHub Pages and verify build marker",
+    "Run updateWeddingRsvpContactInfo in Apps Script",
+    "Run getWeddingRsvpPrefillInfo and set guestNameEntry",
+    "Verify exact Google Maps pin",
+    "Test Google Form in incognito, Zalo and Facebook/Messenger browsers",
+    "Provide actual ceremony and reception end times before regenerating ICS",
+    "Run live wish submit → pending → approved → displayed"
+  ]
+}

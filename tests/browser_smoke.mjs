@@ -53,11 +53,13 @@ function assert(condition, message) {
 }
 
 const viewports = [
+  { width: 320, height: 568 },
   { width: 360, height: 800 },
   { width: 390, height: 844 },
   { width: 430, height: 932 },
   { width: 768, height: 1024 },
-  { width: 1440, height: 900 }
+  { width: 1440, height: 900 },
+  { width: 568, height: 320 }
 ];
 
 const server = createServer();
@@ -71,9 +73,15 @@ const report = [];
 try {
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
+    await page.addInitScript(() => {
+      window.__WEDDING_TEST_MODE__ = true;
+      window.__WEDDING_SKIP_COVER__ = true;
+      window.__WEDDING_TEST_NOW__ = "2026-07-23T12:00:00+07:00";
+    });
     let wishRequests = 0;
     let formRequests = 0;
     let mapRequests = 0;
+    let qrRequests = 0;
     const pageErrors = [];
     const consoleErrors = [];
 
@@ -83,6 +91,11 @@ try {
     });
 
     await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
+
+    await page.route(/\/assets\/qr\/qr-nha-(trai|gai)\.png/, async (route) => {
+      qrRequests += 1;
+      await route.continue();
+    });
 
     await page.route(/https:\/\/docs\.google\.com\/forms\/.*/, async (route) => {
       formRequests += 1;
@@ -131,7 +144,7 @@ try {
     });
 
     await page.goto(
-      `${baseUrl}#to=Gia%20%C4%91%C3%ACnh%20c%C3%B4%20Lan`,
+      `${baseUrl}#to=Gia%20%C4%91%C3%ACnh%20c%C3%B4%20Lan&event=groom`,
       { waitUntil: "domcontentloaded" }
     );
 
@@ -149,48 +162,94 @@ try {
       scrollWidth: document.documentElement.scrollWidth,
       clientWidth: document.documentElement.clientWidth,
       albumCount: document.querySelectorAll(".album-item").length,
+      eventId: document.body.dataset.eventId,
       personalizedCopyHidden:
         document.querySelector("#copyPersonalizedLinkButton")?.hidden
     }));
 
-    assert(initial.build === "v18-20260722", `Sai build: ${initial.build}`);
+    assert(initial.build === "v19.2-20260724", `Sai build: ${initial.build}`);
     assert(initial.guestName === "Gia đình cô Lan", `Sai guest name: ${initial.guestName}`);
     assert(initial.familiesHidden === true, "Family section phải tự ẩn");
     assert(initial.ceremony === "08h30", `Sai ceremony: ${initial.ceremony}`);
     assert(initial.reception === "10h00", `Sai reception: ${initial.reception}`);
-    assert(initial.deadline === "28.07.2026", `Sai deadline: ${initial.deadline}`);
+    assert(initial.deadline === "", `Deadline phải để trống tới khi chốt: ${initial.deadline}`);
     assert(initial.audioPaused === true, "Audio không được phát khi initial load");
     assert(initial.audioSources === 2, `Music phải có 2 sources: ${initial.audioSources}`);
     assert(initial.scrollWidth <= initial.clientWidth + 1, "Có horizontal overflow");
     assert(initial.albumCount === 9, `Album phải có 9 ảnh: ${initial.albumCount}`);
+    assert(initial.eventId === "groom", `Sai active event: ${initial.eventId}`);
     assert(initial.personalizedCopyHidden === false, "Nút copy link có tên phải hiện");
+
+    const centered = await page.evaluate(() => {
+      const centerError = (selector) => {
+        const rect = document.querySelector(selector).getBoundingClientRect();
+        return Math.abs((rect.left + rect.width / 2) - document.documentElement.clientWidth / 2);
+      };
+      return {
+        eyebrow: centerError(".hero .eyebrow"),
+        date: centerError(".hero__date"),
+        open: centerError("#openInvitationButton")
+      };
+    });
+    assert(centered.eyebrow < 3, `Eyebrow lệch tâm: ${centered.eyebrow}`);
+    assert(centered.date < 3, `Ngày lệch tâm: ${centered.date}`);
+    assert(centered.open < 3, `Nút mở thiệp lệch tâm: ${centered.open}`);
+
+    if (viewport.height <= 520) {
+      const heroLayout = await page.evaluate(() => {
+        const hero = document.querySelector(".hero").getBoundingClientRect();
+        const names = document.querySelector(".hero-names").getBoundingClientRect();
+        const date = document.querySelector(".hero__date").getBoundingClientRect();
+        const open = document.querySelector("#openInvitationButton").getBoundingClientRect();
+        return { heroHeight: hero.height, namesBottom: names.bottom, dateTop: date.top, dateBottom: date.bottom, openTop: open.top };
+      });
+      assert(heroLayout.heroHeight >= 498, `Hero landscape quá thấp: ${heroLayout.heroHeight}`);
+      assert(heroLayout.namesBottom < heroLayout.dateTop, "Tên chồng lên ngày ở landscape");
+      assert(heroLayout.dateBottom < heroLayout.openTop, "Ngày chồng lên nút Mở thiệp");
+    }
 
     assert(formRequests === 0, `Không được tải Form ban đầu: ${formRequests}`);
     assert(mapRequests === 0, `Không được tải Map ban đầu: ${mapRequests}`);
     assert(wishRequests === 0, `Không được tải lời chúc ban đầu: ${wishRequests}`);
+    assert(qrRequests === 0, `Không được tải QR ban đầu: ${qrRequests}`);
 
-    await page.locator("#rsvpButton").click();
-    await page.waitForSelector("#rsvpDialog[open]");
-    await page.waitForFunction(
-      () => document.querySelector("#rsvpFrame")?.hidden === false
-    );
-    assert(formRequests === 1, `RSVP phải tải đúng một lần: ${formRequests}`);
-    const rsvpSrc = await page.locator("#rsvpFrame").getAttribute("src");
-    assert(rsvpSrc.includes("embedded=true"), `RSVP thiếu embedded=true: ${rsvpSrc}`);
-    await page.locator("[data-close-rsvp-dialog]").first().click();
+    const rsvpDisabled = await page.evaluate(() => ({
+      ariaDisabled: document.querySelector("#rsvpButton")?.getAttribute("aria-disabled"),
+      text: document.querySelector("#rsvpButton")?.textContent?.trim(),
+      note: document.querySelector("#rsvpNote")?.textContent?.trim()
+    }));
+    assert(rsvpDisabled.ariaDisabled === "true", "RSVP phải disabled an toàn");
+    assert(rsvpDisabled.text === "RSVP sẽ cập nhật", `Sai RSVP label: ${rsvpDisabled.text}`);
+    assert(formRequests === 0, `Không được tải Form khi chưa cấu hình: ${formRequests}`);
 
     await page.locator("#mapButton").click();
     await page.waitForSelector("#mapDialog[open]");
-    await page.waitForFunction(
-      () => document.querySelector("#mapFrame")?.hidden === false
-    );
+    await page.waitForFunction(() => {
+      const frame = document.querySelector("#mapFrame");
+      return frame && !frame.hidden && getComputedStyle(frame).display !== "none";
+    });
+    assert(await page.locator("#mapFrame").isVisible(), "Map iframe phải visible");
     assert(mapRequests === 1, `Map phải tải đúng một lần: ${mapRequests}`);
+    const mapFooterInside = await page.evaluate(() => {
+      const rect = document.querySelector("#mapDialog .embed-dialog__footer").getBoundingClientRect();
+      return rect.top >= -1 && rect.bottom <= window.innerHeight + 1;
+    });
+    assert(mapFooterInside, "Footer Map bị cắt khỏi viewport");
     await page.locator("[data-close-map-dialog]").first().click();
 
     await page.locator("#rsvpButton").click();
-    await page.waitForSelector("#rsvpDialog[open]");
-    assert(formRequests === 1, `Mở lại không được tạo Form request mới: ${formRequests}`);
-    await page.locator("[data-close-rsvp-dialog]").first().click();
+    await page.waitForTimeout(120);
+    const rsvpDialogOpen = await page.locator("#rsvpDialog").evaluate(
+      (dialog) => dialog.open
+    );
+    assert(rsvpDialogOpen === false, "RSVP disabled không được mở dialog");
+    assert(formRequests === 0, `RSVP disabled không được tải Form: ${formRequests}`);
+
+    await page.locator("#giftButton").click();
+    await page.waitForSelector("#giftDialog[open]");
+    await page.waitForFunction(() => document.querySelectorAll("#giftGrid img").length === 2);
+    assert(qrRequests === 2, `Gift QR phải tải sau lần mở đầu tiên: ${qrRequests}`);
+    await page.locator("[data-close-dialog]").click();
 
     await page.locator('[data-lightbox="couple-hands"]').click();
     await page.waitForSelector("#lightboxDialog[open]");
@@ -214,7 +273,8 @@ try {
       formRequests,
       mapRequests,
       wishRequests,
-      lightboxCounter: counter
+      lightboxCounter: counter,
+      qrRequests
     });
 
     await page.close();

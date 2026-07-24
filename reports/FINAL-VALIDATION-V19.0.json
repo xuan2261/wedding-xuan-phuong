@@ -1,0 +1,322 @@
+{
+  "generatedAtUtc": "2026-07-23T08:32:15.451057+00:00",
+  "buildId": "v19.0-20260723",
+  "release": "v19.0",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v18.2.zip",
+  "verdict": "PASS_DRAFT_MULTI_EVENT_RELEASE_CANDIDATE",
+  "finalGuestReleaseReady": false,
+  "skillWorkflow": {
+    "integrityBasis": "13/13 PASS from previously uploaded integrity report",
+    "appliedChain": "integrity → requirements → segmentation → architecture → content/design → UI/UX → privacy/operations → code review → root-cause debug → fix/cook → tests → optimization → Fable judge"
+  },
+  "events": {
+    "bride": {
+      "date": "29/07/2026",
+      "times": [
+        "09h00",
+        "09h30",
+        "10h00"
+      ],
+      "venue": "Tư gia nhà gái",
+      "status": "confirmed-partial"
+    },
+    "groom": {
+      "date": "30/07/2026",
+      "times": [
+        "08h30",
+        "10h00"
+      ],
+      "venue": "Tư gia nhà trai",
+      "status": "confirmed-partial"
+    },
+    "nhatrang": {
+      "date": "15/08/2026",
+      "times": [
+        "17h00",
+        "18h00"
+      ],
+      "venue": "Nhà hàng Nha Trang",
+      "status": "draft"
+    },
+    "saigon": {
+      "date": "22/08/2026",
+      "times": [
+        "17h00",
+        "18h00"
+      ],
+      "venue": "Nhà hàng hải sản Seasan",
+      "status": "draft"
+    }
+  },
+  "implemented": [
+    "One site with event and events URL parameters",
+    "Backward-compatible default groom event",
+    "Event-specific invitation, hero date, timeline, venue, contact, calendar, gifts, sharing and lifecycle",
+    "Multi-event switcher for guests invited to several events",
+    "Four event-specific ICS files",
+    "Offline event-aware guest-link generator",
+    "New Apps Script builder for a separate multi-event Google Form",
+    "Legacy single-event RSVP disabled in runtime",
+    "Unverified map links protected from accidental directions",
+    "GitHub Actions verify/build/upload/deploy workflow"
+  ],
+  "safetyDecisions": [
+    "RSVP buttons remain disabled until the new Form URLs are pasted.",
+    "Nha Trang and Sài Gòn map URLs are not used because the supplied URL duplicates the bride event link.",
+    "Bride map opens externally only; embed remains disabled until the pin is checked.",
+    "Unknown deadlines and end times are not invented.",
+    "Default event remains groom so old personalized links continue working."
+  ],
+  "knownBlockers": [
+    "Create the multi-event Google Form and paste four prefilled URLs and guestNameEntry.",
+    "Confirm RSVP deadlines for all four events.",
+    "Confirm exact venue, hall, address and Maps links for Nha Trang and Sài Gòn.",
+    "Verify the bride event Maps pin.",
+    "Confirm event end times.",
+    "Complete guest segmentation and companion rules.",
+    "Run live Android/iPhone/Zalo/Messenger E2E before sending guests."
+  ],
+  "checks": [
+    {
+      "name": "data consistency",
+      "command": [
+        "python",
+        "tests/consistency_check.py"
+      ],
+      "pass": true,
+      "stdout": "PASS: multi-event wedding data consistency",
+      "stderr": ""
+    },
+    {
+      "name": "release checks",
+      "command": [
+        "python",
+        "tests/verify_release.py"
+      ],
+      "pass": true,
+      "stdout": "PASS: v19 multi-event release checks",
+      "stderr": ""
+    },
+    {
+      "name": "multi-event resolution",
+      "command": [
+        "node",
+        "tests/multi_event_check.mjs"
+      ],
+      "pass": true,
+      "stdout": "PASS: multi-event config resolution",
+      "stderr": ""
+    },
+    {
+      "name": "wishes contract",
+      "command": [
+        "node",
+        "tests/contract_check.js"
+      ],
+      "pass": true,
+      "stdout": "PASS: wishes storage contract",
+      "stderr": ""
+    },
+    {
+      "name": "personalization",
+      "command": [
+        "node",
+        "tests/personalization_check.js"
+      ],
+      "pass": true,
+      "stdout": "PASS: personalization utilities",
+      "stderr": ""
+    },
+    {
+      "name": "assets and QR",
+      "command": [
+        "python",
+        "tests/verify_assets.py"
+      ],
+      "pass": true,
+      "stdout": "PASS: images and QR decode",
+      "stderr": ""
+    },
+    {
+      "name": "build dist",
+      "command": [
+        "python",
+        "tools/build-dist.py"
+      ],
+      "pass": true,
+      "stdout": "PASS: rebuilt clean dist",
+      "stderr": ""
+    },
+    {
+      "name": "verify dist",
+      "command": [
+        "python",
+        "tests/verify_dist.py"
+      ],
+      "pass": true,
+      "stdout": "PASS: clean multi-event dist",
+      "stderr": ""
+    },
+    {
+      "name": "syntax app.js",
+      "command": [
+        "node",
+        "--check",
+        "app.js"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "syntax config.js",
+      "command": [
+        "node",
+        "--check",
+        "config.js"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "syntax guest-utils.js",
+      "command": [
+        "node",
+        "--check",
+        "guest-utils.js"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "syntax tests/browser_smoke.mjs",
+      "command": [
+        "node",
+        "--check",
+        "tests/browser_smoke.mjs"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "syntax create-google-forms-rsvp-multi-event.gs",
+      "command": [
+        "node",
+        "--check",
+        "/mnt/data/_apps_script_check.js"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "syntax wedding-wishes-webapp.gs",
+      "command": [
+        "node",
+        "--check",
+        "/mnt/data/_apps_script_check.js"
+      ],
+      "pass": true,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "browserHarness": {
+    "verdict": "PASS",
+    "cases": [
+      {
+        "case": "bride",
+        "data": {
+          "build": "v19.0-20260723",
+          "eventId": "bride",
+          "guest": "Gia đình cô Lan",
+          "date": "29.07.2026",
+          "venue": "Tư gia nhà gái",
+          "timeline": 3,
+          "switcherHidden": true,
+          "switcherLinks": 0,
+          "mapHidden": true,
+          "rsvpDisabled": "true",
+          "overflow": 0
+        },
+        "qrRequests": 1
+      },
+      {
+        "case": "groom",
+        "data": {
+          "build": "v19.0-20260723",
+          "eventId": "groom",
+          "guest": "Anh Minh",
+          "date": "30.07.2026",
+          "venue": "Tư gia nhà trai",
+          "timeline": 2,
+          "switcherHidden": true,
+          "switcherLinks": 0,
+          "mapHidden": false,
+          "rsvpDisabled": "true",
+          "overflow": 0
+        },
+        "qrRequests": 1
+      },
+      {
+        "case": "nhatrang",
+        "data": {
+          "build": "v19.0-20260723",
+          "eventId": "nhatrang",
+          "guest": "Chị Hương",
+          "date": "15.08.2026",
+          "venue": "Nhà hàng Nha Trang",
+          "timeline": 2,
+          "switcherHidden": true,
+          "switcherLinks": 0,
+          "mapHidden": true,
+          "rsvpDisabled": "true",
+          "overflow": 0
+        },
+        "qrRequests": 2
+      },
+      {
+        "case": "saigon",
+        "data": {
+          "build": "v19.0-20260723",
+          "eventId": "saigon",
+          "guest": "Nhóm bạn",
+          "date": "22.08.2026",
+          "venue": "Nhà hàng hải sản Seasan",
+          "timeline": 2,
+          "switcherHidden": true,
+          "switcherLinks": 0,
+          "mapHidden": true,
+          "rsvpDisabled": "true",
+          "overflow": 0
+        },
+        "qrRequests": 2
+      },
+      {
+        "case": "multi",
+        "data": {
+          "build": "v19.0-20260723",
+          "eventId": "bride",
+          "guest": "Gia đình chú Hùng",
+          "date": "29.07.2026",
+          "venue": "Tư gia nhà gái",
+          "timeline": 3,
+          "switcherHidden": false,
+          "switcherLinks": 2,
+          "mapHidden": true,
+          "rsvpDisabled": "true",
+          "overflow": 0
+        },
+        "qrRequests": 1
+      }
+    ]
+  },
+  "browserLimitations": [
+    "Real Google Forms were not loaded because the multi-event Form has not been created.",
+    "External Maps and Apps Script responses were intercepted in the local harness.",
+    "Physical mobile devices and in-app browsers were not available."
+  ]
+}

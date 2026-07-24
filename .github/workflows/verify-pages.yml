@@ -1,4 +1,4 @@
-name: Verify wedding site
+name: Verify and deploy wedding site
 
 on:
   push:
@@ -8,54 +8,65 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Install Python verification dependencies
-        run: python -m pip install --disable-pip-version-check pillow opencv-python-headless
-
-      - name: Install browser verification dependencies
+          cache: npm
+      - name: Install verification dependencies
         run: |
-          npm install --no-audit --no-fund
+          python -m pip install --disable-pip-version-check pillow opencv-python-headless
+          npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
-
-      - name: Static release checks
-        run: python tests/verify_release.py
-
-      - name: Wedding data consistency
-        run: python tests/consistency_check.py
-
-      - name: Wishes contract check
-        run: node tests/contract_check.js
-
-      - name: Personalization utility check
-        run: node tests/personalization_check.js
-
-      - name: Image and QR decode
-        run: python tests/verify_assets.py
-
-      - name: JavaScript syntax
+      - name: Verify source
         run: |
+          python tests/consistency_check.py
+          python tests/verify_release.py
+          node tests/multi_event_check.mjs
+          node tests/contract_check.js
+          node tests/personalization_check.js
+          python tests/verify_assets.py
           node --check app.js
           node --check config.js
           node --check guest-utils.js
-          node --check tests/browser_smoke.mjs
-          for file in tools/*.gs; do
-            cp "$file" /tmp/apps-script-check.js
-            node --check /tmp/apps-script-check.js
-          done
-
+          for file in tools/*.gs; do cp "$file" /tmp/apps-script-check.js; node --check /tmp/apps-script-check.js; done
+      - name: Build and verify clean dist
+        run: |
+          python tools/build-dist.py
+          python tests/verify_dist.py
       - name: Browser smoke
         run: npm run test:browser
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

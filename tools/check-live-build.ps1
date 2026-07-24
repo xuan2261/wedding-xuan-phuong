@@ -1,6 +1,6 @@
 param(
   [string]$Url = "https://xuan2261.github.io/wedding-xuan-phuong/",
-  [string]$ExpectedBuild = "v18-20260722"
+  [string]$ExpectedBuild = "v19.1-20260723"
 )
 
 $ErrorActionPreference = "Stop"

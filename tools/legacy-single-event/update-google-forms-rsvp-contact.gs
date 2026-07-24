@@ -36,14 +36,14 @@ function updateWeddingRsvpContactInfo() {
 
   const contactBlock = [
     "Nếu cần thay đổi phản hồi sau khi gửi hoặc cần hỗ trợ chỉ đường,",
-    "Quý khách vui lòng liên hệ:",
+    "Quý vị vui lòng liên hệ:",
     "",
     `Chú rể ${RSVP_UPDATE_CONFIG.groomName}: ${RSVP_UPDATE_CONFIG.groomPhone}`,
     `Cô dâu ${RSVP_UPDATE_CONFIG.brideName}: ${RSVP_UPDATE_CONFIG.bridePhone}`,
   ].join("\n");
 
   const description = [
-    "Trân trọng kính mời Quý khách xác nhận tham dự Lễ Thành Hôn của",
+    "Trân trọng kính mời Quý vị xác nhận tham dự Lễ Thành Hôn của",
     `${RSVP_UPDATE_CONFIG.groomName} & ${RSVP_UPDATE_CONFIG.brideName}.`,
     "",
     `Thời gian đón khách: ${RSVP_UPDATE_CONFIG.guestTime}`,
@@ -55,16 +55,16 @@ function updateWeddingRsvpContactInfo() {
     `Bản đồ: ${RSVP_UPDATE_CONFIG.mapsUrl}`,
     "",
     `Vui lòng phản hồi trước ngày ${RSVP_UPDATE_CONFIG.rsvpDeadline}.`,
-    "Thông tin Quý khách cung cấp chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
+    "Thông tin Quý vị cung cấp chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
     "",
     contactBlock,
   ].join("\n");
 
   const confirmationMessage = [
-    "Cảm ơn Quý khách đã xác nhận!",
+    "Cảm ơn Quý vị đã xác nhận!",
     "",
-    `${RSVP_UPDATE_CONFIG.groomName} và ${RSVP_UPDATE_CONFIG.brideName} đã ghi nhận phản hồi của Quý khách.`,
-    "Sự hiện diện và lời chúc phúc của Quý khách là niềm vui và niềm vinh hạnh của hai gia đình.",
+    `${RSVP_UPDATE_CONFIG.groomName} và ${RSVP_UPDATE_CONFIG.brideName} đã ghi nhận phản hồi của Quý vị.`,
+    "Sự hiện diện và lời chúc phúc của Quý vị là niềm vui và niềm vinh hạnh của hai gia đình.",
     "",
     contactBlock,
   ].join("\n");
@@ -94,17 +94,17 @@ function updateWeddingRsvpContactInfo() {
  */
 function updateGuestFacingWording_(form) {
   const titleUpdates = Object.freeze({
-    "Bạn là khách của": "Quý khách thuộc nhóm khách mời nào?",
-    "Quý khách là khách của": "Quý khách thuộc nhóm khách mời nào?",
+    "Bạn là khách của": "Quý vị thuộc nhóm khách mời nào?",
+    "Quý vị là khách của": "Quý vị thuộc nhóm khách mời nào?",
     "Bạn có thể đến chung vui cùng gia đình không?":
-      "Quý khách có thể đến chung vui cùng gia đình không?",
+      "Quý vị có thể đến chung vui cùng gia đình không?",
     "Bạn có cần hỗ trợ thêm không?":
-      "Quý khách có cần hỗ trợ thêm không?",
+      "Quý vị có cần hỗ trợ thêm không?",
     "Cảm ơn bạn đã phản hồi":
-      "Cảm ơn Quý khách đã phản hồi",
+      "Cảm ơn Quý vị đã phản hồi",
     "Bạn có lời nhắn nào dành cho cô dâu và chú rể không?":
       "Lời nhắn riêng dành cho cô dâu và chú rể",
-    "Quý khách có lời nhắn nào dành cho cô dâu và chú rể không?":
+    "Quý vị có lời nhắn nào dành cho cô dâu và chú rể không?":
       "Lời nhắn riêng dành cho cô dâu và chú rể",
     "Lời nhắn dành cho cô dâu và chú rể":
       "Lời nhắn riêng dành cho cô dâu và chú rể",
@@ -112,9 +112,9 @@ function updateGuestFacingWording_(form) {
 
   const helpTextUpdates = Object.freeze({
     "Bạn vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.":
-      "Quý khách vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.",
+      "Quý vị vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.",
     "Dù không thể hiện diện, tình cảm và lời chúc của bạn vẫn rất quý giá đối với chúng tôi.":
-      "Dù không thể hiện diện, tình cảm và lời chúc của Quý khách vẫn là niềm trân quý đối với hai gia đình.",
+      "Dù không thể hiện diện, tình cảm và lời chúc của Quý vị vẫn là niềm trân quý đối với hai gia đình.",
     "Nội dung này không hiển thị công khai trên website.":
       "Nội dung này không hiển thị công khai trên website.",
   });
@@ -138,7 +138,7 @@ function updateGuestFacingWording_(form) {
     // Câu hỏi phân nhóm khách không dùng điều hướng theo câu trả lời.
     if (
       item.getType() === FormApp.ItemType.MULTIPLE_CHOICE &&
-      item.getTitle() === "Quý khách thuộc nhóm khách mời nào?"
+      item.getTitle() === "Quý vị thuộc nhóm khách mời nào?"
     ) {
       item.asMultipleChoiceItem()
         .setChoiceValues([

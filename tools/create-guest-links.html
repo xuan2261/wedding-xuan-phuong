@@ -29,7 +29,10 @@
       background: var(--cream);
     }
     label { display: grid; gap: 7px; margin-bottom: 18px; font-weight: 700; }
-    input, textarea {
+    fieldset { margin: 0 0 18px; padding: 14px; border: 1px solid rgba(32,75,58,.24); border-radius: 12px; }
+    fieldset label { display: flex; align-items: center; gap: 9px; margin: 8px 0; font-weight: 600; }
+    fieldset input { width: auto; }
+    input, textarea, select {
       width: 100%;
       padding: 11px 12px;
       border: 1px solid rgba(32, 75, 58, .3);
@@ -76,7 +79,7 @@
 </head>
 <body>
   <main>
-    <h1>Tạo link thiệp theo tên khách</h1>
+    <h1>Tạo link thiệp đa sự kiện theo tên khách</h1>
     <p>
       Công cụ chạy hoàn toàn trong trình duyệt, không tải danh sách khách lên máy chủ.
       Nhập mỗi tên hoặc mỗi gia đình trên một dòng.
@@ -95,6 +98,24 @@
         <textarea id="guestNames" rows="10"
           placeholder="Gia đình cô Lan&#10;Anh Minh&#10;Nhóm bạn đại học"
           maxlength="12000" required></textarea>
+      </label>
+
+      <fieldset>
+        <legend>Sự kiện được mời</legend>
+        <label><input type="checkbox" name="eventId" value="bride"> Tiệc cưới nhà gái — 29/07</label>
+        <label><input type="checkbox" name="eventId" value="groom" checked> Lễ và tiệc nhà trai — 30/07</label>
+        <label><input type="checkbox" name="eventId" value="nhatrang"> Báo Hỷ Nha Trang — 15/08</label>
+        <label><input type="checkbox" name="eventId" value="saigon"> Báo Hỷ Sài Gòn — 22/08</label>
+      </fieldset>
+
+      <label>
+        Sự kiện mở mặc định
+        <select id="activeEvent">
+          <option value="bride">Nhà gái — 29/07</option>
+          <option value="groom" selected>Nhà trai — 30/07</option>
+          <option value="nhatrang">Nha Trang — 15/08</option>
+          <option value="saigon">Sài Gòn — 22/08</option>
+        </select>
       </label>
 
       <div class="actions">
@@ -120,6 +141,7 @@
       const baseUrlInput = document.querySelector("#baseUrl");
       const namesInput = document.querySelector("#guestNames");
       const results = document.querySelector("#results");
+      const activeEventInput = document.querySelector("#activeEvent");
       const status = document.querySelector("#status");
       const copyAllButton = document.querySelector("#copyAllButton");
       const downloadCsvButton = document.querySelector("#downloadCsvButton");
@@ -132,9 +154,12 @@
           .trim()
           .slice(0, 80);
 
-      const buildLink = (baseUrl, guestName) => {
+      const buildLink = (baseUrl, guestName, eventIds, activeEventId) => {
         const url = new URL(baseUrl);
-        url.hash = new URLSearchParams({ to: guestName }).toString();
+        const params = new URLSearchParams({ to: guestName });
+        if (eventIds.length > 1) params.set("events", eventIds.join(","));
+        params.set("event", activeEventId);
+        url.hash = params.toString();
         return url.toString();
       };
 
@@ -198,9 +223,21 @@
             .filter(Boolean)
         )];
 
+        const eventIds = [...document.querySelectorAll('input[name="eventId"]:checked')]
+          .map((input) => input.value);
+        if (eventIds.length === 0) {
+          status.textContent = "Vui lòng chọn ít nhất một sự kiện.";
+          return;
+        }
+        const activeEventId = eventIds.includes(activeEventInput.value)
+          ? activeEventInput.value
+          : eventIds[0];
+
         generated = uniqueNames.map((name) => ({
           name,
-          url: buildLink(baseUrl, name)
+          events: eventIds.join("|"),
+          activeEvent: activeEventId,
+          url: buildLink(baseUrl, name, eventIds, activeEventId)
         }));
 
         render();
@@ -219,8 +256,8 @@
         const escapeCsv = (value) =>
           `"${String(value).replace(/"/g, '""')}"`;
         const csv = [
-          ["Tên khách", "Link thiệp"],
-          ...generated.map((item) => [item.name, item.url])
+          ["Tên khách", "Sự kiện", "Mở mặc định", "Link thiệp"],
+          ...generated.map((item) => [item.name, item.events, item.activeEvent, item.url])
         ]
           .map((row) => row.map(escapeCsv).join(","))
           .join("\r\n");

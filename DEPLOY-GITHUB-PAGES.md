@@ -1,75 +1,42 @@
-# Deploy GitHub Pages — release v17
+# Deploy GitHub Pages — v19 Multi-Event
 
-## Push source
+## Cách khuyến nghị: GitHub Actions
 
-```powershell
-git add .
-git commit -m "Release wedding website v17"
-git push
-```
+1. Chép full source v19 vào repository.
+2. Commit và push lên branch `main`.
+3. Mở **Settings → Pages** và chọn nguồn **GitHub Actions**.
+4. Theo dõi workflow **Verify and deploy wedding site**.
+5. Chỉ gửi link khách khi workflow deploy hoàn tất.
 
-## Pages settings
+Workflow thực hiện:
 
 ```text
-Settings → Pages → Deploy from a branch
-Branch: main
-Folder: /root
+verify source
+→ test multi-event
+→ browser smoke
+→ build dist
+→ verify dist
+→ upload-pages-artifact
+→ deploy-pages
 ```
 
-Bật **Enforce HTTPS** sau khi Pages hoạt động.
+## Kiểm tra build live
 
-## Xác minh đúng build
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
+```
 
-Source có marker:
+Marker cần thấy:
 
 ```html
-<meta name="wedding-build" content="v17-20260722">
+<meta name="wedding-build" content="v19.2-20260724">
 ```
 
-Chạy:
+## Cổng phát hành
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
-```
+Không gửi link khách khi còn một trong các điều kiện:
 
-Nếu marker live khác `v17-20260722`, chưa gửi link cho khách.
-
-## Apps Script
-
-Sau khi thay backend, cập nhật deployment hiện có bằng một **New version** để giữ
-nguyên URL `/exec`. Xem `WISHES-SETUP.md`.
-
-
-## Apps Script bắt buộc
-
-Source web mới yêu cầu backend `tools/wedding-wishes-webapp.gs` phiên bản 1.5.0.
-
-```text
-Deploy → Manage deployments → Edit
-→ Version: New version
-→ Deploy
-```
-
-Cập nhật đúng deployment hiện có để giữ URL `/exec`.
-
-## Kiểm tra cá nhân hóa
-
-Mở:
-
-```text
-https://xuan2261.github.io/wedding-xuan-phuong/#to=Gia%20đình%20cô%20Lan
-```
-
-Tên phải hiển thị bằng text thuần, không render HTML.
-
-## Kiểm tra live
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
-```
-
-Sau đó test:
-
-```text
-submit lời chúc → hàng pending → đổi approved → lời chúc xuất hiện
-```
+- RSVP đa sự kiện chưa có URL.
+- Nha Trang/Sài Gòn chưa có địa chỉ và map chính xác.
+- Link nhà gái chưa xác minh pin.
+- Chưa test Android, iPhone, Zalo và Messenger.

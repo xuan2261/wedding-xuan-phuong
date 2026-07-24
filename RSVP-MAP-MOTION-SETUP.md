@@ -62,3 +62,12 @@ python tests/consistency_check.py
 ```powershell
 python tools/sync-wedding-data.py
 ```
+
+
+## Hotfix v18.1
+
+- Iframe không còn `hidden`; loading overlay che phía trên.
+- Dialog dùng grid để footer không bị cắt.
+- RSVP là link thật và chỉ bị JS intercept khi dialog hoạt động.
+- Map embed dùng pin tọa độ `14.2869225,109.0786394`.
+- Chạy `tools/check-live-rsvp.ps1` sau khi cập nhật Google Form.

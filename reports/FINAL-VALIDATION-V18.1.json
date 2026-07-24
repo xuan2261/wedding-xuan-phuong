@@ -1,0 +1,73 @@
+{
+  "generatedAtUtc": "2026-07-22T16:15:23.045708+00:00",
+  "buildId": "v18.1-20260722",
+  "release": "v18.1",
+  "verdict": "PASS_SOURCE_RELEASE_CANDIDATE",
+  "skillIntegrity": {
+    "expected": 13,
+    "priorArchiveIntegrity": "13/13 PASS",
+    "appliedWorkflow": "brainstorm → planning → design → UI/UX → code review → debug → fix/cook → test → optimization loop → Fable evidence judge"
+  },
+  "staticGates": {
+    "weddingDataConsistency": "PASS",
+    "releaseSourceChecks": "PASS",
+    "wishesContract": "PASS",
+    "personalization": "PASS",
+    "imagesQrDecode": "PASS",
+    "javascriptSyntax": "PASS",
+    "appsScriptSyntax": "PASS",
+    "packageLockOfflineValidation": "PASS"
+  },
+  "browserSmoke": {
+    "verdict": "PASS",
+    "viewports": 7,
+    "sizes": [
+      [
+        320,
+        568
+      ],
+      [
+        360,
+        800
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        430,
+        932
+      ],
+      [
+        768,
+        1024
+      ],
+      [
+        1440,
+        900
+      ],
+      [
+        568,
+        320
+      ]
+    ]
+  },
+  "fixed": [
+    "RSVP and map iframe hidden bug",
+    "mobile dialog footer clipping",
+    "motion/layout transform collision",
+    "short landscape hero overlap",
+    "feature focal point wide crop",
+    "no-JS RSVP fallback",
+    "deterministic package lock and npm ci",
+    "stale v17 deployment docs",
+    "landscape lightbox",
+    "exact coordinate map embed"
+  ],
+  "externalGates": {
+    "liveGoogleForm": "FAIL_STALE — currently shows 08h00, Nhà hàng XXX, incomplete address and deadline 20/07/2026; run updater",
+    "liveGitHubPages": "FAIL_STALE — public page currently shows 08h00 and RSVP 24.07.2026",
+    "physicalDevices": "NOT_TESTED",
+    "guestNameEntry": "EMPTY"
+  }
+}

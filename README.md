@@ -1,117 +1,61 @@
-# Thiệp cưới Thanh Xuân & Thị Phượng
+# Wedding Xuân & Phượng — v19 Multi-Event Journey
 
-Build hiện tại: **v18-20260722**.
+Build hiện tại: **v19.2-20260724** — Cinematic Opening & Guided Story.
 
-## Thông tin đã xác nhận
+Website phục vụ bốn sự kiện:
 
-- Lễ Thành Hôn: **08h30, ngày 30.07.2026**.
-- Đón khách dự tiệc: **10h00**.
-- Địa điểm: Tư gia nhà trai, 346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai.
-- RSVP trước: **28.07.2026**.
+| ID | Sự kiện | Ngày |
+|---|---|---|
+| `bride` | Tiệc cưới nhà gái | 29/07/2026 |
+| `groom` | Lễ Thành Hôn và tiệc nhà trai | 30/07/2026 |
+| `nhatrang` | Tiệc Báo Hỷ tại Nha Trang | 15/08/2026 |
+| `saigon` | Tiệc Báo Hỷ tại Sài Gòn | 22/08/2026 |
 
-## Cấu trúc
-
-```text
-index.html
-styles.css
-app.js
-config.js
-assets/
-tools/
-tests/
-reports/
-```
-
-## Sổ lời chúc
-
-Tính năng đang bật trong `config.js`. Backend production là:
+## Link cá nhân hóa
 
 ```text
-tools/wedding-wishes-webapp.gs
+#to=Gia%20đình%20cô%20Lan&event=bride
+#to=Anh%20Minh&event=groom
+#to=Chị%20Hương&event=nhatrang
+#to=Nhóm%20bạn&events=nhatrang,saigon&event=nhatrang
 ```
 
-Website chỉ báo thành công khi Apps Script xác nhận `stored: true`. Xem
-`WISHES-SETUP.md` để repair Sheet, deploy version mới và kiểm thử.
+Link cũ chỉ có `#to=...` vẫn mở sự kiện `groom`.
 
-## QR mừng cưới
+## Trạng thái an toàn
 
-Website dùng hai PNG đã xác minh trong `assets/qr/`. Hai SVG là bản dự phòng nhúng
-chính xác PNG tương ứng, không phải placeholder.
+- RSVP đang tắt cho đến khi tạo Google Form đa sự kiện mới.
+- Popup map chỉ bật cho nhà trai; link nhà gái được giữ dưới dạng mở ngoài.
+- Map Nha Trang/Sài Gòn chưa dùng vì link cung cấp trùng link nhà gái.
+- Địa chỉ Nha Trang/Sài Gòn, deadline RSVP, giờ kết thúc và phân nhóm khách còn là dữ liệu nháp.
 
-## Nhạc
-
-Source này **có kèm**:
-
-```text
-assets/audio/music.mp3
-```
-
-Audio dùng `preload="none"` và chỉ bắt đầu sau tương tác của người dùng theo giới
-hạn autoplay của trình duyệt.
-
-## Deploy GitHub Pages
-
-Xem `DEPLOY-GITHUB-PAGES.md`. Sau khi push, chạy:
+## Kiểm tra
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
-```
-
-Trang live phải chứa build marker `v17-20260722`.
-
-## Kiểm tra source
-
-```powershell
+npm ci
+python tests/consistency_check.py
 python tests/verify_release.py
-node tests/contract_check.js
-node --check app.js
-node --check config.js
+node tests/multi_event_check.mjs
+npm run test:browser
+python tools/build-dist.py
+python tests/verify_dist.py
 ```
 
-GitHub Actions cũng chạy các gate này trong `.github/workflows/verify-pages.yml`.
+## Triển khai
 
-## Riêng tư
-
-Website là public-link và chứa ảnh, địa chỉ, số điện thoại cùng thông tin ngân
-hàng. `noindex` không phải mật khẩu. Xem `PRIVACY.md`.
-
-
-## Bản ảnh v16
-
-- Dùng lại toàn bộ 8 ảnh đã chỉnh mới.
-- Thêm `DRS06828` làm ảnh cảm xúc cỡ lớn.
-- Thêm `DRS07290` vào album.
-- Dùng `DRS07446` làm ảnh kết.
-- Tạo 22 file WebP responsive ở 720 px và 1280 px.
-- Giữ hero không lazy-load và duy trì `fetchpriority="high"`.
-- Các ảnh dưới màn hình đầu vẫn dùng `loading="lazy"`.
-
-
-## Nâng cấp v17
-
-- Lời mời cá nhân hóa bằng `#to=...`, fallback **Quý vị**.
-- Công cụ offline `tools/create-guest-links.html`.
-- Google Forms có thể prefill tên khi cấu hình `rsvp.guestNameEntry`.
-- Timeline rõ hai mốc **08h30** và **10h00**.
-- Nút **Thêm vào lịch**, **Chia sẻ thiệp**, **Sao chép địa chỉ** và **Liên hệ chỉ đường**.
-- Khối thông tin hai gia đình tự ẩn đến khi có dữ liệu thật.
-- Lightbox có trước/sau, bộ đếm, phím mũi tên và swipe.
-- Backend lời chúc 1.5.0: CacheService TTL hợp lệ và cache best-effort.
-- CI có static, contract, personalization, image/QR và browser smoke.
+Workflow `.github/workflows/verify-pages.yml` sẽ kiểm tra, dựng `dist`, upload artifact và deploy GitHub Pages khi push lên `main`.
 
 Xem:
 
-- `PERSONALIZATION-SETUP.md`
-- `CALENDAR-SETUP.md`
-- `reports/RELEASE-REVIEW-V17.md`
+- `MULTI-EVENT-SETUP.md`
+- `DEPLOY-GITHUB-PAGES.md`
+- `tools/create-google-forms-rsvp-multi-event.gs`
+- `tools/create-guest-links.html`
 
 
-## Nâng cấp v18
+## Trải nghiệm mở thiệp v19.2
 
-- RSVP mở trong popup; Google Form chỉ tải sau khi khách bấm.
-- Có nút mở Form toàn màn hình khi trình duyệt nhúng không thuận tiện.
-- Bản đồ mở trong popup lazy-load và giữ nút Google Maps để điều hướng.
-- Hiệu ứng được lưu local trong `assets/css/wedding-motion.css`.
-- Google Fonts vẫn dùng Be Vietnam Pro, Lora và Dancing Script.
-- Nhạc `Váy Cưới` dùng MP3 local trước, URL Pancake làm nguồn dự phòng.
-- Dữ liệu cốt lõi được kiểm tra qua `tools/wedding-data.json`.
+- Bìa xanh rừng và con dấu XP hiển thị trước hero.
+- Bấm **Mở thiệp** để mở hai cánh, phát nhạc và tùy chọn tự động xem từng phần.
+- Cuộn, chạm hoặc dùng bàn phím sẽ tạm dừng tự động xem.
+- Có thể kiểm thử nhanh bằng `?skipCover=1`.

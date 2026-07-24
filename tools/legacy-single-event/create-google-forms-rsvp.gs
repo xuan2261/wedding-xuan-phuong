@@ -39,7 +39,7 @@ function createWeddingRsvpForm() {
   const form = FormApp.create(RSVP_CONFIG.formTitle);
   const contactBlock = [
     "Nếu cần thay đổi phản hồi sau khi gửi hoặc cần hỗ trợ chỉ đường,",
-    "Quý khách vui lòng liên hệ:",
+    "Quý vị vui lòng liên hệ:",
     "",
     `Chú rể ${RSVP_CONFIG.groomName}: ${RSVP_CONFIG.groomPhone}`,
     `Cô dâu ${RSVP_CONFIG.brideName}: ${RSVP_CONFIG.bridePhone}`,
@@ -47,7 +47,7 @@ function createWeddingRsvpForm() {
 
   form
     .setDescription([
-      "Trân trọng kính mời Quý khách xác nhận tham dự Lễ Thành Hôn của",
+      "Trân trọng kính mời Quý vị xác nhận tham dự Lễ Thành Hôn của",
       `${RSVP_CONFIG.groomName} & ${RSVP_CONFIG.brideName}.`,
       "",
       `Thời gian đón khách: ${RSVP_CONFIG.guestTime}`,
@@ -59,15 +59,15 @@ function createWeddingRsvpForm() {
       `Bản đồ: ${RSVP_CONFIG.mapsUrl}`,
       "",
       `Vui lòng phản hồi trước ngày ${RSVP_CONFIG.rsvpDeadline}.`,
-      "Thông tin Quý khách cung cấp chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
+      "Thông tin Quý vị cung cấp chỉ được sử dụng để chuẩn bị đón tiếp trong ngày cưới.",
       "",
       contactBlock,
     ].join("\n"))
     .setConfirmationMessage([
-      "Cảm ơn Quý khách đã xác nhận!",
+      "Cảm ơn Quý vị đã xác nhận!",
       "",
-      `${RSVP_CONFIG.groomName} và ${RSVP_CONFIG.brideName} đã ghi nhận phản hồi của Quý khách.`,
-      "Sự hiện diện và lời chúc phúc của Quý khách là niềm vui và niềm vinh hạnh của hai gia đình.",
+      `${RSVP_CONFIG.groomName} và ${RSVP_CONFIG.brideName} đã ghi nhận phản hồi của Quý vị.`,
+      "Sự hiện diện và lời chúc phúc của Quý vị là niềm vui và niềm vinh hạnh của hai gia đình.",
       "",
       contactBlock,
     ].join("\n"))
@@ -84,7 +84,7 @@ function createWeddingRsvpForm() {
 
   form.addSectionHeaderItem()
     .setTitle("Thông tin khách mời")
-    .setHelpText("Quý khách vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.");
+    .setHelpText("Quý vị vui lòng cung cấp thông tin để gia đình chuẩn bị đón tiếp chu đáo.");
 
   form.addTextItem()
     .setTitle("Họ và tên người đại diện")
@@ -103,7 +103,7 @@ function createWeddingRsvpForm() {
     .setRequired(true);
 
   form.addMultipleChoiceItem()
-    .setTitle("Quý khách thuộc nhóm khách mời nào?")
+    .setTitle("Quý vị thuộc nhóm khách mời nào?")
     .setChoiceValues([
       "Nhà trai",
       "Nhà gái",
@@ -114,7 +114,7 @@ function createWeddingRsvpForm() {
     .setRequired(true);
 
   const attendanceItem = form.addMultipleChoiceItem()
-    .setTitle("Quý khách có thể đến chung vui cùng gia đình không?")
+    .setTitle("Quý vị có thể đến chung vui cùng gia đình không?")
     .setRequired(true);
 
   const attendingPage = form.addPageBreakItem()
@@ -157,7 +157,7 @@ function createWeddingRsvpForm() {
     .setRequired(false);
 
   form.addCheckboxItem()
-    .setTitle("Quý khách có cần hỗ trợ thêm không?")
+    .setTitle("Quý vị có cần hỗ trợ thêm không?")
     .setChoiceValues([
       "Cần ghế dành cho em bé",
       "Cần hỗ trợ chỉ đường hoặc phương tiện di chuyển",
@@ -173,8 +173,8 @@ function createWeddingRsvpForm() {
     .setRequired(false);
 
   const decliningPage = form.addPageBreakItem()
-    .setTitle("Cảm ơn Quý khách đã phản hồi")
-    .setHelpText("Dù không thể hiện diện, tình cảm và lời chúc của Quý khách vẫn là niềm trân quý đối với hai gia đình.");
+    .setTitle("Cảm ơn Quý vị đã phản hồi")
+    .setHelpText("Dù không thể hiện diện, tình cảm và lời chúc của Quý vị vẫn là niềm trân quý đối với hai gia đình.");
 
   decliningPage.setGoToPage(FormApp.PageNavigationType.SUBMIT);
 

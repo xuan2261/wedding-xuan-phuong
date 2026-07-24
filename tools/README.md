@@ -1,14 +1,14 @@
-# Công cụ quản trị
+# Tools v19
 
-- `wedding-wishes-webapp.gs`: backend production sổ lời chúc.
-- `create-google-forms-rsvp.gs`: tạo Google Forms RSVP.
-- `update-google-forms-rsvp-contact.gs`: cập nhật Form RSVP hiện có.
-- `check-live-build.ps1`: xác minh GitHub Pages đã deploy đúng build marker.
+## Công cụ đang dùng
 
-Xem `../WISHES-SETUP.md` trước khi cập nhật Apps Script.
+- `create-google-forms-rsvp-multi-event.gs`: tạo Form và Sheet RSVP đa sự kiện mới.
+- `create-guest-links.html`: tạo link một hoặc nhiều sự kiện, chạy offline.
+- `build-dist.py`: dựng artifact GitHub Pages sạch.
+- `generate-multi-event-calendars.py`: sinh bốn file ICS từ `wedding-data.json`.
+- `check-live-build.ps1`: kiểm tra marker build trên GitHub Pages.
+- `wedding-wishes-webapp.gs`: backend lời chúc.
 
+## Legacy
 
-## create-guest-links.html
-
-Công cụ offline tạo URL `#to=...` theo tên cá nhân, gia đình hoặc nhóm khách.
-Không gửi danh sách khách lên mạng.
+`legacy-single-event/` chứa các script v18 phục vụ một sự kiện. Không chạy các script này cho v19.

@@ -1,4 +1,56 @@
+# v19.2 — Cinematic Story 2.0 (2026-07-24)
+
+- Audit lại toàn bộ v19.1 và sửa lỗi `sharing` của event Nha Trang bị lồng sai.
+- Story Player 2.0 có phần trước/tiếp theo, tên chương, trạng thái Xem lại và đồng bộ khi cuộn tay.
+- Thêm chế độ “Xem thiệp đơn giản”, không auto-story và không animation cinematic.
+- Tạm dừng story rõ ràng khi mở bất kỳ dialog nào.
+- Con dấu XP chỉ pulse hai chu kỳ thay vì animation vô hạn.
+- Cover dùng ảnh responsive 720/1280 thay vì luôn tải ảnh 1280 trên mobile.
+- Nhạc fade-in nhẹ, giảm âm lượng khi mở dialog và mặc định 35%.
+- Tạo accent bìa riêng theo bốn sự kiện, vẫn giữ cùng nhận diện xanh–kem.
+- `dist/` loại README, SVG QR và ảnh header Google Form không dùng ở runtime.
+
 # Changelog
+
+## v19.2 — Cinematic Opening & Guided Story
+
+- Thêm bìa thiệp toàn màn hình theo phong cách xanh rừng, đường gấp đôi và con dấu XP.
+- Nút Mở thiệp kích hoạt chuỗi mở hai cánh, làm lộ ảnh hero và bắt đầu nhạc trong thao tác người dùng.
+- Thêm chế độ Tự động xem từng phần có nút phát/tạm dừng, tiến trình và tự dừng khi khách chạm/cuộn.
+- Giữ fallback không JavaScript, hỗ trợ `prefers-reduced-motion` và không dùng thư viện animation bên ngoài.
+- Bìa tự đổi tên khách, loại sự kiện, thứ và ngày cho bốn hồ sơ sự kiện.
+
+## v19.0 — Multi-Event Wedding Journey
+
+- Chuyển từ một sự kiện sang bốn sự kiện.
+- Thêm `event` và `events` trong link cá nhân hóa.
+- Thêm bộ chuyển sự kiện cho khách được mời nhiều buổi.
+- Timeline, địa điểm, lịch, QR, lời mời và lifecycle theo từng event.
+- Tắt an toàn Form RSVP cũ; thêm Apps Script tạo Form đa sự kiện mới.
+- Không sử dụng link Maps Nha Trang/Sài Gòn vì trùng link nhà gái.
+
+## v18.2 — Art direction, lifecycle và lazy gift
+
+- Thêm crop ngang riêng cho ảnh feature và dùng `<picture>`.
+- Thêm trạng thái ngày cưới/hậu đám cưới và tự đóng RSVP theo deadline.
+- Lazy-init QR mừng cưới khi mở dialog.
+- Thêm focus/ARIA cho validation lời chúc.
+- Thêm Apps Script lấy Google Forms prefill entry.
+- Cập nhật ICS PRODID; không tự đoán giờ kết thúc.
+- Xóa asset meta/header trùng và tạo clean dist.
+
+
+## v18.1 — runtime hotfix và crop safety
+
+- Sửa iframe RSVP/Maps bị ẩn và popup trắng.
+- Dialog mobile chuyển sang CSS grid, footer luôn trong viewport.
+- Motion compose với layout transform, không làm lệch hero.
+- Hero/lightbox tối ưu mobile landscape thấp.
+- Feature focal point 25% trên màn hình rộng.
+- RSVP progressive enhancement bằng href thật.
+- Map embed chuyển sang pin tọa độ chính xác.
+- Playwright 1.61.1, package-lock và CI `npm ci`.
+- Browser smoke thêm 320×568 và 568×320, kiểm tra iframe visible/footer.
 
 ## v18 — RSVP popup, bản đồ lazy, motion và dữ liệu nhất quán
 

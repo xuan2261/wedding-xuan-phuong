@@ -1,12 +1,17 @@
 {
   "name": "wedding-xuan-phuong",
   "private": true,
-  "version": "18.0.0",
+  "version": "19.2.0",
   "scripts": {
     "test:browser": "node tests/browser_smoke.mjs",
-    "test:consistency": "python tests/consistency_check.py"
+    "test:consistency": "python tests/consistency_check.py",
+    "test": "python tests/consistency_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && python tools/build-dist.py && python tests/verify_dist.py && node tests/browser_smoke.mjs",
+    "test:dist": "python tools/build-dist.py && python tests/verify_dist.py",
+    "test:lifecycle": "node tests/lifecycle_check.js",
+    "test:multi-event": "node tests/multi_event_check.mjs",
+    "test:opening": "node tests/opening_experience_check.mjs"
   },
   "devDependencies": {
-    "playwright": "1.54.2"
+    "playwright": "1.61.1"
   }
 }
