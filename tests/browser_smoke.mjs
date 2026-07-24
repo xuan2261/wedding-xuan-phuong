@@ -167,7 +167,7 @@ try {
         document.querySelector("#copyPersonalizedLinkButton")?.hidden
     }));
 
-    assert(initial.build === "v19.2-20260724", `Sai build: ${initial.build}`);
+    assert(initial.build === "v19.2.1-20260724", `Sai build: ${initial.build}`);
     assert(initial.guestName === "Gia đình cô Lan", `Sai guest name: ${initial.guestName}`);
     assert(initial.familiesHidden === true, "Family section phải tự ẩn");
     assert(initial.ceremony === "08h30", `Sai ceremony: ${initial.ceremony}`);

@@ -9,9 +9,9 @@ errors = []
 def require(value, message):
     if not value: errors.append(message)
 
-require(DATA["build"]["buildId"] == "v19.2-20260724", "wedding-data sai build")
+require(DATA["build"]["buildId"] == "v19.2.1-20260724", "wedding-data sai build")
 require(BUILD["buildId"] == DATA["build"]["buildId"], "BUILD lệch wedding-data")
-require('content="v19.2-20260724"' in INDEX, "HTML lệch build")
+require('content="v19.2.1-20260724"' in INDEX, "HTML lệch build")
 require(DATA["defaultEventId"] == "groom", "Default event phải là groom")
 require(set(DATA["events"]) == {"bride","groom","nhatrang","saigon"}, "Thiếu event")
 for event_id, event in DATA["events"].items():

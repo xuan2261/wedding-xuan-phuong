@@ -1,0 +1,53 @@
+{
+  "generatedAtUtc": "2026-07-24T03:43:53.394788+00:00",
+  "buildId": "v19.2.1-20260724",
+  "release": "v19.2.1",
+  "sourceBase": "wedding-xuan-phuong-reviewed-v19.2.zip",
+  "verdict": "PASS_LOCAL_RELEASE_CANDIDATE",
+  "rootCause": {
+    "audioIndexSizeError": "fadeVolume only clamped the upper ratio bound. In Edge, the first requestAnimationFrame timestamp could be slightly less than performance.now(), producing a negative ratio and then a negative volume.",
+    "autoStoryPerception": "The opening flow waited 1.58 seconds plus 4.4 seconds before the first chapter movement, and it had no retry if story stops were not ready. The uncaught audio error also polluted the runtime and made the opening appear broken.",
+    "lazyImageIntervention": "Informational browser intervention caused by loading=\"lazy\"; not a functional error."
+  },
+  "fixes": [
+    "Clamp target, elapsed ratio and every intermediate audio volume to [0,1].",
+    "Use a fade generation token to prevent overlapping requestAnimationFrame fades.",
+    "Cancel active fades when music is paused.",
+    "Handle legacy play() return values and Promise rejection safely.",
+    "Start guided story after two animation frames when the cover closes.",
+    "Retry story auto-start once after 240ms if layout/stops are not ready.",
+    "Reduce initial story delay from 4400ms to 2600ms.",
+    "Add data-story-state, data-story-chapter and data-story-autostart diagnostics.",
+    "Add static and Playwright browser regression tests for negative rAF timestamp and auto-story."
+  ],
+  "checks": {
+    "consistency": "PASS",
+    "release": "PASS",
+    "multiEvent": "PASS",
+    "openingContract": "PASS",
+    "audioStoryContract": "PASS",
+    "lifecycle": "PASS",
+    "wishesContract": "PASS",
+    "personalization": "PASS",
+    "imagesQr": "PASS",
+    "dist": "PASS",
+    "packageLock": "PASS",
+    "browserSevenViewports": "PASS",
+    "negativeRafAudioStory": "PASS at 390x844 and 568x320"
+  },
+  "browserEvidence": {
+    "fullAudit": "/mnt/data/v19_2_1_evidence/full-browser-audit.json",
+    "regression": "/mnt/data/v19_2_1_evidence/browser-regression.json",
+    "screenshots": [
+      "/mnt/data/v19_2_1_evidence/autostory-390x844.png",
+      "/mnt/data/v19_2_1_evidence/autostory-568x320.png"
+    ]
+  },
+  "knownExternalBlockers": [
+    "GitHub Pages must be deployed and cache-busted to app.js?v=5.3.",
+    "Multi-event RSVP URLs are still empty/disabled.",
+    "Nha Trang and Sài Gòn map/address data remain incomplete.",
+    "Physical Android, iPhone, Zalo and Messenger tests remain required."
+  ],
+  "skillWorkflow": "integrity → requirements → brainstorm → architecture/design → UI/UX → code review → root-cause debug → fix/cook → static/browser tests → optimization loop → Fable evidence judge"
+}

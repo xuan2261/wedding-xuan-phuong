@@ -614,6 +614,12 @@
       const replay = completed && !running;
 
       player.hidden = false;
+      document.body.dataset.storyState = completed
+        ? "completed"
+        : running
+          ? "running"
+          : "paused";
+      document.body.dataset.storyChapter = String(position);
       button.setAttribute("aria-pressed", String(running));
       button.setAttribute(
         "aria-label",
@@ -811,7 +817,13 @@
       show,
       refreshStops,
       next: () => move(1),
-      previous: () => move(-1)
+      previous: () => move(-1),
+      getState: () => Object.freeze({
+        running,
+        completed,
+        currentIndex,
+        chapterCount: stops.length
+      })
     });
   }
 
@@ -870,10 +882,41 @@
       storyController?.show();
 
       if (shouldStartStory && !reduceMotion) {
-        storyController?.start({
+        const startOptions = {
           fromStart: true,
-          initialDelayMs: Number(settings.storyStartDelayMs || 4200)
+          initialDelayMs: Number(settings.storyStartDelayMs || 2600)
+        };
+
+        // Đợi dialog đóng và layout ổn định qua hai frame rồi mới bắt đầu.
+        // Nếu DOM/ảnh vừa cập nhật khiến lần đầu chưa có story stop, retry đúng một lần.
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const started = storyController?.start(startOptions) === true;
+            document.body.dataset.storyAutostart = started ? "started" : "retrying";
+
+            if (started) {
+              window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
+              return;
+            }
+
+            window.setTimeout(() => {
+              storyController?.refreshStops();
+              const retried = storyController?.start(startOptions) === true;
+              document.body.dataset.storyAutostart = retried ? "started" : "blocked";
+              if (retried) {
+                window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
+              } else {
+                showToast("Không thể tự chạy. Quý vị có thể bấm nút Tự xem để tiếp tục.");
+              }
+            }, 240);
+          });
         });
+      } else {
+        document.body.dataset.storyAutostart = simpleMode
+          ? "simple-mode"
+          : reduceMotion
+            ? "reduced-motion"
+            : "disabled";
       }
     };
 
@@ -1873,24 +1916,66 @@
 
     audio.setAttribute("aria-label", music.title);
 
-    // Âm lượng mặc định vừa phải. Có thể đặt music.volume trong config.js.
-    const configuredVolume = Math.min(
-      1,
-      Math.max(0, typeof music.volume === "number" ? music.volume : 0.35)
+    // HTMLMediaElement.volume chỉ chấp nhận giá trị trong [0, 1].
+    // Một số bản Edge có thể cung cấp timestamp rAF hơi nhỏ hơn performance.now(),
+    // nên mọi giá trị trung gian đều phải được clamp ở cả hai đầu.
+    const clampVolume = (value, fallback = 0) => {
+      const numeric = Number(value);
+      return Math.min(1, Math.max(0, Number.isFinite(numeric) ? numeric : fallback));
+    };
+
+    const configuredVolume = clampVolume(
+      typeof music.volume === "number" ? music.volume : 0.35,
+      0.35
     );
     const duckedVolume = Math.min(configuredVolume, 0.12);
-    audio.volume = configuredVolume;
+    const setAudioVolume = (value) => {
+      const safeVolume = clampVolume(value, audio.volume);
+      if (Math.abs(audio.volume - safeVolume) > 0.0001) {
+        audio.volume = safeVolume;
+      }
+      return safeVolume;
+    };
+
+    setAudioVolume(configuredVolume);
     let volumeAnimation = 0;
+    let volumeFadeGeneration = 0;
+
+    const cancelVolumeFade = () => {
+      volumeFadeGeneration += 1;
+      window.cancelAnimationFrame(volumeAnimation);
+      volumeAnimation = 0;
+    };
 
     const fadeVolume = (target, duration = 320) => {
-      window.cancelAnimationFrame(volumeAnimation);
-      const startVolume = audio.volume;
+      cancelVolumeFade();
+      const generation = volumeFadeGeneration;
+      const safeTarget = clampVolume(target, configuredVolume);
+      const startVolume = clampVolume(audio.volume, configuredVolume);
+      const safeDuration = Math.max(0, Number(duration) || 0);
+
+      if (safeDuration === 0 || Math.abs(safeTarget - startVolume) < 0.0001) {
+        setAudioVolume(safeTarget);
+        return;
+      }
+
       const startedAt = performance.now();
-      const step = (now) => {
-        const ratio = Math.min(1, (now - startedAt) / Math.max(1, duration));
-        audio.volume = startVolume + (target - startVolume) * ratio;
-        if (ratio < 1) volumeAnimation = requestAnimationFrame(step);
+      const step = (timestamp) => {
+        if (generation !== volumeFadeGeneration) return;
+
+        // Clamp elapsed/ratio vì timestamp callback không được giả định luôn >= startedAt.
+        const elapsed = Math.max(0, Number(timestamp) - startedAt);
+        const ratio = Math.min(1, Math.max(0, elapsed / safeDuration));
+        const nextVolume = startVolume + (safeTarget - startVolume) * ratio;
+        setAudioVolume(nextVolume);
+
+        if (ratio < 1) {
+          volumeAnimation = requestAnimationFrame(step);
+        } else {
+          volumeAnimation = 0;
+        }
       };
+
       volumeAnimation = requestAnimationFrame(step);
     };
 
@@ -1911,8 +1996,11 @@
 
     const playMusic = async ({ silent = false, fadeIn = false } = {}) => {
       try {
-        if (fadeIn) audio.volume = 0;
-        await audio.play();
+        if (fadeIn) setAudioVolume(0);
+        const playResult = audio.play();
+        if (playResult && typeof playResult.then === "function") {
+          await playResult;
+        }
         if (fadeIn) fadeVolume(configuredVolume, 1200);
         syncMusicButton();
         return true;
@@ -1931,6 +2019,7 @@
     };
 
     const pauseMusic = () => {
+      cancelVolumeFade();
       audio.pause();
       syncMusicButton();
     };

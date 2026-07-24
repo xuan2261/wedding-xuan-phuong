@@ -1,6 +1,6 @@
 # Wedding Xuân & Phượng — v19 Multi-Event Journey
 
-Build hiện tại: **v19.2-20260724** — Cinematic Opening & Guided Story.
+Build hiện tại: **v19.2.1-20260724** — Cinematic Opening & Guided Story.
 
 Website phục vụ bốn sự kiện:
 

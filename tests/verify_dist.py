@@ -9,7 +9,7 @@ for forbidden in ['tests','tools','reports','README.md','MULTI-EVENT-SETUP.md']:
     if (DIST/forbidden).exists(): errors.append(f'dist không được chứa {forbidden}')
 index=(DIST/'index.html').read_text(encoding='utf-8')
 config=(DIST/'config.js').read_text(encoding='utf-8')
-if 'v19.2-20260724' not in index: errors.append('dist sai build')
+if 'v19.2.1-20260724' not in index: errors.append('dist sai build')
 if 'id="invitationCover"' not in index: errors.append('dist thiếu opening cover')
 if 'id="storyPlayer"' not in index or 'id="storyButton"' not in index: errors.append('dist thiếu story controls')
 for event_id in ['bride','groom','nhatrang','saigon']:

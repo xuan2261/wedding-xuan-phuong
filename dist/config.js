@@ -12,8 +12,8 @@
 
   const SOURCE = {
     build: {
-      buildId: "v19.2-20260724",
-      release: "v19.2",
+      buildId: "v19.2.1-20260724",
+      release: "v19.2.1",
       status: "draft-multi-event-cinematic-v2"
     },
 
@@ -357,7 +357,7 @@
       autoStoryDefault: true,
       simpleModeEnabled: true,
       openingDurationMs: 1580,
-      storyStartDelayMs: 4400,
+      storyStartDelayMs: 2600,
       storyHoldMs: 6500,
       pauseOnInteraction: true,
       pauseOnDialogs: true,

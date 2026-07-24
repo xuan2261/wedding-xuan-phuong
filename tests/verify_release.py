@@ -9,7 +9,7 @@ config=(ROOT/'config.js').read_text(encoding='utf-8')
 app=(ROOT/'app.js').read_text(encoding='utf-8')
 guest=(ROOT/'guest-utils.js').read_text(encoding='utf-8')
 backend=(ROOT/'tools/wedding-wishes-webapp.gs').read_text(encoding='utf-8')
-require('v19.2-20260724' in index,'sai build marker')
+require('v19.2.1-20260724' in index,'sai build marker')
 for event_id in ['bride','groom','nhatrang','saigon']:
     require(f'{event_id}: {{' in config,f'thiếu event {event_id}')
 require('eventContext' in config,'thiếu event context')

@@ -28,6 +28,7 @@ assert(app.includes("function setupOpeningExperience"), "Thiếu setupOpeningExp
 assert(app.includes("function setupGuidedStory"), "Thiếu setupGuidedStory");
 assert(app.includes('window.__WEDDING_SKIP_COVER__'), "Thiếu test/debug escape hatch");
 assert(app.includes('wedding:cover-opened'), "Thiếu cover-opened event");
+assert(app.includes('wedding:story-autostarted'), "Thiếu story autostart event");
 assert(config.includes("openingExperience:"), "Thiếu openingExperience config");
 assert(config.includes("autoStoryDefault: true"), "Auto story mặc định chưa bật");
 assert(styles.includes(".invitation-cover__panel--left"), "Thiếu panel trái");

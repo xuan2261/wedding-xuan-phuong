@@ -29,7 +29,7 @@ powershell -ExecutionPolicy Bypass -File tools/check-live-build.ps1
 Marker cần thấy:
 
 ```html
-<meta name="wedding-build" content="v19.2-20260724">
+<meta name="wedding-build" content="v19.2.1-20260724">
 ```
 
 ## Cổng phát hành

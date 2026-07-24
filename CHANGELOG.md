@@ -1,3 +1,13 @@
+# v19.2.1 — Audio Fade & Auto Story Hotfix (2026-07-24)
+
+- Sửa `IndexSizeError` khi Edge cung cấp timestamp `requestAnimationFrame` nhỏ hơn `performance.now()`.
+- Clamp mọi giá trị âm lượng vào `[0, 1]` và thêm generation guard chống hai fade tranh chấp.
+- Hủy fade khi tạm dừng nhạc.
+- Khởi động story sau hai frame khi cover đóng; retry một lần nếu DOM chưa ổn định.
+- Rút delay chương đầu từ 4,4 giây xuống 2,6 giây.
+- Thêm trạng thái debug `data-story-state` và `data-story-autostart`.
+- Thêm regression contract cho audio fade và auto-story.
+
 # v19.2 — Cinematic Story 2.0 (2026-07-24)
 
 - Audit lại toàn bộ v19.1 và sửa lỗi `sharing` của event Nha Trang bị lồng sai.

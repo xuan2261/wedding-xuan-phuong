@@ -1,9 +1,9 @@
 {
-  "buildId": "v19.2-20260724",
-  "release": "v19.2",
-  "generatedAtUtc": "2026-07-24T03:30:00+00:00",
+  "buildId": "v19.2.1-20260724",
+  "release": "v19.2.1",
+  "generatedAtUtc": "2026-07-24T04:30:00+00:00",
   "backendVersion": "1.5.0",
-  "status": "draft-multi-event-cinematic-v2",
+  "status": "release-candidate-audio-story-hotfix",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",

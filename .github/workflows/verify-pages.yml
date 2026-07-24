@@ -37,6 +37,9 @@ jobs:
           python tests/consistency_check.py
           python tests/verify_release.py
           node tests/multi_event_check.mjs
+          node tests/opening_experience_check.mjs
+          node tests/audio_story_regression_check.mjs
+          node tests/lifecycle_check.js
           node tests/contract_check.js
           node tests/personalization_check.js
           python tests/verify_assets.py
@@ -49,7 +52,9 @@ jobs:
           python tools/build-dist.py
           python tests/verify_dist.py
       - name: Browser smoke
-        run: npm run test:browser
+        run: |
+          npm run test:browser
+          npm run test:audio-story-browser
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
