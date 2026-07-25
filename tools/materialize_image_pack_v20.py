@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Materialize the Photoshopped wedding image pack v20.
 
-This helper is intentionally temporary. It reconstructs the staged base64 ZIP,
-installs the new 1280px WebP masters, derives responsive 720px variants and
-landscape/social crops, updates cache-busting references, writes evidence, then
-removes the staging payload and itself.
+This helper is intentionally temporary. It verifies an exact staged ZIP (or a
+Base64 fallback), installs the new 1280px WebP masters, derives responsive
+720px variants and landscape/social crops, updates cache-busting references,
+writes evidence, then removes the staging payload and itself.
 """
 
 from __future__ import annotations
@@ -147,13 +147,22 @@ Hero → chân dung riêng → cận cảnh thân mật → ánh nhìn → trang
     (ROOT / "IMAGE-MAP-V20.md").write_text(content, encoding="utf-8")
 
 
-def main() -> int:
-    parts = sorted(STAGING.glob("newpart-*.b64"))
-    if not parts:
-        raise RuntimeError("No replacement image-pack chunks found")
+def read_payload() -> bytes:
+    binary_pack = STAGING / "wedding-image-pack-v20-q72.zip"
+    if binary_pack.is_file():
+        return binary_pack.read_bytes()
 
+    parts = sorted(STAGING.glob("directpart-*.b64"))
+    if not parts:
+        parts = sorted(STAGING.glob("newpart-*.b64"))
+    if not parts:
+        raise RuntimeError("No verified binary or Base64 image pack found")
     encoded = "".join(part.read_text(encoding="ascii").strip() for part in parts)
-    payload = base64.b64decode(encoded, validate=True)
+    return base64.b64decode(encoded, validate=True)
+
+
+def main() -> int:
+    payload = read_payload()
     digest = hashlib.sha256(payload).hexdigest()
     if digest != EXPECTED_SHA256:
         raise RuntimeError(
@@ -231,8 +240,22 @@ def main() -> int:
 
     shutil.rmtree(STAGING)
     Path(__file__).unlink()
-    workflow = ROOT / ".github" / "workflows" / "materialize-image-pack-v20.yml"
-    workflow.unlink(missing_ok=True)
+    for workflow_name in (
+        "materialize-image-pack-v20.yml",
+        "diagnose-image-pack-v20.yml",
+        "diagnose-old-image-pack.yml",
+    ):
+        (ROOT / ".github" / "workflows" / workflow_name).unlink(missing_ok=True)
+    for temporary in (
+        ROOT / "tools" / "diagnose_image_pack_v20.py",
+        ROOT / "reports" / "materialize-image-pack-v20.log",
+        ROOT / "reports" / "image-pack-v20-diagnostic.json",
+        ROOT / "reports" / "old-image-pack-diagnosis.json",
+        ROOT / "reports" / "IMAGE-PACK-V20-HISTORY-RECOVERY.json",
+        ROOT / "noop",
+        ROOT / "temp-test-path.txt",
+    ):
+        temporary.unlink(missing_ok=True)
 
     print(f"PASS: materialized {len(report)} Photoshop sources as responsive v20 assets")
     return 0
