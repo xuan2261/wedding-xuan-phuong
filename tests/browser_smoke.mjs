@@ -85,7 +85,14 @@ try {
       if (message.type() === "error") consoleErrors.push(message.text());
     });
 
-    await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
+    // Keep font rendering deterministic without deliberately creating network
+    // errors in the console. Empty CSS exercises the production fallback stack.
+    await page.route(/https:\/\/fonts\.googleapis\.com\/.*/, async (route) => {
+      await route.fulfill({ status: 200, contentType: "text/css; charset=utf-8", body: "" });
+    });
+    await page.route(/https:\/\/fonts\.gstatic\.com\/.*/, async (route) => {
+      await route.fulfill({ status: 204, body: "" });
+    });
     await page.route(/\/assets\/qr\/qr-nha-(trai|gai)\.png/, async (route) => {
       qrRequests += 1;
       await route.continue();
