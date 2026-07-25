@@ -83,7 +83,17 @@ jobs:
           if-no-files-found: error
           retention-days: 1
       - name: Audio/story browser regression
-        run: npm run test:audio-story-browser
+        run: |
+          set -o pipefail
+          npm run test:audio-story-browser 2>&1 | tee reports/audio-story-browser-ci.log
+      - name: Upload audio/story browser log
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wedding-audio-story-browser-log
+          path: reports/audio-story-browser-ci.log
+          if-no-files-found: error
+          retention-days: 1
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
