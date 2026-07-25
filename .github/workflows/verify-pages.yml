@@ -75,7 +75,6 @@ jobs:
         run: |
           tar \
             --exclude=.git \
-            --exclude=node_modules \
             --exclude=dist \
             -czf /tmp/wedding-browser-debug-source.tar.gz .
       - name: Upload browser-debug source
