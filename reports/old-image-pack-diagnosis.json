@@ -1,0 +1,119 @@
+{
+  "files": [
+    {
+      "name": "part-001.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "c6067b2008ae82e05d733d099eada85be9f0c0fd7f29843f8d5db2ac53b5adbe",
+      "prefix": "2CvNx/3roLKCpW4DGvrEcoiX",
+      "suffix": "24hfYzL/+QhteMzRh0DXpjUP",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-002.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "86d2e436d88ce522cbe2b1023911c4b6a800a2bff5e5675dc086792d85aefd6b",
+      "prefix": "8QYVJX68Mxe/pDXMFlqLlUay",
+      "suffix": "+q+qN0/f0nkoGbLwrsNiJYKT",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-003.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "2f5574fb663b434335006a035410e658a311ace79579f46e7833282801e714ba",
+      "prefix": "lnpcmnbpG5Uo6mDw8ulU9Cm+",
+      "suffix": "XBaqDaFP/cRr5yM6yLrebguw",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-004.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "1a9942ac286e9958a3791e0a87cff091efb5440a8eac2b02bcb8daf367d68634",
+      "prefix": "xeWKLkiTdC+92Upb+JV6cjvL",
+      "suffix": "CkdCE7WTvFR9ea+8pUPxJhz9",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-005.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "c17de2763992d40b4fc94cbf5d253b1e3ba1a924c926ab7ea21e54c4a9173a5e",
+      "prefix": "pQMVD1JsHqUxzmty19XXVEXM",
+      "suffix": "XJzi7w0pD99KBVatttWhi4wj",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-006.b64",
+      "chars_raw": 19999,
+      "chars_stripped": 19999,
+      "mod4": 3,
+      "invalid_chars": [],
+      "sha256_text": "d85207f6e40032db91d976249782e443d02ce0f3d0fb54524f705ada8eb3a62c",
+      "prefix": "lbRchvbNbYMCtOxkaQVR7BW4",
+      "suffix": "1MTkyl4cVhmBb+WiE66xFRv1",
+      "individually_valid": false,
+      "error": "Error: Incorrect padding"
+    },
+    {
+      "name": "part-007-a.b64",
+      "chars_raw": 19464,
+      "chars_stripped": 19464,
+      "mod4": 0,
+      "invalid_chars": [],
+      "sha256_text": "edffc0fdf2d5cfa4fc16e267b5ce0e1a3cd269a118839b1010cb589dd28b5e53",
+      "prefix": "SWyWY8G77SpW7MTKT/L45NZo",
+      "suffix": "l08NVnXgx2MwcEHfcSe/7oaf",
+      "individually_valid": true
+    },
+    {
+      "name": "part-007-b.b64",
+      "chars_raw": 19464,
+      "chars_stripped": 19464,
+      "mod4": 0,
+      "invalid_chars": [],
+      "sha256_text": "f1cd9908d6c401348142c3c192a6391340bcb62b17825cc514dd136f2684e96b",
+      "prefix": "grMKgVpIG7CcxY4PoaOlTAK8",
+      "suffix": "bISFWU7G/dV5uezv2CPhjbBF",
+      "individually_valid": true
+    },
+    {
+      "name": "part-007-c.b64",
+      "chars_raw": 39,
+      "chars_stripped": 39,
+      "mod4": 3,
+      "invalid_chars": [
+        "_"
+      ],
+      "sha256_text": "2c26b93c31ed376f488378e7e26614847e2b7c5d38604b71d9d9e16f5a1fb669",
+      "prefix": "MUST_USE_PREVIOUS_PYTHON",
+      "suffix": "US_PYTHON_OUTPUT_EXACTLY",
+      "individually_valid": false,
+      "error": "Error: Only base64 data is allowed"
+    }
+  ],
+  "combined": {
+    "chars": 158961,
+    "mod4": 1,
+    "sha256_text": "756d8b749c27a4ec01904032c607c12ffeba88e462b7a6ac8f96b8629c9adc13",
+    "valid": false,
+    "error": "Error: Only base64 data is allowed"
+  }
+}
