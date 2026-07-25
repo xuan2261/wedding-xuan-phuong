@@ -4,13 +4,11 @@ on:
   push:
     branches: [images/refresh-photoshop-v20]
     paths:
-      - .image-pack-v20/READY
+      - .image-pack-v20/NEW_READY
   pull_request:
     branches: [main]
     paths:
-      - .image-pack-v20/READY
-      - .github/workflows/materialize-image-pack-v20.yml
-      - tools/materialize_image_pack_v20.py
+      - .image-pack-v20/NEW_READY
 
 permissions:
   contents: write
