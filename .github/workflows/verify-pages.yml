@@ -58,7 +58,7 @@ jobs:
             --json reports/RELEASE-READINESS-V19.4.json \
             --markdown reports/RELEASE-READINESS-V19.4.md
       - name: Upload release-readiness report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wedding-release-readiness
           path: |
@@ -76,7 +76,7 @@ jobs:
           npm run test:browser 2>&1 | tee reports/browser-smoke-ci.log
       - name: Upload browser smoke log
         if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wedding-browser-smoke-log
           path: reports/browser-smoke-ci.log
@@ -88,7 +88,7 @@ jobs:
           npm run test:audio-story-browser 2>&1 | tee reports/audio-story-browser-ci.log
       - name: Upload audio/story browser log
         if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wedding-audio-story-browser-log
           path: reports/audio-story-browser-ci.log
