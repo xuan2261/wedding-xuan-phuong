@@ -1,0 +1,49 @@
+name: Lighthouse budgets
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow opencv-python-headless
+          npm ci --no-audit --no-fund
+          npm install --no-save --no-package-lock @lhci/cli@0.15.x
+      - name: Build production dist
+        run: |
+          python tools/build-dist.py
+          python tests/share_entry_pages_check.py
+          python tests/verify_dist.py
+      - name: Collect Lighthouse reports
+        run: npx lhci collect --config=./lighthouserc.cjs
+      - name: Enforce Lighthouse budgets
+        run: npx lhci assert --config=./lighthouserc.cjs
+      - name: Upload Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-lighthouse-${{ github.run_id }}
+          path: .lighthouseci/
+          if-no-files-found: warn
+          retention-days: 7
