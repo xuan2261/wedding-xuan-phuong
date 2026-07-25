@@ -21,7 +21,7 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGING = ROOT / ".image-pack-v20"
-EXPECTED_SHA256 = "6bcec6c685f2c6df177e0088d442fa892b6beae60430c6657565bb62cc64862b"
+EXPECTED_SHA256 = "afca17358afe24cd9f199a68da4332cc2cef42520fede19ccbea294dcb7387c0"
 ASSETS = ROOT / "assets" / "images"
 
 
@@ -148,14 +148,17 @@ Hero → chân dung riêng → cận cảnh thân mật → ánh nhìn → trang
 
 
 def main() -> int:
-    parts = sorted(STAGING.glob("part-*.b64"))
+    parts = sorted(STAGING.glob("newpart-*.b64"))
     if not parts:
-        raise RuntimeError("No staged image-pack chunks found")
+        raise RuntimeError("No replacement image-pack chunks found")
 
     encoded = "".join(part.read_text(encoding="ascii").strip() for part in parts)
     payload = base64.b64decode(encoded, validate=True)
     digest = hashlib.sha256(payload).hexdigest()
-    print(f"INFO: staged image pack sha256={digest}; expected={EXPECTED_SHA256}")
+    if digest != EXPECTED_SHA256:
+        raise RuntimeError(
+            f"Image pack checksum mismatch: observed={digest}, expected={EXPECTED_SHA256}"
+        )
     if not zipfile.is_zipfile(io.BytesIO(payload)):
         raise RuntimeError(f"Staged image pack is not a valid ZIP: {digest}")
 
