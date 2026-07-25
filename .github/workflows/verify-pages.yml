@@ -42,6 +42,7 @@ jobs:
           node tests/story_asset_preload_check.mjs
           node tests/release_hardening_check.mjs
           python tests/guest_tool_check.py
+          python tests/release_readiness_check.py
           node tests/lifecycle_check.js
           node tests/contract_check.js
           node tests/personalization_check.js
@@ -51,6 +52,19 @@ jobs:
           node --check guest-utils.js
           node --check event-entry.js
           for file in tools/*.gs; do cp "$file" /tmp/apps-script-check.js; node --check /tmp/apps-script-check.js; done
+      - name: Generate release-readiness evidence
+        run: |
+          python tools/release_readiness.py \
+            --json reports/RELEASE-READINESS-V19.4.json \
+            --markdown reports/RELEASE-READINESS-V19.4.md
+      - name: Upload release-readiness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wedding-release-readiness
+          path: |
+            reports/RELEASE-READINESS-V19.4.json
+            reports/RELEASE-READINESS-V19.4.md
+          if-no-files-found: error
       - name: Build and verify clean dist
         run: |
           python tools/build-dist.py
