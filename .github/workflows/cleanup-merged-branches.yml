@@ -1,0 +1,75 @@
+name: Cleanup merged branches
+
+on:
+  pull_request:
+    types: [closed]
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cleanup-merged-branches.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cleanup-merged-branches
+  cancel-in-progress: false
+
+jobs:
+  cleanup-closed-pr:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete merged head branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        shell: bash
+        run: |
+          echo "Deleting merged branch ${HEAD_REF}"
+          gh api \
+            --method DELETE \
+            "repos/${GITHUB_REPOSITORY}/git/refs/heads/${HEAD_REF}"
+
+  cleanup-historical-branches:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Delete only fully merged historical branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          branches=(
+            "audit/v19.4-release-readiness"
+            "hardening/v19.5-release-gates"
+            "chore/dependency-rollup-and-redeploy"
+            "ops/pages-live-watch-and-branch-cleanup"
+          )
+
+          for branch in "${branches[@]}"; do
+            if ! git ls-remote --exit-code --heads origin "${branch}" >/dev/null 2>&1; then
+              echo "SKIP: ${branch} does not exist"
+              continue
+            fi
+
+            git fetch --no-tags origin \
+              "+refs/heads/${branch}:refs/remotes/origin/${branch}"
+            if ! git merge-base --is-ancestor "refs/remotes/origin/${branch}" HEAD; then
+              echo "KEEP: ${branch} contains commits not in main"
+              continue
+            fi
+
+            echo "DELETE: ${branch} is fully merged into main"
+            gh api \
+              --method DELETE \
+              "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"
+          done

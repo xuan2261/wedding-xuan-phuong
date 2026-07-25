@@ -1,0 +1,65 @@
+name: Verify live GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: pages-live-watch
+  cancel-in-progress: true
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Verify public build and event entry pages
+        id: live
+        shell: bash
+        run: |
+          mkdir -p reports
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            attempts=24
+            delay=15
+          else
+            attempts=2
+            delay=15
+          fi
+          python tools/verify_live_pages.py \
+            --base-url "https://xuan2261.github.io/wedding-xuan-phuong/" \
+            --expected-build "v19.4-20260724" \
+            --attempts "${attempts}" \
+            --delay-seconds "${delay}" \
+            --report reports/LIVE-PAGES-WATCH.json
+      - name: Upload live verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-live-pages-${{ github.run_id }}
+          path: reports/LIVE-PAGES-WATCH.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Close deployment issue after verified proof
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BUILD: v19.4-20260724
+        shell: bash
+        run: |
+          state="$(gh issue view 10 --repo "${GITHUB_REPOSITORY}" --json state --jq .state)"
+          if [[ "${state}" == "OPEN" ]]; then
+            gh issue close 10 \
+              --repo "${GITHUB_REPOSITORY}" \
+              --reason completed \
+              --comment "Đã xác minh tự động URL công khai, release.json và đủ bốn trang sự kiện đều chạy build ${EXPECTED_BUILD}. Evidence: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+          fi

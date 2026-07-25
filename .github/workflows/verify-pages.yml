@@ -43,6 +43,7 @@ jobs:
           node tests/release_hardening_check.mjs
           python tests/guest_tool_check.py
           python tests/release_readiness_check.py
+          python tests/live_pages_verifier_check.py
           node tests/lifecycle_check.js
           node tests/contract_check.js
           node tests/personalization_check.js
@@ -114,42 +115,24 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v7
       - name: Verify live build and event entry pages
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
           EXPECTED_BUILD: v19.4-20260724
         run: |
-          python - <<'PY'
-          import json
-          import os
-          import time
-          import urllib.request
-
-          base = os.environ["PAGE_URL"].rstrip("/") + "/"
-          expected = os.environ["EXPECTED_BUILD"]
-          last_error = None
-          for attempt in range(18):
-              try:
-                  request = urllib.request.Request(base, headers={"Cache-Control": "no-cache"})
-                  with urllib.request.urlopen(request, timeout=20) as response:
-                      html = response.read().decode("utf-8", "replace")
-                  if expected not in html:
-                      raise RuntimeError(f"root marker chưa cập nhật: {expected}")
-                  with urllib.request.urlopen(base + "release.json?build=" + expected, timeout=20) as response:
-                      release = json.load(response)
-                  if release.get("buildId") != expected:
-                      raise RuntimeError("release.json sai build")
-                  for event_id in ["bride", "groom", "nhatrang", "saigon"]:
-                      with urllib.request.urlopen(base + f"events/{event_id}/?build=" + expected, timeout=20) as response:
-                          page = response.read().decode("utf-8", "replace")
-                      if expected not in page or f'data-event-id="{event_id}"' not in page:
-                          raise RuntimeError(f"event entry page sai: {event_id}")
-                  print(f"PASS: live Pages đang chạy {expected}")
-                  break
-              except Exception as exc:
-                  last_error = exc
-                  if attempt == 17:
-                      raise
-                  print(f"Chờ Pages đồng bộ ({attempt + 1}/18): {exc}")
-                  time.sleep(10)
-          PY
+          mkdir -p reports
+          python tools/verify_live_pages.py \
+            --base-url "${PAGE_URL}" \
+            --expected-build "${EXPECTED_BUILD}" \
+            --attempts 18 \
+            --delay-seconds 10 \
+            --report reports/LIVE-PAGES-DEPLOY.json
+      - name: Upload deployment verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-live-deploy-${{ github.run_id }}
+          path: reports/LIVE-PAGES-DEPLOY.json
+          if-no-files-found: error
+          retention-days: 14

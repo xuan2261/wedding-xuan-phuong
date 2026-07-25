@@ -46,6 +46,7 @@ jobs:
           node tests/release_hardening_check.mjs
           python tests/guest_tool_check.py
           python tests/release_readiness_check.py
+          python tests/live_pages_verifier_check.py
           node tests/lifecycle_check.js
           node tests/contract_check.js
           node tests/personalization_check.js
