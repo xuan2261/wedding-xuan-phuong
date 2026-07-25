@@ -70,6 +70,22 @@ jobs:
           python tools/build-dist.py
           python tests/share_entry_pages_check.py
           python tests/verify_dist.py
+      - name: Package browser-debug source
+        if: github.event_name == 'pull_request'
+        run: |
+          tar \
+            --exclude=.git \
+            --exclude=node_modules \
+            --exclude=dist \
+            -czf /tmp/wedding-browser-debug-source.tar.gz .
+      - name: Upload browser-debug source
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wedding-browser-debug-source
+          path: /tmp/wedding-browser-debug-source.tar.gz
+          if-no-files-found: error
+          retention-days: 1
       - name: Browser smoke
         run: npm run test:browser
       - name: Audio/story browser regression
