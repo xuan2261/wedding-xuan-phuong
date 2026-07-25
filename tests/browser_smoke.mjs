@@ -164,7 +164,8 @@ try {
       albumCount: document.querySelectorAll(".album-item").length,
       eventId: document.body.dataset.eventId,
       personalizedCopyHidden:
-        document.querySelector("#copyPersonalizedLinkButton")?.hidden
+        document.querySelector("#copyPersonalizedLinkButton")?.hidden,
+      expectedGiftCount: window.WEDDING_CONFIG?.gifts?.length ?? 0
     }));
 
     assert(initial.build === "v19.4-20260724", `Sai build: ${initial.build}`);
@@ -179,6 +180,10 @@ try {
     assert(initial.albumCount === 9, `Album phải có 9 ảnh: ${initial.albumCount}`);
     assert(initial.eventId === "groom", `Sai active event: ${initial.eventId}`);
     assert(initial.personalizedCopyHidden === false, "Nút copy link có tên phải hiện");
+    assert(
+      Number.isInteger(initial.expectedGiftCount) && initial.expectedGiftCount > 0,
+      `Số QR theo sự kiện không hợp lệ: ${initial.expectedGiftCount}`
+    );
 
     const centered = await page.evaluate(() => {
       const centerError = (selector) => {
@@ -247,8 +252,14 @@ try {
 
     await page.locator("#giftButton").click();
     await page.waitForSelector("#giftDialog[open]");
-    await page.waitForFunction(() => document.querySelectorAll("#giftGrid img").length === 2);
-    assert(qrRequests === 2, `Gift QR phải tải sau lần mở đầu tiên: ${qrRequests}`);
+    await page.waitForFunction(
+      (expected) => document.querySelectorAll("#giftGrid img").length === expected,
+      initial.expectedGiftCount
+    );
+    assert(
+      qrRequests === initial.expectedGiftCount,
+      `Gift QR phải khớp chính sách sự kiện: expected=${initial.expectedGiftCount}, actual=${qrRequests}`
+    );
     await page.locator("[data-close-dialog]").click();
 
     await page.locator('[data-lightbox="couple-hands"]').click();
