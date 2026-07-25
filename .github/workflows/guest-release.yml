@@ -1,0 +1,74 @@
+name: Certify guest release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: guest-release-certification
+  cancel-in-progress: false
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install verification dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow opencv-python-headless
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          npm install --no-save --no-package-lock @lhci/cli@0.15.x
+      - name: Enforce strict guest readiness
+        run: |
+          mkdir -p reports
+          python tools/release_readiness.py \
+            --strict \
+            --json reports/GUEST-RELEASE-READINESS.json \
+            --markdown reports/GUEST-RELEASE-READINESS.md
+      - name: Verify source and build
+        run: |
+          python tests/consistency_check.py
+          python tests/verify_release.py
+          node tests/multi_event_check.mjs
+          node tests/opening_experience_check.mjs
+          node tests/audio_story_regression_check.mjs
+          node tests/story_asset_preload_check.mjs
+          node tests/release_hardening_check.mjs
+          python tests/guest_tool_check.py
+          python tests/release_readiness_check.py
+          node tests/lifecycle_check.js
+          node tests/contract_check.js
+          node tests/personalization_check.js
+          python tests/verify_assets.py
+          python tools/build-dist.py
+          python tests/share_entry_pages_check.py
+          python tests/verify_dist.py
+      - name: Browser regression
+        run: |
+          npm run test:browser
+          npm run test:audio-story-browser
+      - name: Lighthouse budgets
+        run: |
+          npx lhci collect --config=./lighthouserc.cjs
+          npx lhci assert --config=./lighthouserc.cjs
+      - name: Upload guest-release evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-guest-release-evidence
+          path: |
+            reports/GUEST-RELEASE-READINESS.json
+            reports/GUEST-RELEASE-READINESS.md
+            .lighthouseci/
+          if-no-files-found: warn
+          retention-days: 14
