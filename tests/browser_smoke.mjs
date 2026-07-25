@@ -249,7 +249,8 @@ try {
     await page.waitForSelector("#mapDialog[open]");
     await page.waitForFunction(() => {
       const frame = document.querySelector("#mapFrame");
-      return frame && !frame.hidden && getComputedStyle(frame).display !== "none";
+      const loading = document.querySelector("#mapLoading");
+      return frame && !frame.hidden && loading?.hidden === true;
     });
     assert(await page.locator("#mapFrame").isVisible(), "Map iframe phải visible");
     assert(mapRequests === 1, `Map phải tải đúng một lần: ${mapRequests}`);
@@ -263,7 +264,10 @@ try {
     await page.locator("#giftButton").click();
     await page.waitForSelector("#giftDialog[open]");
     await page.waitForFunction(
-      (expected) => document.querySelectorAll("#giftGrid img").length === expected,
+      (expected) => {
+        const images = Array.from(document.querySelectorAll("#giftGrid img"));
+        return images.length === expected && images.every((image) => image.complete);
+      },
       initial.expectedGiftCount
     );
     assert(
