@@ -1,0 +1,95 @@
+name: Recover and apply Photoshop image pack v20
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/recover-image-pack-v20.yml
+      - tools/recover_image_pack_v20_history.py
+      - tools/apply_image_pack_v20.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: recover-image-pack-v20
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Fetch staged image branch
+        run: |
+          git fetch --no-tags origin \
+            "+refs/heads/images/refresh-photoshop-v20:refs/remotes/origin/images/refresh-photoshop-v20"
+      - name: Recover exact ZIP from Git history
+        id: recovery
+        shell: bash
+        run: |
+          mkdir -p reports /tmp/v20-recovery
+          set +e
+          python tools/recover_image_pack_v20_history.py \
+            --repo . \
+            --base-ref origin/main \
+            --head-ref origin/images/refresh-photoshop-v20 \
+            --output /tmp/v20-recovery/wedding-image-pack-v20-q72.zip \
+            --report reports/IMAGE-PACK-V20-HISTORY-RECOVERY.json
+          status=$?
+          echo "status=${status}" >> "${GITHUB_OUTPUT}"
+          exit 0
+      - name: Upload recovery evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-image-pack-v20-history-recovery
+          path: reports/IMAGE-PACK-V20-HISTORY-RECOVERY.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop if exact payload was not recovered
+        if: steps.recovery.outputs.status != '0'
+        run: exit 1
+      - name: Preserve trusted installer outside worktree
+        run: cp tools/apply_image_pack_v20.py /tmp/v20-recovery/apply_image_pack_v20.py
+      - name: Switch to image branch and apply pack
+        shell: bash
+        run: |
+          git switch -C images/refresh-photoshop-v20 \
+            refs/remotes/origin/images/refresh-photoshop-v20
+          python /tmp/v20-recovery/apply_image_pack_v20.py \
+            --root "${GITHUB_WORKSPACE}" \
+            --zip /tmp/v20-recovery/wedding-image-pack-v20-q72.zip
+      - name: Verify generated images and source
+        run: |
+          python tests/verify_assets.py
+          python tests/share_entry_pages_check.py
+          node --check app.js
+          node --check config.js
+          node --check guest-utils.js
+          python tools/build-dist.py
+          python tests/verify_dist.py
+      - name: Commit generated assets to PR branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat(images): refresh all wedding photos from Photoshop masters"
+          git push origin HEAD:images/refresh-photoshop-v20
+      - name: Update PR status comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh pr comment 13 --repo "${GITHUB_REPOSITORY}" \
+            --body "Đã khôi phục đúng gói ảnh v20 từ Git history, xác minh SHA-256, materialize ảnh responsive, xóa staging và đẩy asset thành phẩm lên branch. Chờ Verify/Lighthouse PASS trước khi merge."
