@@ -84,8 +84,17 @@ try {
     };
   });
 
-  await page.route(/fonts\.(googleapis|gstatic)\.com/, (route) => route.abort());
-  await page.route(/https:\/\/statics\.pancake\.vn\/.*/, (route) => route.abort());
+  // Exercise fallback fonts without generating deliberate network errors that
+  // would obscure the audio/story regression being tested here.
+  await page.route(/https:\/\/fonts\.googleapis\.com\/.*/, async (route) => {
+    await route.fulfill({ status: 200, contentType: "text/css; charset=utf-8", body: "" });
+  });
+  await page.route(/https:\/\/fonts\.gstatic\.com\/.*/, async (route) => {
+    await route.fulfill({ status: 204, body: "" });
+  });
+  await page.route(/https:\/\/statics\.pancake\.vn\/.*/, async (route) => {
+    await route.fulfill({ status: 204, contentType: "audio/mpeg", body: "" });
+  });
   await page.route(/https:\/\/script\.google\.com\/.*/, (route) => route.abort());
 
   await page.goto(
