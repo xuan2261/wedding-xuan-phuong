@@ -154,8 +154,8 @@ try {
       build: document.querySelector('meta[name="wedding-build"]')?.content,
       guestName: document.querySelector("[data-guest-name]")?.textContent?.trim(),
       familiesHidden: document.querySelector("#families")?.hidden,
-      ceremony: document.querySelector("[data-ceremony-time]")?.textContent?.trim(),
-      reception: document.querySelector("[data-guest-time]")?.textContent?.trim(),
+      timelineTimes: Array.from(document.querySelectorAll("#eventTimeline time"), (item) => item.textContent?.trim()),
+      timelineLabels: Array.from(document.querySelectorAll("#eventTimeline h3"), (item) => item.textContent?.trim()),
       deadline: document.querySelector("[data-rsvp-deadline]")?.textContent?.trim(),
       audioPaused: document.querySelector("#weddingMusic")?.paused,
       audioSources: document.querySelectorAll("#weddingMusic source").length,
@@ -171,8 +171,14 @@ try {
     assert(initial.build === "v19.4-20260724", `Sai build: ${initial.build}`);
     assert(initial.guestName === "Gia đình cô Lan", `Sai guest name: ${initial.guestName}`);
     assert(initial.familiesHidden === true, "Family section phải tự ẩn");
-    assert(initial.ceremony === "08h30", `Sai ceremony: ${initial.ceremony}`);
-    assert(initial.reception === "10h00", `Sai reception: ${initial.reception}`);
+    assert(
+      JSON.stringify(initial.timelineTimes) === JSON.stringify(["08h30", "10h00"]),
+      `Sai timeline times: ${JSON.stringify(initial.timelineTimes)}`
+    );
+    assert(
+      JSON.stringify(initial.timelineLabels) === JSON.stringify(["Lễ Thành Hôn", "Đón khách và dùng tiệc"]),
+      `Sai timeline labels: ${JSON.stringify(initial.timelineLabels)}`
+    );
     assert(initial.deadline === "", `Deadline phải để trống tới khi chốt: ${initial.deadline}`);
     assert(initial.audioPaused === true, "Audio không được phát khi initial load");
     assert(initial.audioSources === 2, `Music phải có 2 sources: ${initial.audioSources}`);
