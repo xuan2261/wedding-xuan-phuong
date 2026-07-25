@@ -56,6 +56,22 @@ jobs:
           path: reports/IMAGE-PACK-V20-HISTORY-RECOVERY.json
           if-no-files-found: error
           retention-days: 14
+      - name: Persist failed recovery evidence on image branch
+        if: steps.recovery.outputs.status != '0'
+        shell: bash
+        run: |
+          cp reports/IMAGE-PACK-V20-HISTORY-RECOVERY.json /tmp/v20-recovery/
+          git switch -C images/refresh-photoshop-v20 \
+            refs/remotes/origin/images/refresh-photoshop-v20
+          mkdir -p reports
+          cp /tmp/v20-recovery/IMAGE-PACK-V20-HISTORY-RECOVERY.json reports/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/IMAGE-PACK-V20-HISTORY-RECOVERY.json
+          if ! git diff --cached --quiet; then
+            git commit -m "debug(images): persist v20 history recovery evidence"
+            git push origin HEAD:images/refresh-photoshop-v20
+          fi
       - name: Stop if exact payload was not recovered
         if: steps.recovery.outputs.status != '0'
         run: exit 1
