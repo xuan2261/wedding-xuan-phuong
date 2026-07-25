@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -15,6 +16,7 @@ SPEC = importlib.util.spec_from_file_location("verify_live_pages", MODULE_PATH)
 if SPEC is None or SPEC.loader is None:
     raise RuntimeError("cannot load verify_live_pages module")
 MODULE = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 EXPECTED_BUILD = "v-test-20260725"
