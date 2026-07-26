@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Materialize the Photoshopped wedding image pack v20.
 
-This helper is intentionally temporary. It verifies an exact staged ZIP (or a
-Base64 fallback), installs the new 1280px WebP masters, derives responsive
-720px variants and landscape/social crops, updates cache-busting references,
-writes evidence, then removes the staging payload and itself.
+This temporary helper accepts either the exact ZIP at
+.image-pack-v20/wedding-image-pack-v20-q72.zip or ordered Base64 chunks named
+upload-v20-*.b64. It verifies byte length and SHA-256 before extraction, builds
+responsive assets, updates references, writes evidence, and removes staging.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 ROOT = Path(__file__).resolve().parents[1]
 STAGING = ROOT / ".image-pack-v20"
 EXPECTED_SHA256 = "afca17358afe24cd9f199a68da4332cc2cef42520fede19ccbea294dcb7387c0"
+EXPECTED_BYTES = 1_241_783
 ASSETS = ROOT / "assets" / "images"
 
 
@@ -36,48 +37,28 @@ def safe_extract(archive: zipfile.ZipFile, destination: Path) -> None:
 
 def save_webp(image: Image.Image, path: Path, quality: int) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    image.convert("RGB").save(
-        path,
-        "WEBP",
-        quality=quality,
-        method=6,
-        exact=True,
-    )
+    image.convert("RGB").save(path, "WEBP", quality=quality, method=6, exact=True)
 
 
 def save_jpeg(image: Image.Image, path: Path, quality: int = 88) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    image.convert("RGB").save(
-        path,
-        "JPEG",
-        quality=quality,
-        optimize=True,
-        progressive=True,
-        subsampling="4:2:0",
-    )
+    image.convert("RGB").save(path, "JPEG", quality=quality, optimize=True, progressive=True, subsampling="4:2:0")
 
 
 def make_landscape_with_context(source: Image.Image, size: tuple[int, int]) -> Image.Image:
-    """Convert portrait to landscape without cutting the couple from the frame."""
     width, height = size
     background = ImageOps.fit(source, size, method=Image.Resampling.LANCZOS)
     background = background.filter(ImageFilter.GaussianBlur(max(14, width // 44)))
     background = ImageEnhance.Brightness(background).enhance(0.48)
-
     foreground = ImageOps.contain(source, (width, height), method=Image.Resampling.LANCZOS)
     canvas = background.copy()
-    x = (width - foreground.width) // 2
-    y = (height - foreground.height) // 2
-    canvas.paste(foreground, (x, y))
+    canvas.paste(foreground, ((width - foreground.width) // 2, (height - foreground.height) // 2))
     return canvas
 
 
 def output_record(asset: str, source: dict[str, object]) -> dict[str, object]:
     outputs: dict[str, object] = {}
-    for label, path in (
-        ("720", ASSETS / f"{asset}-720.webp"),
-        ("1280", ASSETS / f"{asset}-1280.webp"),
-    ):
+    for label, path in (("720", ASSETS / f"{asset}-720.webp"), ("1280", ASSETS / f"{asset}-1280.webp")):
         with Image.open(path) as image:
             outputs[label] = {
                 "size": list(image.size),
@@ -97,14 +78,12 @@ def output_record(asset: str, source: dict[str, object]) -> dict[str, object]:
 def update_source_references() -> None:
     index_path = ROOT / "index.html"
     index = index_path.read_text(encoding="utf-8")
-    index = index.replace("?v=18.2", "?v=20")
-    index = index.replace("?v=16", "?v=20")
+    index = index.replace("?v=18.2", "?v=20").replace("?v=16", "?v=20")
     index = index.replace("assets/images/meta-v3.jpg", "assets/images/meta-v4.jpg")
     index_path.write_text(index, encoding="utf-8")
 
 
 def write_mapping(manifest: dict[str, object]) -> None:
-    rows = []
     roles = {
         "bride": "Chân dung cô dâu",
         "couple-formal": "Cặp đôi trang trọng",
@@ -118,13 +97,8 @@ def write_mapping(manifest: dict[str, object]) -> None:
         "couple-garden": "Ảnh kết Thank you",
         "couple-studio": "Ảnh studio nền trắng và ảnh chia sẻ",
     }
-    for item in manifest["assets"]:
-        asset = str(item["asset"])
-        rows.append(f"| `{item['source']}` | `{asset}` | {roles[asset]} |")
-
+    rows = [f"| `{item['source']}` | `{item['asset']}` | {roles[str(item['asset'])]} |" for item in manifest["assets"]]
     content = """# Ánh xạ ảnh Wedding Xuân & Phượng — v20
-
-## Nguồn ảnh Photoshop mới
 
 | File tải lên | Key website | Vai trò |
 |---|---|---|
@@ -134,84 +108,43 @@ def write_mapping(manifest: dict[str, object]) -> None:
 
 - Chỉ đổi định dạng, kích thước và tỷ lệ hiển thị; không thay đổi người, khuôn mặt hay bối cảnh.
 - Ảnh dọc được chuẩn hóa 2:3 ở 720 × 1080 và 1280 × 1920.
-- Định dạng WebP, bỏ metadata không cần thiết, giữ chất lượng phù hợp cho website.
-- Ảnh `couple-intimate-landscape-*` giữ trọn khung người ở giữa và dùng chính ảnh làm nền mở rộng mờ, tránh crop vào mặt.
-- Ảnh chia sẻ `meta-v4.jpg` là crop ngang từ ảnh studio mới, 1200 × 630.
-- Header Google Forms `google-forms-header-xuan-phuong-v3.jpg` là crop ngang từ ảnh trang trọng mới, 1600 × 400.
-- Các JPG gốc không được đưa lên GitHub Pages.
-
-## Thứ tự kể chuyện giữ nguyên
-
-Hero → chân dung riêng → cận cảnh thân mật → ánh nhìn → trang trọng → vui tươi → áo dài → tư thế ngồi → studio → toàn thân → kết bằng khoảnh khắc trong vườn.
+- Ảnh ngang giữ trọn khung người ở giữa với nền mở rộng mờ, tránh crop vào mặt.
+- JPG nguồn không được đưa lên GitHub Pages.
 """
     (ROOT / "IMAGE-MAP-V20.md").write_text(content, encoding="utf-8")
 
 
-def read_payload() -> bytes:
-    binary_pack = STAGING / "wedding-image-pack-v20-q72.zip"
-    if binary_pack.is_file():
-        return binary_pack.read_bytes()
-
-    parts = sorted(STAGING.glob("directpart-*.b64"))
-    if not parts:
-        parts = sorted(STAGING.glob("newpart-*.b64"))
-    if not parts:
-        raise RuntimeError("No verified binary or Base64 image pack found")
-    encoded = "".join(part.read_text(encoding="ascii").strip() for part in parts)
-    return base64.b64decode(encoded, validate=True)
-
-
-def cleanup_temporary_artifacts() -> None:
-    shutil.rmtree(STAGING, ignore_errors=True)
-    Path(__file__).unlink(missing_ok=True)
-
-    for workflow_name in (
-        "materialize-image-pack-v20.yml",
-        "diagnose-image-pack-v20.yml",
-        "diagnose-old-image-pack.yml",
-        "recover-google-photos-v20.yml",
-    ):
-        (ROOT / ".github" / "workflows" / workflow_name).unlink(missing_ok=True)
-
-    for temporary in (
-        ROOT / "tools" / "diagnose_image_pack_v20.py",
-        ROOT / "tools" / "recover_google_photos_v20.py",
-        ROOT / "tools" / "run_google_photos_recovery_v20.py",
-        ROOT / "reports" / "materialize-image-pack-v20.log",
-        ROOT / "reports" / "image-pack-v20-diagnostic.json",
-        ROOT / "reports" / "old-image-pack-diagnosis.json",
-        ROOT / "reports" / "IMAGE-PACK-V20-HISTORY-RECOVERY.json",
-        ROOT / "reports" / "GOOGLE-PHOTOS-PAGE.html",
-        ROOT / "reports" / "GOOGLE-PHOTOS-V20-RECOVERY.json",
-        ROOT / "reports" / "google-photos-v20-recovery.log",
-        ROOT / "noop",
-        ROOT / "temp-test-path.txt",
-        ROOT / "TEMP-BASE-TREE-TEST.txt",
-        ROOT / "TEMP-BASE-TREE-TEST-2.txt",
-        ROOT / "TEMP-BASE-TREE-TEST-3.txt",
-        ROOT / "TEMP-BASE-TREE-TEST-4.txt",
-        ROOT / "TEMP-BASE-TREE-TEST-5.txt",
-    ):
-        temporary.unlink(missing_ok=True)
+def read_verified_payload() -> bytes:
+    zip_path = STAGING / "wedding-image-pack-v20-q72.zip"
+    if zip_path.exists():
+        payload = zip_path.read_bytes()
+    else:
+        parts = sorted(STAGING.glob("upload-v20-*.b64"))
+        if not parts:
+            parts = sorted(STAGING.glob("newpart-*.b64"))
+        if not parts:
+            raise RuntimeError("No verified ZIP or Base64 chunks found")
+        encoded = "".join(part.read_text(encoding="ascii").strip() for part in parts)
+        payload = base64.b64decode(encoded, validate=True)
+    digest = hashlib.sha256(payload).hexdigest()
+    if len(payload) != EXPECTED_BYTES or digest != EXPECTED_SHA256:
+        raise RuntimeError(
+            f"Image pack mismatch: bytes={len(payload)}, sha256={digest}, "
+            f"expected_bytes={EXPECTED_BYTES}, expected_sha256={EXPECTED_SHA256}"
+        )
+    if not zipfile.is_zipfile(io.BytesIO(payload)):
+        raise RuntimeError("Verified payload is not a ZIP")
+    return payload
 
 
 def main() -> int:
-    payload = read_payload()
-    digest = hashlib.sha256(payload).hexdigest()
-    if digest != EXPECTED_SHA256:
-        raise RuntimeError(
-            f"Image pack checksum mismatch: observed={digest}, expected={EXPECTED_SHA256}"
-        )
-    if not zipfile.is_zipfile(io.BytesIO(payload)):
-        raise RuntimeError(f"Staged image pack is not a valid ZIP: {digest}")
-
+    payload = read_verified_payload()
     with zipfile.ZipFile(io.BytesIO(payload)) as archive:
         safe_extract(archive, ROOT)
 
     manifest_path = ROOT / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest_path.unlink()
-
     report = []
     for item in manifest["assets"]:
         asset = str(item["asset"])
@@ -219,60 +152,26 @@ def main() -> int:
         with Image.open(master_path) as master:
             master = ImageOps.exif_transpose(master).convert("RGB")
             if master.size != (1280, 1920):
-                master = ImageOps.fit(
-                    master,
-                    (1280, 1920),
-                    method=Image.Resampling.LANCZOS,
-                    centering=(0.5, 0.5),
-                )
+                master = ImageOps.fit(master, (1280, 1920), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
                 save_webp(master, master_path, 81)
-            responsive = master.resize((720, 1080), Image.Resampling.LANCZOS)
-            save_webp(responsive, ASSETS / f"{asset}-720.webp", 78)
+            save_webp(master.resize((720, 1080), Image.Resampling.LANCZOS), ASSETS / f"{asset}-720.webp", 78)
         report.append(output_record(asset, item))
 
     with Image.open(ASSETS / "couple-intimate-1280.webp") as intimate:
         intimate = intimate.convert("RGB")
-        save_webp(
-            make_landscape_with_context(intimate, (1280, 720)),
-            ASSETS / "couple-intimate-landscape-1280.webp",
-            80,
-        )
-        save_webp(
-            make_landscape_with_context(intimate, (720, 405)),
-            ASSETS / "couple-intimate-landscape-720.webp",
-            77,
-        )
-
+        save_webp(make_landscape_with_context(intimate, (1280, 720)), ASSETS / "couple-intimate-landscape-1280.webp", 80)
+        save_webp(make_landscape_with_context(intimate, (720, 405)), ASSETS / "couple-intimate-landscape-720.webp", 77)
     with Image.open(ASSETS / "couple-studio-1280.webp") as studio:
-        meta = ImageOps.fit(
-            studio.convert("RGB"),
-            (1200, 630),
-            method=Image.Resampling.LANCZOS,
-            centering=(0.5, 0.23),
-        )
-        save_jpeg(meta, ASSETS / "meta-v4.jpg", 89)
-
+        save_jpeg(ImageOps.fit(studio.convert("RGB"), (1200, 630), method=Image.Resampling.LANCZOS, centering=(0.5, 0.23)), ASSETS / "meta-v4.jpg", 89)
     with Image.open(ASSETS / "couple-formal-1280.webp") as formal:
-        header = ImageOps.fit(
-            formal.convert("RGB"),
-            (1600, 400),
-            method=Image.Resampling.LANCZOS,
-            centering=(0.5, 0.27),
-        )
-        save_jpeg(
-            header,
-            ASSETS / "google-forms-header-xuan-phuong-v3.jpg",
-            88,
-        )
+        save_jpeg(ImageOps.fit(formal.convert("RGB"), (1600, 400), method=Image.Resampling.LANCZOS, centering=(0.5, 0.27)), ASSETS / "google-forms-header-xuan-phuong-v3.jpg", 88)
 
-    (ROOT / "image-optimization-report.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    (ROOT / "image-optimization-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     update_source_references()
     write_mapping(manifest)
-    cleanup_temporary_artifacts()
-
+    shutil.rmtree(STAGING)
+    Path(__file__).unlink()
+    (ROOT / ".github/workflows/materialize-image-pack-v20.yml").unlink(missing_ok=True)
     print(f"PASS: materialized {len(report)} Photoshop sources as responsive v20 assets")
     return 0
 
