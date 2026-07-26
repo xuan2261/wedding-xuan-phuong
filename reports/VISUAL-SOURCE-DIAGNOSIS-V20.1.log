@@ -1,4 +1,4 @@
-HEAD=f8c6886e1156593748bc28c4d530ecff93a10950
+HEAD=6cc5e340f6999c1e8fc72434177a3c326d7640eb
 == JavaScript syntax ==
 --- node --check app.js
 status=0
@@ -43,9 +43,8 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'cv2'
 status=1
 --- python tests/verify_dist.py
-FAIL
-- dist sai build
-status=1
+PASS: clean multi-event dist
+status=0
 --- python tests/verify_release.py
 FAIL
 - sai build marker
