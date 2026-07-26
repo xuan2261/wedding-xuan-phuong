@@ -63,12 +63,12 @@ jobs:
           npm run test:browser
           npm run test:visual-safe-zones
           npm run test:audio-story-browser
-      - name: Commit audited source and evidence
+      - name: Commit audited source
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .github/workflows/ak-debug-v20-2-one-shot.yml
           rm -f tools/apply-ak-debug-v20-2.py
+          git clean -fdX
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
