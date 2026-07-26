@@ -1,5 +1,5 @@
 /**
- * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v19
+ * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.2
  *
  * URL mẫu:
  *   #to=Gia%20đình%20cô%20Lan&event=bride
@@ -12,9 +12,9 @@
 
   const SOURCE = {
     build: {
-      buildId: "v20.1-20260726",
-      release: "v20.1",
-      status: "visual-safe-zones-and-cover-refinement"
+      buildId: "v20.2-20260726",
+      release: "v20.2",
+      status: "ak-debug-full-audit-and-deploy-hardening"
     },
 
     couple: {

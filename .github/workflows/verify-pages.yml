@@ -35,6 +35,7 @@ jobs:
       - name: Verify source
         run: |
           python tests/consistency_check.py
+          python tests/build_metadata_check.py
           python tests/verify_release.py
           node tests/multi_event_check.mjs
           node tests/opening_experience_check.mjs
@@ -56,25 +57,26 @@ jobs:
       - name: Generate release-readiness evidence
         run: |
           python tools/release_readiness.py \
-            --json reports/RELEASE-READINESS-V19.4.json \
-            --markdown reports/RELEASE-READINESS-V19.4.md
+            --json reports/RELEASE-READINESS.json \
+            --markdown reports/RELEASE-READINESS.md
       - name: Upload release-readiness report
         uses: actions/upload-artifact@v7
         with:
           name: wedding-release-readiness
           path: |
-            reports/RELEASE-READINESS-V19.4.json
-            reports/RELEASE-READINESS-V19.4.md
+            reports/RELEASE-READINESS.json
+            reports/RELEASE-READINESS.md
           if-no-files-found: error
       - name: Build and verify clean dist
         run: |
           python tools/build-dist.py
           python tests/share_entry_pages_check.py
           python tests/verify_dist.py
-      - name: Browser smoke
+      - name: Browser smoke and visual safe zones
         run: |
           set -o pipefail
           npm run test:browser 2>&1 | tee reports/browser-smoke-ci.log
+          npm run test:visual-safe-zones
       - name: Upload browser smoke log
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
@@ -83,6 +85,14 @@ jobs:
           path: reports/browser-smoke-ci.log
           if-no-files-found: error
           retention-days: 1
+      - name: Upload visual safe-zone evidence
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: wedding-visual-safe-zones
+          path: reports/visual-safe-zone-*.png
+          if-no-files-found: error
+          retention-days: 7
       - name: Audio/story browser regression
         run: |
           set -o pipefail
@@ -116,18 +126,12 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
       - uses: actions/checkout@v7
-      # Đọc từ BUILD.json thay vì ghim cứng: cổng kiểm tra hậu-deploy trước đây
-      # chỉ pass khi trang public vẫn còn build cũ.
-      - name: Resolve expected build id
-        id: expected
-        shell: bash
-        run: echo "build=$(jq -r .buildId BUILD.json)" >> "${GITHUB_OUTPUT}"
       - name: Verify live build and event entry pages
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-          EXPECTED_BUILD: ${{ steps.expected.outputs.build }}
         run: |
           mkdir -p reports
+          EXPECTED_BUILD="$(python -c 'import json; print(json.load(open("BUILD.json", encoding="utf-8"))["buildId"])')"
           python tools/verify_live_pages.py \
             --base-url "${PAGE_URL}" \
             --expected-build "${EXPECTED_BUILD}" \

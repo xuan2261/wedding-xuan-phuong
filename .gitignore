@@ -3,7 +3,9 @@ node_modules/
 
 # Python bytecode
 __pycache__/
+**/__pycache__/
 *.py[cod]
+*.pyc
 
 # Local environment / editor
 .env
@@ -20,6 +22,9 @@ Thumbs.db
 playwright-report/
 test-results/
 *.log
+reports/visual-safe-zone-*.png
+reports/browser-smoke-ci.log
+reports/audio-story-browser-ci.log
 
 # Scratch files
 tmp/

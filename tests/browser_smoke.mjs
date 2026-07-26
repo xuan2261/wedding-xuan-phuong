@@ -166,7 +166,7 @@ try {
       rsvpEnabled: Boolean(window.WEDDING_CONFIG?.rsvp?.enabled)
     }));
 
-    assert(initial.build === "v20.1-20260726", `Sai build: ${initial.build}`);
+    assert(initial.build === "v20.2-20260726", `Sai build: ${initial.build}`);
     assert(initial.guestName === "Gia đình cô Lan", `Sai guest name: ${initial.guestName}`);
     assert(initial.familiesHidden === true, "Family section phải tự ẩn");
     assert(
