@@ -76,4 +76,19 @@ assert(
 );
 assert(rsvpScript.includes("LockService"), "Thiếu khoá chống ghi trùng dòng");
 
+// Chống trùng phải so cả nội dung: chỉ so tên thì khách đổi ý trong vòng cửa sổ
+// sẽ bị nuốt lần gửi sau mà thiệp vẫn báo thành công.
+assert(
+  rsvpScript.includes("answer.attending") && rsvpScript.includes("answer.partySize"),
+  "Chống trùng phải so nội dung câu trả lời, không chỉ tên khách"
+);
+assert(
+  rsvpScript.includes("summarySheetName"),
+  "Thiếu tab tổng hợp theo câu trả lời mới nhất"
+);
+assert(
+  app.includes("payload.duplicate === true"),
+  "Thiệp phải phân biệt lần gửi trùng với lần gửi mới"
+);
+
 console.log("PASS: inline RSVP form and Google Sheet contract");

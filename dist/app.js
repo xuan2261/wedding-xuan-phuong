@@ -1369,8 +1369,13 @@
 
       if (payload.ok && payload.stored === true) {
         rememberSubmission(RSVP_SUBMITTED_AT_KEY);
+        // Máy chủ bỏ qua lần gửi trùng y hệt (bấm đúp) và nói rõ điều đó. Đừng
+        // đáp lại bằng câu cảm ơn như một lần gửi mới: khách cần biết cái gì
+        // thực sự đang nằm trong sổ.
         setStatus(
-          "Cảm ơn Quý khách! Hai gia đình đã nhận được xác nhận tham dự.",
+          payload.duplicate === true && payload.message
+            ? payload.message
+            : "Cảm ơn Quý khách! Hai gia đình đã nhận được xác nhận tham dự.",
           "success"
         );
         form.reset();
