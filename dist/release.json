@@ -1,8 +1,8 @@
 {
-  "buildId": "v19.4-20260724",
-  "release": "v19.4",
-  "generatedAtUtc": "2026-07-24T09:30:00+00:00",
-  "status": "release-candidate-adaptive-rsvp-guest-tool-hardening",
+  "buildId": "v20.1-20260726",
+  "release": "v20.1",
+  "generatedAtUtc": "2026-07-26T07:20:00+00:00",
+  "status": "visual-safe-zones-and-cover-refinement",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",

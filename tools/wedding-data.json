@@ -1,9 +1,9 @@
 {
   "build": {
-    "buildId": "v19.4-20260724",
-    "release": "v19.4",
+    "buildId": "v20.1-20260726",
+    "release": "v20.1",
     "backendVersion": "1.5.0",
-    "status": "release-candidate-adaptive-rsvp-guest-tool-hardening"
+    "status": "visual-safe-zones-and-cover-refinement"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",
@@ -30,7 +30,7 @@
           "time": "09h00",
           "datetime": "2026-07-29T09:00:00+07:00",
           "label": "Đón khách",
-          "note": "Gia đình nhà gái hân hạnh đón tiếp Quý vị."
+          "note": "Gia đình nhà gái hân hạnh đón tiếp Quý khách."
         },
         {
           "time": "09h30",
@@ -42,7 +42,7 @@
           "time": "10h00",
           "datetime": "2026-07-29T10:00:00+07:00",
           "label": "Khai tiệc",
-          "note": "Kính mời Quý vị cùng chung vui trong tiệc cưới."
+          "note": "Kính mời Quý khách cùng chung vui trong tiệc cưới."
         }
       ],
       "venueName": "Tư gia nhà gái",
@@ -79,7 +79,7 @@
       "invitationHeading": "Trân trọng kính mời",
       "guestInvitationLead": "Đến tham dự",
       "guestInvitationEventName": "Tiệc cưới tại nhà gái",
-      "invitationMessage": "Trong niềm hân hoan của hai gia đình, Thanh Xuân và Thị Phượng trân trọng kính mời Quý vị đến chung vui trong Tiệc cưới tại nhà gái. Sự hiện diện và lời chúc phúc của Quý vị là niềm vui quý giá đối với cô dâu, chú rể và gia đình.",
+      "invitationMessage": "Trong niềm hân hoan của hai gia đình, Thanh Xuân và Thị Phượng trân trọng kính mời Quý khách đến chung vui trong Tiệc cưới tại nhà gái. Sự hiện diện và lời chúc phúc của Quý khách là niềm vui quý giá đối với cô dâu, chú rể và gia đình.",
       "eventSectionKicker": "Nhà gái",
       "eventSectionTitle": "Lịch trình tiệc cưới nhà gái",
       "countdownKicker": "Đếm ngược",
@@ -87,7 +87,7 @@
       "actionsTitle": "Xác nhận tham dự tiệc nhà gái",
       "actionsDescription": "Thông tin RSVP sẽ được bổ sung khi biểu mẫu đa sự kiện hoàn tất.",
       "sharingTitle": "Tiệc cưới nhà gái · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng."
     },
     "groom": {
       "id": "groom",
@@ -112,7 +112,7 @@
           "time": "10h00",
           "datetime": "2026-07-30T10:00:00+07:00",
           "label": "Đón khách và dùng tiệc",
-          "note": "Hân hạnh đón Quý vị đến chung vui cùng hai gia đình."
+          "note": "Hân hạnh đón Quý khách đến chung vui cùng hai gia đình."
         }
       ],
       "venueName": "Tư gia nhà trai",
@@ -128,7 +128,7 @@
         "url": "",
         "deadlineDisplay": "",
         "guestNameEntry": "",
-        "pendingMessage": "RSVP đa sự kiện đang được hoàn thiện. Quý vị cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể."
+        "pendingMessage": "RSVP đa sự kiện đang được hoàn thiện. Quý khách cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể."
       },
       "calendar": {
         "enabled": true,
@@ -149,7 +149,7 @@
       "invitationHeading": "Trân trọng kính mời",
       "guestInvitationLead": "Đến tham dự",
       "guestInvitationEventName": "Lễ Thành Hôn",
-      "invitationMessage": "Thời gian đã đưa Thanh Xuân và Thị Phượng đến bên nhau, yêu thương đã dẫn lối để cùng xây dựng một mái ấm. Trong niềm hân hoan của hai gia đình, trân trọng kính mời Quý vị đến tham dự Lễ Thành Hôn và chung vui trong tiệc cưới tại nhà trai.",
+      "invitationMessage": "Thời gian đã đưa Thanh Xuân và Thị Phượng đến bên nhau, yêu thương đã dẫn lối để cùng xây dựng một mái ấm. Trong niềm hân hoan của hai gia đình, trân trọng kính mời Quý khách đến tham dự Lễ Thành Hôn và chung vui trong tiệc cưới tại nhà trai.",
       "eventSectionKicker": "Nhà trai",
       "eventSectionTitle": "Lịch trình Lễ Thành Hôn",
       "countdownKicker": "Đếm ngược",
@@ -157,7 +157,7 @@
       "actionsTitle": "Xác nhận tham dự lễ nhà trai",
       "actionsDescription": "Thông tin RSVP đa sự kiện sẽ được bổ sung sau khi Google Form mới được tạo.",
       "sharingTitle": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng."
     },
     "nhatrang": {
       "id": "nhatrang",
@@ -176,13 +176,13 @@
           "time": "17h00",
           "datetime": "2026-08-15T17:00:00+07:00",
           "label": "Đón khách",
-          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý vị."
+          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý khách."
         },
         {
           "time": "18h00",
           "datetime": "2026-08-15T18:00:00+07:00",
           "label": "Bắt đầu Tiệc Báo Hỷ",
-          "note": "Kính mời Quý vị cùng chung vui trong buổi tiệc thân mật."
+          "note": "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật."
         }
       ],
       "venueName": "Nhà hàng Nha Trang",
@@ -221,7 +221,7 @@
       "invitationHeading": "Trân trọng báo tin vui",
       "guestInvitationLead": "Đến chung vui trong",
       "guestInvitationEventName": "Tiệc Báo Hỷ tại Nha Trang",
-      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý vị đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Nha Trang. Sự hiện diện của Quý vị là niềm vui quý giá đối với hai vợ chồng.",
+      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý khách đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Nha Trang. Sự hiện diện của Quý khách là niềm vui quý giá đối với hai vợ chồng.",
       "eventSectionKicker": "Nha Trang",
       "eventSectionTitle": "Lịch trình Tiệc Báo Hỷ",
       "countdownKicker": "Hẹn gặp tại Nha Trang",
@@ -229,7 +229,7 @@
       "actionsTitle": "Xác nhận tham dự Báo Hỷ Nha Trang",
       "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa điểm và danh sách khách được chốt.",
       "sharingTitle": "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng."
     },
     "saigon": {
       "id": "saigon",
@@ -248,13 +248,13 @@
           "time": "17h00",
           "datetime": "2026-08-22T17:00:00+07:00",
           "label": "Đón khách",
-          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý vị."
+          "note": "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý khách."
         },
         {
           "time": "18h00",
           "datetime": "2026-08-22T18:00:00+07:00",
           "label": "Bắt đầu Tiệc Báo Hỷ",
-          "note": "Kính mời Quý vị cùng chung vui trong buổi tiệc thân mật."
+          "note": "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật."
         }
       ],
       "venueName": "Nhà hàng hải sản Seasan",
@@ -293,7 +293,7 @@
       "invitationHeading": "Trân trọng báo tin vui",
       "guestInvitationLead": "Đến chung vui trong",
       "guestInvitationEventName": "Tiệc Báo Hỷ tại Sài Gòn",
-      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý vị đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Sài Gòn. Sự hiện diện của Quý vị là niềm vui quý giá đối với hai vợ chồng.",
+      "invitationMessage": "Sau ngày chung đôi, Thanh Xuân và Thị Phượng trân trọng thông báo tin vui và kính mời Quý khách đến chung vui trong buổi Tiệc Báo Hỷ thân mật tại Sài Gòn. Sự hiện diện của Quý khách là niềm vui quý giá đối với hai vợ chồng.",
       "eventSectionKicker": "Sài Gòn",
       "eventSectionTitle": "Lịch trình Tiệc Báo Hỷ",
       "countdownKicker": "Hẹn gặp tại Sài Gòn",
@@ -301,7 +301,7 @@
       "actionsTitle": "Xác nhận tham dự Báo Hỷ Sài Gòn",
       "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa chỉ và danh sách khách được chốt.",
       "sharingTitle": "Tiệc Báo Hỷ Sài Gòn · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý vị đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng."
     }
   },
   "contact": {

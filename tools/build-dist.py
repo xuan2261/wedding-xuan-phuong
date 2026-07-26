@@ -11,7 +11,7 @@ DIST = ROOT / "dist"
 DATA = json.loads((ROOT / "tools" / "wedding-data.json").read_text(encoding="utf-8"))
 BUILD = json.loads((ROOT / "BUILD.json").read_text(encoding="utf-8"))
 SITE_ROOT = "https://xuan2261.github.io/wedding-xuan-phuong/"
-META_IMAGE = f"{SITE_ROOT}assets/images/meta-v3.jpg"
+META_IMAGE = f"{SITE_ROOT}assets/images/meta-v4.jpg"
 
 if DIST.exists():
     shutil.rmtree(DIST)
@@ -49,7 +49,7 @@ shutil.copytree(ROOT / "assets", DIST / "assets", ignore=ignore_runtime_noise)
 
 def render_event_entry(event_id: str, event: dict) -> str:
     title = str(event.get("sharingTitle") or event.get("title") or "Thiệp cưới")
-    description = str(event.get("sharingText") or "Trân trọng kính mời Quý vị đến chung vui.")
+    description = str(event.get("sharingText") or "Trân trọng kính mời Quý khách đến chung vui.")
     event_url = f"{SITE_ROOT}events/{event_id}/"
     date_display = str(event.get("dateDisplay") or "")
     venue = str(event.get("venueName") or "")
@@ -94,7 +94,7 @@ def render_event_entry(event_id: str, event: dict) -> str:
     <p>Thiệp mời</p>
     <h1>{escape(title)}</h1>
     <p>{escape(visible_detail)}</p>
-    <p>Đang mở đúng lời mời dành cho Quý vị…</p>
+    <p>Đang mở đúng lời mời dành cho Quý khách…</p>
     <p><a href="../../#event={escape(event_id, quote=True)}" data-event-entry-link>Mở thiệp</a></p>
   </main>
 </body>
