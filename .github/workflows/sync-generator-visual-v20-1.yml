@@ -1,0 +1,88 @@
+name: Sync visual v20.1 generators
+
+on:
+  push:
+    branches: [fix/visual-overlap-v20-1]
+    paths:
+      - .github/workflows/sync-generator-visual-v20-1.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/visual-overlap-v20-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Synchronize source generators and build metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          build_path = root / 'BUILD.json'
+          build = json.loads(build_path.read_text(encoding='utf-8'))
+          build.update({
+              'buildId': 'v20.1-20260726',
+              'release': 'v20.1',
+              'generatedAtUtc': '2026-07-26T07:20:00+00:00',
+              'status': 'visual-safe-zones-and-cover-refinement',
+          })
+          build['knownBlockers'] = [
+              item.replace('v19.4', 'v20.1')
+              for item in build.get('knownBlockers', [])
+          ]
+          build_path.write_text(json.dumps(build, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          data_path = root / 'tools/wedding-data.json'
+          data = json.loads(data_path.read_text(encoding='utf-8'))
+          data['build'].update({
+              'buildId': 'v20.1-20260726',
+              'release': 'v20.1',
+              'status': 'visual-safe-zones-and-cover-refinement',
+          })
+
+          def replace(value):
+              if isinstance(value, str):
+                  return value.replace('Quý vị', 'Quý khách')
+              if isinstance(value, list):
+                  return [replace(item) for item in value]
+              if isinstance(value, dict):
+                  return {key: replace(item) for key, item in value.items()}
+              return value
+
+          data = replace(data)
+          data_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          generator = root / 'tools/build-dist.py'
+          text = generator.read_text(encoding='utf-8')
+          text = text.replace('meta-v3.jpg', 'meta-v4.jpg').replace('Quý vị', 'Quý khách')
+          generator.write_text(text, encoding='utf-8', newline='\n')
+          PY
+          python tools/build-dist.py
+          node --check app.js
+          node --check config.js
+          python tests/share_entry_pages_check.py
+          python tests/verify_dist.py
+          rm -f .github/workflows/sync-generator-visual-v20-1.yml
+      - name: Commit synchronized production sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(build): synchronize visual v20.1 source and dist"
+          git push origin HEAD:fix/visual-overlap-v20-1
