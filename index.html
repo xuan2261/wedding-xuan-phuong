@@ -114,13 +114,13 @@
 
         <label class="invitation-cover__autoplay">
           <input id="coverAutoStory" type="checkbox" checked>
-          <span>Tự động xem từng phần</span>
+          <span>Tự động cuộn xem thiệp</span>
         </label>
       </div>
     </div>
   </dialog>
 
-  <header class="hero" aria-labelledby="hero-title" data-story-stop="hero" data-story-title="Ảnh mở đầu" data-story-hold="4200">
+  <header class="hero" aria-labelledby="hero-title">
     <img
       class="hero__image"
       src="assets/images/hero-720.webp?v=20"
@@ -158,7 +158,7 @@
 
   <main id="main" tabindex="-1">
 
-    <section class="section guest-invitation reveal" data-motion="zoom-in" data-story-stop="guest" data-story-title="Lời mời dành cho Quý khách" data-story-hold="5000" id="guest-invitation" tabindex="-1" aria-labelledby="guest-invitation-title">
+    <section class="section guest-invitation reveal" data-motion="zoom-in" id="guest-invitation" tabindex="-1" aria-labelledby="guest-invitation-title">
       <div class="guest-invitation__seal" aria-hidden="true">XP</div>
       <p class="section-kicker">Trân trọng kính mời</p>
       <h2 id="guest-invitation-title" data-guest-name>Quý khách</h2>
@@ -178,7 +178,7 @@
       <div class="event-switcher__links" id="eventSwitcherLinks"></div>
     </nav>
 
-    <section class="section invitation reveal" data-motion="fade-up" data-story-stop="invitation" data-story-title="Lời ngỏ" data-story-hold="7000" id="invitation" aria-labelledby="invitation-title">
+    <section class="section invitation reveal" data-motion="fade-up" id="invitation" aria-labelledby="invitation-title">
       <p class="section-kicker">Lời ngỏ</p>
       <h2 class="invitation__title" id="invitation-title" data-invitation-heading>
         <span data-invitation-heading-line1>Trân trọng</span>
@@ -219,7 +219,7 @@
       </div>
     </section>
 
-    <section class="section couple" id="couple" data-story-stop="couple" data-story-title="Cô dâu và chú rể" data-story-hold="6500" aria-labelledby="couple-title">
+    <section class="section couple" id="couple" aria-labelledby="couple-title">
       <p class="section-kicker reveal">Đôi uyên ương</p>
       <h2 id="couple-title" class="reveal">Chú rể &amp; Cô dâu</h2>
 
@@ -280,7 +280,7 @@
       </blockquote>
     </section>
 
-    <section class="section event reveal" id="event-section" data-motion="fade-up" data-story-stop="event" data-story-title="Lịch trình sự kiện" data-story-hold="7000" aria-labelledby="event-title">
+    <section class="section event reveal" id="event-section" data-motion="fade-up" aria-labelledby="event-title">
       <p class="section-kicker" data-event-section-kicker>Nhà trai</p>
       <h2 id="event-title" data-event-section-title>Lịch trình Lễ Thành Hôn</h2>
 
@@ -446,9 +446,6 @@
         <button class="button button--secondary" type="button" id="shareButton">
           Chia sẻ thiệp
         </button>
-        <button class="button button--secondary" type="button" id="copyPersonalizedLinkButton" hidden>
-          Sao chép link có tên này
-        </button>
         <button class="button button--secondary" type="button" id="wishButton" hidden>
           Gửi lời chúc
         </button>
@@ -458,7 +455,7 @@
       <p class="actions__note" id="rsvpNote" hidden>Link xác nhận tham dự sẽ được cập nhật sau.</p>
     </section>
 
-    <section class="section album" id="album" data-story-stop="album" data-story-title="Album ảnh cưới" data-story-hold="8500" aria-labelledby="album-title">
+    <section class="section album" id="album" aria-labelledby="album-title">
       <p class="section-kicker reveal">Khoảnh khắc</p>
       <h2 id="album-title" class="reveal">Album ảnh cưới</h2>
 
@@ -534,7 +531,7 @@
       </div>
     </section>
 
-    <section class="section wishes" id="wishes" data-story-stop="wishes" data-story-title="Những lời chúc" data-story-hold="6500" aria-labelledby="wishes-title" hidden>
+    <section class="section wishes" id="wishes" aria-labelledby="wishes-title" hidden>
       <p class="section-kicker reveal">Yêu thương gửi lại</p>
       <h2 id="wishes-title" class="reveal">Những lời chúc yêu thương</h2>
       <p class="wishes__intro reveal">
@@ -559,7 +556,7 @@
       </div>
     </section>
 
-    <section class="closing" id="closing" data-story-stop="closing" data-story-title="Lời cảm ơn" data-story-hold="7000">
+    <section class="closing" id="closing">
       <img
         src="assets/images/couple-garden-720.webp?v=20"
         srcset="assets/images/couple-garden-720.webp?v=20 720w, assets/images/couple-garden-1280.webp?v=20 1280w"
@@ -601,60 +598,6 @@
     <span class="sr-only">Bật nhạc nền</span>
   </button>
   <audio id="weddingMusic" loop preload="none"></audio>
-
-  <div
-    class="story-player"
-    id="storyPlayer"
-    role="group"
-    aria-label="Điều khiển xem thiệp theo từng phần"
-    hidden
-  >
-    <button
-      class="story-player__nav story-player__nav--previous"
-      id="storyPreviousButton"
-      type="button"
-      aria-label="Xem phần trước"
-      title="Xem phần trước"
-    >
-      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"></path></svg>
-    </button>
-
-    <button
-      class="story-player__toggle"
-      id="storyButton"
-      type="button"
-      aria-pressed="false"
-      aria-label="Bắt đầu xem thiệp tự động"
-      title="Bắt đầu xem thiệp tự động"
-    >
-      <svg class="story-player__icon" data-story-icon="play" aria-hidden="true" viewBox="0 0 24 24">
-        <path d="M8 5v14l11-7z"></path>
-      </svg>
-      <svg class="story-player__icon" data-story-icon="pause" aria-hidden="true" viewBox="0 0 24 24" hidden>
-        <path d="M7 5h4v14H7zm6 0h4v14h-4z"></path>
-      </svg>
-    </button>
-
-    <span class="story-player__copy">
-      <span data-story-chapter aria-live="polite" aria-atomic="true">Ảnh mở đầu</span>
-      <small><span data-story-label>Tự xem</span> · <span data-story-counter>1/1</span></small>
-    </span>
-
-    <button
-      class="story-player__nav story-player__nav--next"
-      id="storyNextButton"
-      type="button"
-      aria-label="Xem phần tiếp theo"
-      title="Xem phần tiếp theo"
-    >
-      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"></path></svg>
-    </button>
-
-    <span class="story-player__track" aria-hidden="true">
-      <span data-story-progress></span>
-    </span>
-  </div>
-
 
   <dialog
     class="contact-dialog"

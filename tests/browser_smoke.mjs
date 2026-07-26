@@ -161,7 +161,7 @@ try {
       clientWidth: document.documentElement.clientWidth,
       albumCount: document.querySelectorAll(".album-item").length,
       eventId: document.body.dataset.eventId,
-      personalizedCopyHidden: document.querySelector("#copyPersonalizedLinkButton")?.hidden,
+      hasPersonalizedCopyButton: Boolean(document.querySelector("#copyPersonalizedLinkButton")),
       expectedGiftCount: window.WEDDING_CONFIG?.gifts?.length ?? 0,
       rsvpEnabled: Boolean(window.WEDDING_CONFIG?.rsvp?.enabled)
     }));
@@ -188,7 +188,13 @@ try {
     assert(initial.scrollWidth <= initial.clientWidth + 1, "Có horizontal overflow");
     assert(initial.albumCount === 9, `Album phải có 9 ảnh: ${initial.albumCount}`);
     assert(initial.eventId === "groom", `Sai active event: ${initial.eventId}`);
-    assert(initial.personalizedCopyHidden === false, "Nút copy link có tên phải hiện");
+    // Nút này sao chép link mang tên chính khách đang xem. Gửi tiếp cho người
+    // khác thì họ thấy sai tên, mà link cho từng khách vốn đã có công cụ riêng
+    // (tools/create-guest-links.html), nên nút đã được gỡ khỏi thiệp.
+    assert(
+      initial.hasPersonalizedCopyButton === false,
+      "Nút sao chép link có tên khách quay lại thiệp"
+    );
     assert(initial.rsvpEnabled === false, "Fixture groom hiện phải dùng fallback liên hệ RSVP");
     assert(
       Number.isInteger(initial.expectedGiftCount) && initial.expectedGiftCount > 0,

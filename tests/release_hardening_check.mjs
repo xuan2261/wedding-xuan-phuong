@@ -7,7 +7,10 @@ const config = readFileSync(new URL("../config.js", import.meta.url), "utf8");
 
 const checks = [
   ["adaptive data state", app.includes("getAdaptiveDataState") && app.includes("dataMode")],
-  ["constrained story preload", app.includes("constrainedPreloadImageLimit")],
+  // Preload thủ công từng chương đã bị bỏ cùng kiểu nhảy chương: cuộn liên tục
+  // 40px/s cho trình duyệt thừa thời gian tự lazy-load. Thứ còn phải giữ là
+  // không tự cuộn trên mạng hạn chế, vì cuộn tự động kéo ảnh nhanh hơn.
+  ["constrained auto-scroll", app.includes("disableAutoStoryOnConstrainedNetwork")],
   ["constrained music", app.includes("data-saver-blocked")],
   ["focus after cover", app.includes("focusTarget.focus({ preventScroll: true })")],
   ["contact fallback setup", app.includes("setupAttendanceContactDialog")],
