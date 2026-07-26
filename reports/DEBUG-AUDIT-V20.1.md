@@ -165,24 +165,23 @@ trong dialog; lightbox không thông báo ảnh đổi; `#main` thiếu `tabinde
 
 ---
 
-## 4. Còn lại chưa sửa
+## 4. Trạng thái các mục cần quyết định
 
-Đã xác nhận nhưng **chưa** sửa trong đợt này — phần lớn cần bạn quyết định hoặc
-cung cấp dữ liệu thật:
+Hai mục dưới đây **đã đóng** sau khi gia đình xác nhận:
 
-- **QR nhà trai lệch số tài khoản** — *đã xử lý phần làm được, còn chờ xác nhận.*
-  Ảnh **không bị sửa**: `VQRQAKQFO1476` đúng định dạng alias VietQR của MB Bank
-  nên nhiều khả năng là mã thật; dựng lại QR theo số đang hiển thị có thể làm
-  hỏng đường chuyển tiền thật. Thay vào đó đã khai báo `bankBin` +
-  `qrAccountIdentifier` trong `config.js`, sửa `assets/qr/README.md` (trước đó
-  ghi sai sự thật), và siết `tests/verify_assets.py` để đối chiếu payload EMVCo
-  với cấu hình. **Gia đình cần kiểm tra trong app MB Bank** xem alias
-  `VQRQAKQFO1476` có trỏ về `0374037026` không, rồi đặt
-  `qrIdentifierVerified: true` hoặc tạo lại QR.
-- **`.ics`** — *đã sửa.* Bổ sung `DTEND`, `VTIMEZONE` cho `Asia/Ho_Chi_Minh`,
-  ghi CRLF và gấp dòng theo RFC 5545. Giờ kết thúc thật vẫn chưa được cung cấp
-  nên dùng tạm mốc cuối timeline + 2 giờ, đánh dấu `calendarEndIsProvisional`
-  trong `tools/wedding-data.json` để sửa một chỗ khi chốt.
+- **QR nhà trai** — *đã đóng.* Gia đình kiểm tra trong app MB Bank: alias
+  `VQRQAKQFO1476` trỏ đúng về tài khoản `0374037026`, nên **giữ nguyên ảnh QR**
+  và `config.js` ghi `qrIdentifierVerified: true`. Việc cố ý không dựng lại ảnh
+  là đúng: nếu ép QR về số đang hiển thị thì mới là làm hỏng đường chuyển tiền.
+  `tests/verify_assets.py` vẫn khoá payload EMVCo theo `bankBin` +
+  `qrAccountIdentifier` nên ảnh và cấu hình không thể lệch trong im lặng.
+- **`.ics`** — *đã đóng.* Bổ sung `DTEND`, `VTIMEZONE` cho `Asia/Ho_Chi_Minh`,
+  ghi CRLF (kèm `.gitattributes` `*.ics -text`) và gấp dòng theo RFC 5545. Giờ
+  kết thúc chốt là **giờ bắt đầu + 3 giờ** theo quyết định của gia đình: nhà gái
+  09h00–12h00, nhà trai 08h30–11h30, Nha Trang và Sài Gòn 17h00–20h00. Không còn
+  cờ `calendarEndIsProvisional`.
+
+Còn lại chưa sửa — phần lớn cần quyết định hoặc dữ liệu thật:
 - **Công cụ tạo link khách** (`tools/create-guest-links.html`): CSV có dấu ngoặc
   chưa đóng nuốt mất các dòng sau; sửa tay trong textarea âm thầm huỷ CSV vừa
   nhập; CSV không phải UTF-8 sinh tên khách lỗi font.

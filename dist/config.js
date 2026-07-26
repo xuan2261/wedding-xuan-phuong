@@ -62,7 +62,7 @@
         // 0374037026 tại MB Bank — không kiểm chứng được từ trong repo.
         bankBin: "970422",
         qrAccountIdentifier: "VQRQAKQFO1476",
-        qrIdentifierVerified: false,
+        qrIdentifierVerified: true,
         qrImage: "assets/qr/qr-nha-trai.png"
       },
       bride: {
