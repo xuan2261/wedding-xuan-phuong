@@ -1,0 +1,60 @@
+name: Extract failed source log v20.1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/extract-failed-source-log-v20-1.yml
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/visual-overlap-v20-1
+          fetch-depth: 0
+      - name: Download and condense failed verify job log
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_ID: "89771068362"
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports /tmp/joblog
+          gh api --method GET "repos/${GITHUB_REPOSITORY}/actions/jobs/${JOB_ID}/logs" > /tmp/joblog/raw
+          if file /tmp/joblog/raw | grep -qi zip; then
+            unzip -p /tmp/joblog/raw > /tmp/joblog/full.log
+          else
+            cp /tmp/joblog/raw /tmp/joblog/full.log
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          lines = Path('/tmp/joblog/full.log').read_text(encoding='utf-8', errors='replace').splitlines()
+          keep = []
+          needles = ('Verify source', 'FAIL', 'Error', 'error', 'Traceback', '##[error]', 'python ', 'node --check', 'npm ')
+          for index, line in enumerate(lines):
+              if any(needle in line for needle in needles):
+                  start = max(0, index - 3)
+                  end = min(len(lines), index + 8)
+                  keep.extend(lines[start:end])
+          deduped = []
+          for line in keep:
+              if not deduped or line != deduped[-1]:
+                  deduped.append(line)
+          Path('reports/FAILED-SOURCE-LOG-V20.1.txt').write_text('\n'.join(deduped[-450:]) + '\n', encoding='utf-8')
+          PY
+          cat reports/FAILED-SOURCE-LOG-V20.1.txt
+      - name: Commit condensed log
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f reports/FAILED-SOURCE-LOG-V20.1.txt
+          git commit -m "debug(ci): preserve exact source verification failure"
+          git push origin HEAD:fix/visual-overlap-v20-1
