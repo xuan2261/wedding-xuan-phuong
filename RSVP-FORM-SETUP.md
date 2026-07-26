@@ -99,7 +99,33 @@ Khi `apiUrl` còn để trống, biểu mẫu tự ẩn và thiệp giữ nguyê
 - Honeypot ẩn: bot điền là bị từ chối.
 - `minFormOpenMs`: gửi quá nhanh sau khi mở là bị từ chối.
 - Cooldown phía khách: `rsvpForm.cooldownSeconds` (mặc định 60 giây).
-- `LockService` + cửa sổ chống trùng 300 giây: khách bấm gửi hai lần chỉ ghi một dòng.
+- `LockService` + cửa sổ chống trùng 300 giây.
+
+Cửa sổ chống trùng **chỉ bỏ qua lần gửi trùng y hệt** — cùng khách, cùng máy,
+cùng mọi câu trả lời, trong vòng 5 phút. Đó là cú bấm đúp trên điện thoại.
+
+Khách đổi bất kỳ điều gì (đổi từ Có sang Không, đổi số người, đổi bên mời, đổi
+sự kiện, sửa lời nhắn) thì **luôn được ghi thành dòng mới**. Khi đó thiệp báo
+"Xác nhận của Quý khách đã được ghi nhận trước đó" thay cho câu cảm ơn, để khách
+biết đúng cái gì đang nằm trong sổ.
+
+## Giữ đủ lịch sử và xem số hiện hành
+
+Tab `Xác nhận tham dự` giữ **mọi** lần gửi, kể cả khi khách đổi ý. Vì vậy cộng
+thẳng trên tab đó sẽ đếm trùng.
+
+Con số để gia đình dùng nằm ở tab `Tổng hợp xác nhận`: mỗi khách một dòng, lấy
+câu trả lời **mới nhất**, kèm cột `Số lần gửi` để thấy ai đã đổi ý.
+
+Dựng lại tab đó bất cứ lúc nào bằng cách chạy trong Apps Script:
+
+```javascript
+summarizeWeddingRsvp()
+```
+
+Hàm này xoá và ghi lại toàn bộ tab tổng hợp, đồng thời in số nhận lời / từ chối /
+tổng số người theo từng sự kiện ra Execution log. Tab `Xác nhận tham dự` không bị
+đụng tới.
 
 ## Kiểm thử sau khi deploy
 
@@ -107,15 +133,8 @@ Gửi một xác nhận thử. Kết quả đúng:
 
 - Thiệp hiện "Cảm ơn Quý khách! Hai gia đình đã nhận được xác nhận tham dự."
 - Tab `Xác nhận tham dự` có đúng một dòng mới.
-- Bấm gửi lại ngay lần nữa: không sinh thêm dòng.
-
-## Tổng hợp nhanh
-
-Chạy trong Apps Script để xem số khách theo từng sự kiện:
-
-```javascript
-summarizeWeddingRsvp()
-```
+- Bấm gửi lại ngay lần nữa mà không sửa gì: không sinh thêm dòng.
+- Sửa một mục rồi gửi lại: sinh dòng mới, và `summarizeWeddingRsvp()` chỉ tính dòng sau.
 
 ## Hạn xác nhận và lúc cổng đóng
 

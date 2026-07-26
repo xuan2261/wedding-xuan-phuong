@@ -22,6 +22,7 @@
 const RSVP_APP = Object.freeze({
   version: "1.0.0",
   sheetName: "Xác nhận tham dự",
+  summarySheetName: "Tổng hợp xác nhận",
   clientCooldownSeconds: 60,
   duplicateWindowSeconds: 300,
   minFormOpenMs: 1200,
@@ -185,12 +186,25 @@ function submitWeddingRsvp_(parameters) {
     const sheet = getOrCreateRsvpSheet_(getWishesSpreadsheet_());
     const now = new Date();
 
-    // Khách bấm gửi hai lần liên tiếp là chuyện thường trên điện thoại; chỉ ghi
-    // một dòng thay vì để gia đình phải tự lọc trùng trong Sheet.
-    if (clientKey && isDuplicateRsvp_(sheet, clientKey, guestName, now)) {
+    // Chỉ bỏ qua khi câu trả lời TRÙNG Y HỆT lần gửi trước, tức là khách bấm
+    // đúp trên điện thoại. Trước đây chỉ so tên và client key, nên khách đổi ý
+    // trong vòng năm phút thì lần gửi sau bị nuốt trong im lặng mà thiệp vẫn
+    // báo thành công — mất đúng thông tin gia đình cần.
+    const answer = {
+      clientKey: clientKey,
+      guestName: guestName,
+      attending: attending,
+      partySize: partySize,
+      guestOf: guestOf,
+      eventLabel: eventLabel,
+      message: message,
+    };
+
+    if (clientKey && isRepeatedRsvp_(sheet, answer, now)) {
       return {
         ok: true,
         stored: true,
+        duplicate: true,
         code: "DUPLICATE_IGNORED",
         message: "Xác nhận của Quý khách đã được ghi nhận trước đó.",
       };
@@ -216,7 +230,14 @@ function submitWeddingRsvp_(parameters) {
   }
 }
 
-function isDuplicateRsvp_(sheet, clientKey, guestName, now) {
+/**
+ * Có phải khách vừa gửi lại y hệt câu trả lời cũ không (bấm đúp)?
+ *
+ * So toàn bộ nội dung chứ không chỉ tên: khách đổi ý phải được ghi thành dòng
+ * mới, còn bấm đúp thì chỉ giữ một dòng. Lịch sử được giữ đủ, dòng mới nhất của
+ * mỗi khách là câu trả lời hiện hành.
+ */
+function isRepeatedRsvp_(sheet, answer, now) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return false;
 
@@ -226,36 +247,95 @@ function isDuplicateRsvp_(sheet, clientKey, guestName, now) {
     .getRange(startRow, 1, lastRow - startRow + 1, RSVP_HEADERS.length)
     .getValues();
 
-  return rows.some((row) => {
+  return rows.some(function (row) {
     const timestamp = row[0] instanceof Date ? row[0].getTime() : 0;
     if (!timestamp || now.getTime() - timestamp > windowMs) return false;
-    return String(row[8]) === clientKey && String(row[1]) === guestName;
+
+    return String(row[8]) === answer.clientKey &&
+      String(row[1]) === answer.guestName &&
+      String(row[2]) === answer.attending &&
+      Number(row[3]) === answer.partySize &&
+      String(row[4]) === answer.guestOf &&
+      String(row[5]) === answer.eventLabel &&
+      String(row[6]) === answer.message;
   });
 }
 
+
 /**
- * Tổng hợp nhanh để gia đình xem số khách theo từng sự kiện.
+ * Dựng lại tab "Tổng hợp": mỗi khách một dòng, lấy câu trả lời MỚI NHẤT.
+ *
+ * Tab "Xác nhận tham dự" giữ đủ lịch sử nên một khách đổi ý sẽ có nhiều dòng.
+ * Cộng thẳng trên tab đó sẽ đếm trùng, vì vậy con số để gia đình dùng nằm ở đây.
+ * Chạy lại hàm này bất cứ lúc nào cần số mới.
  */
 function summarizeWeddingRsvp() {
-  const sheet = getOrCreateRsvpSheet_(getWishesSpreadsheet_());
+  const spreadsheet = getWishesSpreadsheet_();
+  const sheet = getOrCreateRsvpSheet_(spreadsheet);
   const lastRow = sheet.getLastRow();
+
   if (lastRow < 2) {
     Logger.log("Chưa có xác nhận nào.");
     return;
   }
 
   const rows = sheet.getRange(2, 1, lastRow - 1, RSVP_HEADERS.length).getValues();
-  const totals = {};
 
-  rows.forEach((row) => {
+  // Một khách trong một sự kiện chỉ có một câu trả lời hiện hành: dòng gửi sau
+  // cùng. Khoá theo cả sự kiện vì cùng một người có thể được mời nhiều tiệc.
+  const current = {};
+  rows.forEach(function (row) {
+    const guestName = String(row[1] || "").trim();
     const eventLabel = String(row[5] || "Chưa rõ");
-    const attending = String(row[2]) === RSVP_ATTENDING.yes;
-    if (!totals[eventLabel]) totals[eventLabel] = { guests: 0, yes: 0, no: 0 };
-    totals[eventLabel][attending ? "yes" : "no"] += 1;
-    if (attending) totals[eventLabel].guests += Number(row[3]) || 0;
+    if (!guestName) return;
+
+    // Lồng hai mức thay vì ghép khoá bằng ký tự ngăn cách: tên khách là dữ liệu
+    // khách tự nhập nên không nên tin nó không chứa ký tự ta chọn làm dấu ngăn.
+    if (!current[eventLabel]) current[eventLabel] = {};
+    const bucket = current[eventLabel];
+    const key = guestName.toLowerCase();
+
+    const timestamp = row[0] instanceof Date ? row[0].getTime() : 0;
+    const previous = bucket[key];
+    if (previous && previous.timestamp >= timestamp) return;
+
+    bucket[key] = {
+      timestamp: timestamp,
+      when: row[0],
+      guestName: guestName,
+      attending: String(row[2]),
+      partySize: Number(row[3]) || 0,
+      guestOf: String(row[4] || ""),
+      eventLabel: eventLabel,
+      message: String(row[6] || ""),
+      revisions: previous ? previous.revisions + 1 : 1,
+    };
   });
 
-  Object.keys(totals).forEach((eventLabel) => {
+  const entries = [];
+  Object.keys(current).forEach(function (eventLabel) {
+    Object.keys(current[eventLabel]).forEach(function (key) {
+      entries.push(current[eventLabel][key]);
+    });
+  });
+  entries.sort(function (a, b) {
+    if (a.eventLabel !== b.eventLabel) return a.eventLabel < b.eventLabel ? -1 : 1;
+    return a.guestName < b.guestName ? -1 : 1;
+  });
+
+  writeRsvpSummarySheet_(spreadsheet, entries);
+
+  const totals = {};
+  entries.forEach(function (entry) {
+    if (!totals[entry.eventLabel]) {
+      totals[entry.eventLabel] = { guests: 0, yes: 0, no: 0 };
+    }
+    const coming = entry.attending === RSVP_ATTENDING.yes;
+    totals[entry.eventLabel][coming ? "yes" : "no"] += 1;
+    if (coming) totals[entry.eventLabel].guests += entry.partySize;
+  });
+
+  Object.keys(totals).forEach(function (eventLabel) {
     const item = totals[eventLabel];
     Logger.log(
       "%s — nhận lời: %s, từ chối: %s, tổng số người: %s",
@@ -265,4 +345,50 @@ function summarizeWeddingRsvp() {
       item.guests
     );
   });
+  Logger.log("Đã dựng lại tab \"%s\".", RSVP_APP.summarySheetName);
+}
+
+
+function writeRsvpSummarySheet_(spreadsheet, entries) {
+  const headers = [
+    "Sự kiện",
+    "Họ và tên",
+    "Tham dự",
+    "Số người",
+    "Khách của",
+    "Lời nhắn",
+    "Cập nhật lúc",
+    "Số lần gửi",
+  ];
+
+  let sheet = spreadsheet.getSheetByName(RSVP_APP.summarySheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(RSVP_APP.summarySheetName);
+    sheet.setColumnWidth(1, 190);
+    sheet.setColumnWidth(2, 200);
+    sheet.setColumnWidth(6, 320);
+  }
+
+  // Dựng lại từ đầu để không sót dòng của lần tổng hợp trước.
+  sheet.clear();
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight("bold");
+  sheet.setFrozenRows(1);
+
+  if (entries.length) {
+    const values = entries.map(function (entry) {
+      return [
+        entry.eventLabel,
+        entry.guestName,
+        entry.attending,
+        entry.partySize,
+        entry.guestOf,
+        entry.message,
+        entry.when,
+        entry.revisions,
+      ];
+    });
+    sheet.getRange(2, 1, values.length, headers.length).setValues(values);
+  }
+
+  SpreadsheetApp.flush();
 }
