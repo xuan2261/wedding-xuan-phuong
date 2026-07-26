@@ -355,7 +355,7 @@
       enabled: true,
       rememberSession: false,
       autoStoryDefault: true,
-      simpleModeEnabled: false,
+      simpleModeEnabled: true,
       openingDurationMs: 1580,
       storyStartDelayMs: 2600,
       storyHoldMs: 6500,
