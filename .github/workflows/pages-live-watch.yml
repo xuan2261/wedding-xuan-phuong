@@ -23,6 +23,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      # Build id phải đọc từ BUILD.json. Ghim cứng khiến bộ giám sát chỉ xanh
+      # khi trang public còn cũ, và chuyển đỏ đúng lúc bản mới lên sóng.
+      - name: Resolve expected build id
+        id: expected
+        shell: bash
+        run: echo "build=$(jq -r .buildId BUILD.json)" >> "${GITHUB_OUTPUT}"
       - name: Verify public build and event entry pages
         id: live
         shell: bash
@@ -37,7 +43,7 @@ jobs:
           fi
           python tools/verify_live_pages.py \
             --base-url "https://xuan2261.github.io/wedding-xuan-phuong/" \
-            --expected-build "v19.4-20260724" \
+            --expected-build "${{ steps.expected.outputs.build }}" \
             --attempts "${attempts}" \
             --delay-seconds "${delay}" \
             --report reports/LIVE-PAGES-WATCH.json
@@ -53,7 +59,7 @@ jobs:
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
-          EXPECTED_BUILD: v19.4-20260724
+          EXPECTED_BUILD: ${{ steps.expected.outputs.build }}
         shell: bash
         run: |
           state="$(gh issue view 10 --repo "${GITHUB_REPOSITORY}" --json state --jq .state)"

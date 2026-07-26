@@ -116,10 +116,16 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
       - uses: actions/checkout@v7
+      # Đọc từ BUILD.json thay vì ghim cứng: cổng kiểm tra hậu-deploy trước đây
+      # chỉ pass khi trang public vẫn còn build cũ.
+      - name: Resolve expected build id
+        id: expected
+        shell: bash
+        run: echo "build=$(jq -r .buildId BUILD.json)" >> "${GITHUB_OUTPUT}"
       - name: Verify live build and event entry pages
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-          EXPECTED_BUILD: v19.4-20260724
+          EXPECTED_BUILD: ${{ steps.expected.outputs.build }}
         run: |
           mkdir -p reports
           python tools/verify_live_pages.py \

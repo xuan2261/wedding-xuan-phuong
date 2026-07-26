@@ -197,7 +197,9 @@
 
     const catalog = new Map((config.eventCatalog || []).map((item) => [item.id, item]));
     const personalization = config.personalization || {};
-    const baseUrl = config.site?.domain || window.location.href;
+    // Phải dựng link theo URL đang mở, không theo domain cấu hình: nếu không,
+    // khách đang ở domain riêng hoặc bản xem thử sẽ bị đá sang github.io.
+    const baseUrl = window.location.href;
 
     links.replaceChildren(...guestState.invitedEventIds.map((eventId) => {
       const event = catalog.get(eventId);
@@ -222,6 +224,58 @@
     }));
 
     nav.hidden = false;
+  }
+
+  // config.js phân giải sự kiện đúng một lần lúc tải trang rồi đóng băng
+  // WEDDING_CONFIG, nên đổi fragment thôi thì nội dung vẫn đứng yên. Nút chuyển
+  // sự kiện là điều hướng cùng tài liệu, vì vậy phải tự tải lại khi tham số
+  // sự kiện thay đổi — kể cả khi khách bấm nút back/forward.
+  function setupEventHashNavigation() {
+    const personalization = config.personalization || {};
+    const eventParameter = String(personalization.eventParameter || "event");
+    const eventsParameter = String(personalization.eventsParameter || "events");
+
+    const readEventParams = () => {
+      const params = new URLSearchParams(
+        String(window.location.hash || "").replace(/^#/, "")
+      );
+      return [
+        String(params.get(eventParameter) || "").trim().toLowerCase(),
+        String(params.get(eventsParameter) || "").trim().toLowerCase()
+      ].join("|");
+    };
+
+    let currentEventParams = readEventParams();
+
+    window.addEventListener("hashchange", () => {
+      const nextEventParams = readEventParams();
+      if (nextEventParams === currentEventParams) return;
+      currentEventParams = nextEventParams;
+      window.location.reload();
+    });
+  }
+
+  // Link nội trang (#main, #guest-invitation) sẽ ghi đè toàn bộ fragment và
+  // xoá mất #to=…&event=…, khiến khách mất tên và rơi về sự kiện mặc định sau
+  // lần tải lại kế tiếp. Cuộn bằng JS để giữ nguyên dữ liệu cá nhân hoá.
+  function setupInPageAnchors() {
+    document.addEventListener("click", (event) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const anchor = event.target?.closest?.('a[href^="#"]');
+      if (!anchor) return;
+
+      event.preventDefault();
+
+      const targetId = anchor.getAttribute("href").slice(1);
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      target.focus({ preventScroll: true });
+    });
   }
 
   function setupFamilies() {
@@ -2273,6 +2327,8 @@
   setupPersonalization();
   applyConfig();
   setupEventSwitcher();
+  setupEventHashNavigation();
+  setupInPageAnchors();
   setupFamilies();
   setupEventActions();
   setupShareAndCalendar();
