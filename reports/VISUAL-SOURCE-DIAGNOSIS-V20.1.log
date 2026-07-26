@@ -1,4 +1,4 @@
-HEAD=6cc5e340f6999c1e8fc72434177a3c326d7640eb
+HEAD=08f3fc9a8d3be8fa914419369268b11ab332d1ed
 == JavaScript syntax ==
 --- node --check app.js
 status=0
@@ -46,10 +46,8 @@ status=1
 PASS: clean multi-event dist
 status=0
 --- python tests/verify_release.py
-FAIL
-- sai build marker
-- thiếu simple mode
-status=1
+PASS: v20.1 multi-event release checks
+status=0
 == Build dist ==
 PASS: rebuilt optimized clean dist v20.1-20260726 with 4 event entry pages
 status=0
