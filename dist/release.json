@@ -1,8 +1,8 @@
 {
-  "buildId": "v20.1-20260726",
-  "release": "v20.1",
-  "generatedAtUtc": "2026-07-26T07:20:00+00:00",
-  "status": "visual-safe-zones-and-cover-refinement",
+  "buildId": "v20.2-20260726",
+  "release": "v20.2",
+  "generatedAtUtc": "2026-07-26T09:20:00+00:00",
+  "status": "ak-debug-full-audit-and-deploy-hardening",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",

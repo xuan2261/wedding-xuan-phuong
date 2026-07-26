@@ -1,9 +1,9 @@
 {
-  "buildId": "v20.1-20260726",
-  "release": "v20.1",
-  "generatedAtUtc": "2026-07-26T07:20:00+00:00",
+  "buildId": "v20.2-20260726",
+  "release": "v20.2",
+  "generatedAtUtc": "2026-07-26T09:20:00+00:00",
   "backendVersion": "1.5.0",
-  "status": "visual-safe-zones-and-cover-refinement",
+  "status": "ak-debug-full-audit-and-deploy-hardening",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",
@@ -17,7 +17,7 @@
     "Bride map pin is not verified.",
     "RSVP deadlines and event end times are not supplied.",
     "Final guest grouping data has not been supplied.",
-    "Public GitHub Pages remains stale until v20.1 is deployed.",
+    "Public GitHub Pages remains stale until v20.2 is deployed.",
     "Physical Android/iPhone and Zalo/Messenger tests have not been completed."
   ]
 }

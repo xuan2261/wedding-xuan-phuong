@@ -19,7 +19,7 @@ const checks = [
 ];
 const failures = checks.filter(([, ok]) => !ok).map(([name]) => name);
 if (failures.length) {
-  console.error("FAIL: v19.4 release hardening", failures);
+  console.error("FAIL: v20.2 release hardening", failures);
   process.exit(1);
 }
-console.log("PASS: v19.4 adaptive, contact and focus hardening");
+console.log("PASS: v20.2 adaptive, contact and focus hardening");
