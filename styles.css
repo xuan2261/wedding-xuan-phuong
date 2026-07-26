@@ -6,12 +6,19 @@ html {
 
 :root {
   --green-950: #102b20;
+  /* --green-900 / --green-700 / --gold-700 / --gold-300 được dùng ở 5 chỗ nhưng
+     chưa từng được định nghĩa, nên var() hỏng và màu bị rơi về giá trị kế thừa.
+     Bổ sung đúng vị trí trên thang màu sẵn có thay vì sửa từng nơi gọi. */
+  --green-900: #16382a;
   --green-800: #214b3a;
+  --green-700: #2e5a46;
   --green-650: #37654f;
   --cream: #f7f2e8;
   --paper: #fffdf8;
+  --gold-300: #d9c48a;
   --gold: #b8995a;
   --gold-text: #886e38;
+  --gold-700: #886e38;
   --ink: #203027;
   --muted: #626c66;
   --line: rgba(32, 75, 58, 0.18);
@@ -1012,12 +1019,25 @@ textarea {
   font-weight: 500;
 }
 
-footer {
+/* Chỉ nhắm chân trang thật. Selector `footer` trần trước đây trúng luôn
+   <footer class="dialog-footer"> trong dialog liên hệ, sơn nền xanh đậm lên đó
+   và khiến nút "Đóng" (chữ xanh đậm, nền trong suốt) chỉ còn 1.54:1 — gần như
+   vô hình. */
+body > footer {
   padding: 20px;
   color: #dfe8e1;
   background: var(--green-950);
   text-align: center;
   font-size: 0.78rem;
+}
+
+.dialog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+  padding: 4px 0 0;
 }
 
 .music-button {
@@ -1905,6 +1925,14 @@ dialog::backdrop {
     border-radius: 0;
   }
 
+  /* .dialog-intro bị ẩn ở dưới nên dialog chỉ còn 3 con, trong khi template gốc
+     khai báo 4 hàng. Footer vì thế nhận hàng minmax(0,1fr) vốn dành cho phần
+     thân: bản đồ co còn ~152px còn footer phình ra ~154px. Khai báo lại đúng 3
+     hàng để khung bản đồ giữ hết chiều cao trống. */
+  .embed-dialog[open] {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
   .embed-dialog .dialog-header {
     padding: 8px 12px 4px;
   }
@@ -1986,8 +2014,11 @@ body[data-wedding-phase="after"] .countdown {
   100% { transform: scale(1) rotate(0); }
 }
 
+/* Ô đồng ý dùng class .form-consent, không phải .checkbox-field (class này
+   không tồn tại ở đâu cả), nên viền báo lỗi chưa bao giờ hiện dù app.js có gán
+   aria-invalid="true". */
 .form-field [aria-invalid="true"],
-.checkbox-field input[aria-invalid="true"] {
+.form-consent input[aria-invalid="true"] {
   outline: 3px solid rgba(159, 48, 48, 0.28);
   outline-offset: 2px;
 }
@@ -2234,7 +2265,11 @@ body[data-event-id="saigon"] .guest-invitation__seal {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto auto auto auto auto;
   justify-items: center;
-  align-content: center;
+  /* `safe` là bắt buộc: đây vừa là grid canh giữa vừa là vùng cuộn. Khi nội dung
+     cao hơn khung (máy nằm ngang, tên khách dài), canh giữa thường đẩy dòng đầu
+     lên phía trên gốc cuộn — mà scrollTop không thể âm nên phần đó bị cắt vĩnh
+     viễn. `safe center` tự chuyển về canh đầu khi tràn. */
+  align-content: safe center;
   gap: clamp(10px, 2.4svh, 22px);
   padding:
     max(34px, env(safe-area-inset-top))
@@ -2616,7 +2651,9 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   .invitation-cover__content {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: repeat(6, auto);
-    align-content: center;
+    /* Xem chú thích ở .invitation-cover__content gốc: canh giữa không "safe"
+       trong vùng cuộn sẽ cắt mất dòng đầu và không cuộn tới được. */
+    align-content: safe center;
     justify-items: start;
     gap: 5px 24px;
     padding: 20px 44px;

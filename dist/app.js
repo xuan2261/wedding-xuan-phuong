@@ -2314,9 +2314,30 @@
 
   let toastTimer;
 
+  // Dialog mở bằng showModal() nằm ở top layer, nên toast gắn dưới <body> luôn
+  // bị che bất kể z-index. Phần lớn toast là xác nhận "Đã sao chép…" phát ra từ
+  // bên trong dialog quà mừng / liên hệ, nên phải gắn toast vào đúng dialog đang
+  // mở thì khách mới thấy.
+  function resolveToastHost() {
+    let host = document.body;
+    document.querySelectorAll("dialog[open]").forEach((dialog) => {
+      try {
+        if (dialog.matches(":modal")) host = dialog;
+      } catch {
+        // Trình duyệt cũ chưa có :modal — coi dialog đang mở là modal.
+        host = dialog;
+      }
+    });
+    return host;
+  }
+
   function showToast(message) {
     const toast = $("#toast");
     toast.textContent = message;
+
+    const host = resolveToastHost();
+    if (toast.parentElement !== host) host.appendChild(toast);
+
     toast.classList.add("is-visible");
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(() => {
