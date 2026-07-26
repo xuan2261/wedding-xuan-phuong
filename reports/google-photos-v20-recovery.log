@@ -1,0 +1,12 @@
+/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tools/recover_google_photos_v20.py:106: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  pixels = list(gray.getdata())
+Traceback (most recent call last):
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tools/recover_google_photos_v20.py", line 383, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tools/recover_google_photos_v20.py", line 335, in main
+    assigned = assign_candidates(candidates)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tools/recover_google_photos_v20.py", line 204, in assign_candidates
+    raise RuntimeError(f"Unsafe visual match for {asset}: dHash distance {distance} > {MAX_DHASH_DISTANCE}")
+RuntimeError: Unsafe visual match for couple-hands: dHash distance 94 > 24
