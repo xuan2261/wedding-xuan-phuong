@@ -177,7 +177,12 @@ try {
       JSON.stringify(initial.timelineLabels) === JSON.stringify(["Lễ Thành Hôn", "Đón khách và dùng tiệc"]),
       `Sai timeline labels: ${JSON.stringify(initial.timelineLabels)}`
     );
-    assert(initial.deadline === "", `Deadline phải để trống tới khi chốt: ${initial.deadline}`);
+    // Gia đình đã chốt hạn xác nhận: một ngày trước mỗi sự kiện.
+    // Fixture là sự kiện nhà trai 30/07.
+    assert(
+      initial.deadline === "29/07/2026",
+      `Sai hạn xác nhận cho tiệc nhà trai: ${initial.deadline}`
+    );
     assert(initial.audioPaused === true, "Audio không được phát khi initial load");
     assert(initial.audioSources === 2, `Music phải có 2 sources: ${initial.audioSources}`);
     assert(initial.scrollWidth <= initial.clientWidth + 1, "Có horizontal overflow");
@@ -285,20 +290,39 @@ try {
     assert(mapFooterInside, "Footer Map bị cắt khỏi viewport");
     await page.locator("[data-close-map-dialog]").first().click();
 
-    await page.locator("#giftButton").click();
-    await page.waitForSelector("#giftDialog[open]");
-    await page.waitForFunction(
-      (expected) => {
-        const images = Array.from(document.querySelectorAll("#giftGrid img"));
-        return images.length === expected && images.every((image) => image.complete);
-      },
-      initial.expectedGiftCount
+    // Mỗi bên gia đình một nút riêng; hộp thoại chỉ tải đúng QR của bên được bấm.
+    const giftButtonLabels = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("#giftButtons [data-gift-open]"), (button) =>
+        `${button.dataset.giftOpen}|${button.textContent.trim()}`)
     );
     assert(
-      qrRequests === initial.expectedGiftCount,
-      `Gift QR phải khớp chính sách sự kiện: expected=${initial.expectedGiftCount}, actual=${qrRequests}`
+      giftButtonLabels.length === initial.expectedGiftCount,
+      `Số nút quà mừng phải khớp sự kiện: expected=${initial.expectedGiftCount}, actual=${giftButtonLabels.length}`
     );
-    await page.locator("[data-close-dialog]").click();
+    assert(
+      giftButtonLabels.includes("groom|Quà mừng cưới chú rể") &&
+        giftButtonLabels.includes("bride|Quà mừng cưới cô dâu"),
+      `Sai nhãn nút quà mừng: ${giftButtonLabels.join(" / ")}`
+    );
+
+    for (const giftId of ["groom", "bride"]) {
+      const qrBefore = qrRequests;
+      await page.locator(`[data-gift-open="${giftId}"]`).click();
+      await page.waitForSelector("#giftDialog[open]");
+      await page.waitForFunction(() => {
+        const images = Array.from(document.querySelectorAll("#giftGrid img"));
+        return images.length === 1 && images.every((image) => image.complete);
+      });
+      assert(
+        qrRequests === qrBefore + 1,
+        `Mỗi nút chỉ được tải đúng một QR: ${qrRequests - qrBefore}`
+      );
+      await page.locator("#giftDialog [data-close-dialog]").click();
+    }
+    assert(
+      qrRequests === initial.expectedGiftCount,
+      `Tổng QR phải khớp chính sách sự kiện: expected=${initial.expectedGiftCount}, actual=${qrRequests}`
+    );
 
     await page.locator('[data-lightbox="couple-hands"]').click();
     await page.waitForSelector("#lightboxDialog[open]");

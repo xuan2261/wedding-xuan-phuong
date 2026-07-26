@@ -668,21 +668,32 @@ textarea {
   font-style: italic;
 }
 
-.actions__gift-link {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 6px 4px;
-  border: 0;
-  border-bottom: 1px solid currentColor;
-  background: transparent;
-  color: var(--green-650);
-  cursor: pointer;
-  font-size: 0.86rem;
-  font-weight: 600;
+.actions__gift-note {
+  max-width: 440px;
+  margin: 24px auto 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
 }
 
-.actions__gift-link:hover {
-  color: var(--green-950);
+/* Mỗi bên gia đình một nút riêng, xếp dọc để trên điện thoại vẫn đủ rộng cho
+   nhãn tiếng Việt có dấu mà không xuống dòng giữa chừng. */
+.actions__gifts {
+  display: grid;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.actions__gift-button {
+  width: min(340px, 100%);
+}
+
+.actions__gift-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
 }
 
 .album {
@@ -875,6 +886,7 @@ textarea {
 }
 
 .form-field input,
+.form-field select,
 .form-field textarea {
   width: 100%;
   border: 1px solid rgba(32, 75, 58, 0.28);
@@ -884,7 +896,8 @@ textarea {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   min-height: 48px;
   padding: 11px 13px;
 }
@@ -897,10 +910,62 @@ textarea {
 }
 
 .form-field input:focus,
+.form-field select:focus,
 .form-field textarea:focus {
   border-color: var(--green-650);
   outline: 0;
   box-shadow: 0 0 0 4px rgba(55, 101, 79, 0.13);
+}
+
+/* Biểu mẫu xác nhận tham dự ngay trên thiệp. */
+.rsvp-form {
+  display: grid;
+  gap: 16px;
+  max-width: 480px;
+  margin: 22px auto 0;
+  text-align: left;
+}
+
+/* Hai câu hỏi chọn một nằm cạnh nhau nên phải có nhãn nhóm rõ ràng, nếu không
+   khách và trình đọc màn hình đều hiểu nhầm thành một danh sách duy nhất. */
+.form-choice {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.form-choice legend {
+  padding: 0;
+  color: var(--green-950);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.form-choice label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.form-choice input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  accent-color: var(--green-800);
+}
+
+.rsvp-form textarea {
+  min-height: 88px;
+}
+
+.rsvp-form__submit {
+  justify-self: center;
+  min-width: 200px;
 }
 
 .form-field small,

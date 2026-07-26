@@ -18,12 +18,17 @@ function load(hash) {
 const groom = load("");
 assert.equal(groom.event.id, "groom");
 assert.equal(groom.event.dateDisplay, "30.07.2026");
-assert.equal(groom.gifts.length, 1);
+// Gia đình đã chốt: mọi sự kiện đều hiện tài khoản của cả chú rể và cô dâu.
+assert.equal(groom.gifts.length, 2);
+assert.equal([...groom.gifts].map((gift) => gift.id).join(","), "groom,bride");
 
 const bride = load("#to=Gia%20đình%20cô%20Lan&event=bride");
 assert.equal(bride.event.id, "bride");
 assert.equal(bride.event.timeline.length, 3);
-assert.equal(bride.gifts[0].id, "bride");
+assert.equal(bride.gifts.length, 2);
+assert.equal([...bride.gifts].map((gift) => gift.id).join(","), "groom,bride");
+assert.equal(bride.gifts[0].buttonLabel, "Quà mừng cưới chú rể");
+assert.equal(bride.gifts[1].buttonLabel, "Quà mừng cưới cô dâu");
 
 const nhaTrang = load("#event=nhatrang");
 assert.equal(nhaTrang.event.dateDisplay, "15.08.2026");

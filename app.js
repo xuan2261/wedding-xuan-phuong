@@ -29,6 +29,31 @@
   // Cờ một lần: chuyển sự kiện phải reload, đừng bắt khách mở bìa lại.
   const EVENT_SWITCH_KEY = "wedding-event-switch-v20-2";
 
+  // Trình duyệt mặc định khôi phục vị trí cuộn cũ sau khi tải lại. Với thiệp thì
+  // sai: màn bìa mở đè lên trên nhưng trang bên dưới vẫn nằm giữa album, nên mở
+  // thiệp xong khách rơi vào giữa nội dung mà không hiểu đang ở đâu. Tự quản lý
+  // để lần tải nào cũng bắt đầu từ đầu thiệp.
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+
+  // Chỉ giữ nguyên vị trí khi link thật sự trỏ tới một mục có trong trang. Link
+  // cá nhân hoá dùng hash cho dữ liệu khách (#to=..., #event=...) chứ không phải
+  // anchor, nên những link đó vẫn phải mở từ đầu thiệp.
+  function resetScrollForFreshLoad() {
+    const hash = window.location.hash.slice(1);
+
+    if (hash) {
+      try {
+        if (document.getElementById(decodeURIComponent(hash))) return;
+      } catch {
+        // Hash hỏng không decode được thì coi như không phải anchor.
+      }
+    }
+
+    window.scrollTo(0, 0);
+  }
+
   const guestState = {
     name: "",
     isPersonalized: false,
@@ -500,6 +525,45 @@
     });
   }
 
+  // Mỗi bên gia đình một nút riêng: khách bấm đúng người muốn gửi quà thay vì
+  // phải mở hộp thoại rồi mới chọn giữa hai tài khoản.
+  function renderGiftButtons(container) {
+    if (!container) return;
+
+    container.replaceChildren(
+      ...config.gifts.map((gift) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "button actions__gift-button";
+        button.dataset.giftOpen = gift.id;
+
+        const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("aria-hidden", "true");
+        icon.setAttribute("focusable", "false");
+        icon.classList.add("actions__gift-icon");
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute(
+          "d",
+          "M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"
+        );
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", "currentColor");
+        path.setAttribute("stroke-width", "1.6");
+        path.setAttribute("stroke-linecap", "round");
+        path.setAttribute("stroke-linejoin", "round");
+        icon.append(path);
+
+        const text = document.createElement("span");
+        text.textContent = gift.buttonLabel || gift.label;
+
+        button.append(icon, text);
+        return button;
+      })
+    );
+  }
+
   function applyConfig() {
     const { couple, event, invitation, labels, rsvp, site } = config;
 
@@ -566,16 +630,40 @@
 
     const rsvpButton = $("#rsvpButton");
     const rsvpNote = $("#rsvpNote");
-    const giftButton = $("#giftButton");
+    const giftButtons = $("#giftButtons");
     const wishButton = $("#wishButton");
     const wishesSection = $("#wishes");
 
-    giftButton.hidden = !giftsAreReady();
+    const giftsReady = giftsAreReady();
+    renderGiftButtons(giftButtons);
+    giftButtons.hidden = !giftsReady;
+
+    const giftNote = $("#giftNote");
+    if (giftNote) {
+      const noteText = String(site.giftNote || "").trim();
+      giftNote.textContent = noteText;
+      giftNote.hidden = !giftsReady || !noteText;
+    }
     const wishesReady = wishesAreReady();
     wishButton.hidden = !wishesReady;
     wishesSection.hidden = !wishesReady;
 
-    if (rsvp.enabled && rsvp.url) {
+    // Khi biểu mẫu trên thiệp đã hoạt động thì nút gọi điện chỉ còn là phương án
+    // dự phòng, và không được nói "RSVP sẽ cập nhật sau" nữa.
+    const inlineRsvpReady = Boolean(
+      config.rsvpForm?.enabled && String(config.rsvpForm?.apiUrl || "").trim()
+    );
+
+    if (inlineRsvpReady) {
+      const fallbackPhone = String(config.contact?.directionPhone || "").replace(/\D+/g, "");
+      if (fallbackPhone) rsvpButton.href = `tel:${fallbackPhone}`;
+      rsvpButton.removeAttribute("aria-disabled");
+      rsvpButton.dataset.rsvpFallback = "contact";
+      rsvpButton.textContent = "Liên hệ xác nhận";
+      rsvpNote.hidden = true;
+      setText("[data-actions-description]", labels.inlineRsvpDescription ||
+        "Quý khách vui lòng điền vài thông tin bên dưới để hai gia đình chuẩn bị đón tiếp chu đáo.");
+    } else if (rsvp.enabled && rsvp.url) {
       rsvpButton.href = buildRsvpUrl();
       rsvpButton.removeAttribute("aria-disabled");
       rsvpButton.textContent = "Xác nhận tham dự";
@@ -684,6 +772,7 @@
     let stops = [];
     let scrollFrame = 0;
     let suppressScrollSyncUntil = 0;
+    let interactionGraceUntil = 0;
 
     const refreshStops = () => {
       stops = $$("[data-story-stop]").filter((element) => {
@@ -832,7 +921,9 @@
       resetProgress();
       syncPlayer();
       document.body.dataset.storyPauseReason = reason;
-      if (announce) showToast("Đã tạm dừng chế độ xem tự động.");
+      if (announce) {
+        showToast("Đã tạm dừng tự xem. Bấm nút Tự xem để tiếp tục.");
+      }
     };
 
     const scrollToCurrent = () => {
@@ -876,12 +967,14 @@
 
     const start = ({ fromStart = false, initialDelayMs = 0 } = {}) => {
       refreshStops();
-      if (!player || !button || !stops.length || reduceMotion ||
+      if (!player || !button || !stops.length ||
           document.body.classList.contains("simple-mode")) {
         if (player) player.hidden = true;
         return false;
       }
 
+      interactionGraceUntil = performance.now() +
+        Math.max(0, Number(settings.interactionGraceMs ?? 1200));
       currentIndex = fromStart || completed ? 0 : nearestIndex();
       completed = false;
       running = true;
@@ -911,7 +1004,9 @@
     const show = () => {
       refreshStops();
       if (player) {
-        player.hidden = reduceMotion || document.body.classList.contains("simple-mode");
+        // Tiết giảm chuyển động chỉ bỏ hiệu ứng, không bỏ chức năng: khách vẫn
+        // cần thanh điều khiển để tự đi tới từng phần của thiệp.
+        player.hidden = document.body.classList.contains("simple-mode");
         if (!player.hidden) syncPlayer();
       }
     };
@@ -926,12 +1021,17 @@
     if (settings.pauseOnInteraction !== false) {
       const pauseForInteraction = (event) => {
         if (!running || player?.contains(event.target)) return;
+        // Ngay sau khi mở thiệp, chuỗi sự kiện của chính cú bấm "Mở thiệp" và
+        // những cú chạm thăm dò đầu tiên không phải ý muốn dừng tự xem.
+        if (performance.now() < interactionGraceUntil) return;
         pause({ announce: true, reason: "interaction" });
       };
 
+      // Chỉ cuộn thật mới là ý định tự điều khiển. Trước đây `touchstart` và
+      // `pointerdown` cũng dừng tour, nghĩa là chạm màn hình để ngắm hoặc click
+      // chuột vào bất kỳ đâu là tự xem chết hẳn ở chương một.
       window.addEventListener("wheel", pauseForInteraction, { passive: true });
-      window.addEventListener("touchstart", pauseForInteraction, { passive: true });
-      window.addEventListener("pointerdown", pauseForInteraction, { passive: true });
+      window.addEventListener("touchmove", pauseForInteraction, { passive: true });
       window.addEventListener("keydown", (event) => {
         if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]
           .includes(event.key)) {
@@ -1009,9 +1109,7 @@
     if (autoStory) {
       const disableForData = adaptiveDataState.constrained &&
         settings.disableAutoStoryOnConstrainedNetwork !== false;
-      autoStory.checked =
-        settings.autoStoryDefault !== false && !reduceMotion && !disableForData;
-      autoStory.disabled = reduceMotion;
+      autoStory.checked = settings.autoStoryDefault !== false && !disableForData;
       if (dataHint) dataHint.hidden = !disableForData;
     }
 
@@ -1063,10 +1161,10 @@
         }
       });
 
-      if (shouldStartStory && !reduceMotion) {
+      if (shouldStartStory) {
         const startOptions = {
           fromStart: true,
-          initialDelayMs: Number(settings.storyStartDelayMs || 2600)
+          initialDelayMs: Number(settings.storyStartDelayMs || 1400)
         };
 
         // Đợi dialog đóng và layout ổn định qua hai frame rồi mới bắt đầu.
@@ -1105,7 +1203,7 @@
     const openInvitation = ({ simpleMode = false } = {}) => {
       if (opening) return;
       opening = true;
-      const shouldStartStory = !simpleMode && Boolean(autoStory?.checked) && !reduceMotion;
+      const shouldStartStory = !simpleMode && Boolean(autoStory?.checked);
 
       window.dispatchEvent(
         new CustomEvent("wedding:invitation-open", {
@@ -1113,8 +1211,15 @@
         })
       );
 
-      if (reduceMotion || simpleMode) {
+      if (simpleMode) {
         finishOpening(false, true);
+        return;
+      }
+
+      // Tiết giảm chuyển động: bỏ hoạt cảnh mở hai cánh và vào thẳng thiệp,
+      // nhưng vẫn giữ tự xem (scrollToCurrent sẽ nhảy tức thì thay vì cuộn mượt).
+      if (reduceMotion) {
+        finishOpening(shouldStartStory, false);
         return;
       }
 
@@ -1162,7 +1267,7 @@
     const message = $("#countdownMessage");
     const rsvpButton = $("#rsvpButton");
     const rsvpNote = $("#rsvpNote");
-    const giftButton = $("#giftButton");
+    const giftButtons = $("#giftButtons");
     const fields = {
       days: $("[data-days]"),
       hours: $("[data-hours]"),
@@ -1187,8 +1292,18 @@
 
     document.body.dataset.weddingPhase = phase;
 
-    if (rsvpClosesAt && now >= rsvpClosesAt && rsvpButton) {
-      rsvpButton.hidden = true;
+    if (rsvpClosesAt && now >= rsvpClosesAt) {
+      const inlineForm = $("#rsvpForm");
+      if (inlineForm) inlineForm.hidden = true;
+      const deadlineCopy = $("#rsvpDeadlineCopy");
+      if (deadlineCopy) deadlineCopy.hidden = true;
+
+      // Chỉ ẩn nút khi nó trỏ tới Google Form đã đóng. Khi nút là số điện thoại
+      // dự phòng thì phải giữ lại: chính thông điệp đóng cổng bảo khách liên hệ
+      // trực tiếp, ẩn nút đi là bảo khách gọi rồi cất luôn chỗ để gọi.
+      const isContactFallback = rsvpButton?.dataset.rsvpFallback === "contact";
+      if (rsvpButton && !isContactFallback) rsvpButton.hidden = true;
+
       if (rsvpNote) {
         rsvpNote.hidden = false;
         rsvpNote.textContent =
@@ -1197,8 +1312,10 @@
       }
     }
 
-    if (giftsHideAt && now >= giftsHideAt && giftButton) {
-      giftButton.hidden = true;
+    if (giftsHideAt && now >= giftsHideAt && giftButtons) {
+      giftButtons.hidden = true;
+      const giftNote = $("#giftNote");
+      if (giftNote) giftNote.hidden = true;
     }
 
     if (phase !== "before") {
@@ -1259,9 +1376,33 @@
     fallbackCleanup: null
   };
 
-  function getWishClientKey() {
-    const storageKey = "wedding-wish-client-key-v1";
+  // Sổ lời chúc và biểu mẫu xác nhận tham dự dùng chung ba tiện ích lưu trữ này,
+  // mỗi biểu mẫu một khoá riêng để cooldown của biểu mẫu này không khoá nhầm
+  // biểu mẫu kia.
+  // Kết quả gửi biểu mẫu chỉ được tin khi đến từ chính Apps Script Web App.
+  function isTrustedAppsScriptOrigin(origin) {
+    try {
+      const url = new URL(origin);
+      if (url.protocol !== "https:") return false;
 
+      const hostname = url.hostname.toLowerCase();
+
+      return (
+        hostname === "script.google.com" ||
+        hostname === "script.googleusercontent.com" ||
+        hostname.endsWith("-script.googleusercontent.com")
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  const WISH_CLIENT_KEY = "wedding-wish-client-key-v1";
+  const WISH_SUBMITTED_AT_KEY = "wedding-wish-submitted-at-v1";
+  const RSVP_CLIENT_KEY = "wedding-rsvp-client-key-v1";
+  const RSVP_SUBMITTED_AT_KEY = "wedding-rsvp-submitted-at-v1";
+
+  function getClientKey(storageKey) {
     try {
       const existing = window.localStorage.getItem(storageKey);
       if (existing) return existing;
@@ -1277,20 +1418,17 @@
     }
   }
 
-  function getLastWishSubmittedAt() {
+  function getLastSubmittedAt(storageKey) {
     try {
-      return Number(window.localStorage.getItem("wedding-wish-submitted-at-v1")) || 0;
+      return Number(window.localStorage.getItem(storageKey)) || 0;
     } catch {
       return 0;
     }
   }
 
-  function rememberWishSubmission() {
+  function rememberSubmission(storageKey) {
     try {
-      window.localStorage.setItem(
-        "wedding-wish-submitted-at-v1",
-        String(Date.now())
-      );
+      window.localStorage.setItem(storageKey, String(Date.now()));
     } catch {
       // Chế độ riêng tư có thể từ chối localStorage; server vẫn có rate limit.
     }
@@ -1300,6 +1438,180 @@
     const status = $("#wishFormStatus");
     status.textContent = message;
     status.dataset.state = state;
+  }
+
+  // Biểu mẫu xác nhận tham dự nằm ngay trên thiệp và gửi thẳng vào Google Sheet.
+  // Đường truyền giống hệt sổ lời chúc: POST vào iframe ẩn để tránh CORS, kết
+  // quả thật do Apps Script trả về bằng postMessage. Nhờ vậy thiệp chỉ báo
+  // "đã nhận" khi Sheet đã ghi thật, không báo thành công lạc quan.
+  function setupRsvpForm() {
+    const settings = config.rsvpForm || {};
+    const form = $("#rsvpForm");
+    const apiUrl = String(settings.apiUrl || "").trim();
+
+    if (!form) return;
+    if (!settings.enabled || !apiUrl) {
+      form.hidden = true;
+      return;
+    }
+
+    const guestName = $("#rsvpGuestName");
+    const partySize = $("#rsvpPartySize");
+    const partySizeField = $("#rsvpPartySizeField");
+    const eventSelect = $("#rsvpEventSelect");
+    const message = $("#rsvpMessage");
+    const submitButton = $("#rsvpSubmitButton");
+    const status = $("#rsvpFormStatus");
+    const clientKey = $("#rsvpClientKey");
+    const openedAt = $("#rsvpOpenedAt");
+    const requestId = $("#rsvpRequestId");
+    const siteOrigin = $("#rsvpSiteOrigin");
+    const guestLink = $("#rsvpGuestLink");
+    const cooldownMs = Math.max(0, Number(settings.cooldownSeconds || 0)) * 1000;
+    const minFormOpenMs = Math.max(0, Number(settings.minFormOpenMs || 0));
+
+    let submitting = false;
+    let submitTimer = 0;
+
+    const setStatus = (text, state = "") => {
+      status.textContent = text;
+      status.dataset.state = state;
+    };
+
+    form.action = apiUrl;
+    guestName.maxLength = Number(settings.maxNameLength) || 80;
+    message.maxLength = Number(settings.maxMessageLength) || 280;
+    partySize.max = String(Number(settings.maxPartySize) || 20);
+    clientKey.value = getClientKey(RSVP_CLIENT_KEY);
+    siteOrigin.value = window.location.origin;
+    guestLink.value = window.location.href;
+    openedAt.value = String(Date.now());
+
+    if (guestState.isPersonalized && guestState.name) {
+      guestName.value = guestState.name;
+    }
+
+    // Chỉ liệt kê những sự kiện khách được mời; khách chỉ có một sự kiện thì
+    // không cần phải chọn nên ẩn luôn ô này.
+    const catalog = new Map((config.eventCatalog || []).map((item) => [item.id, item]));
+    eventSelect.replaceChildren(
+      ...guestState.invitedEventIds.map((eventId) => {
+        const option = document.createElement("option");
+        option.value = eventId;
+        option.textContent = catalog.get(eventId)?.shortTitle || eventId;
+        option.selected = eventId === guestState.activeEventId;
+        return option;
+      })
+    );
+    if (partySizeField) partySizeField.hidden = false;
+    if (guestState.invitedEventIds.length <= 1) eventSelect.closest(".form-field").hidden = true;
+
+    // Không tham dự thì hỏi số người là vô nghĩa.
+    const syncPartySizeVisibility = () => {
+      const declined = form.querySelector('input[name="attending"]:checked')?.value === "no";
+      if (partySizeField) partySizeField.hidden = declined;
+      if (declined) partySize.value = "0";
+      else if (partySize.value === "0") partySize.value = "1";
+    };
+
+    form.querySelectorAll('input[name="attending"]').forEach((input) => {
+      input.addEventListener("change", syncPartySizeVisibility);
+    });
+
+    form.addEventListener("submit", (event) => {
+      guestName.value = guestName.value.trim();
+      message.value = message.value.trim();
+
+      if (!form.checkValidity() || guestName.value.length < 2) {
+        event.preventDefault();
+        form.reportValidity();
+        setStatus("Vui lòng kiểm tra lại các mục còn thiếu.", "error");
+        return;
+      }
+
+      if (Date.now() - Number(openedAt.value || 0) < minFormOpenMs) {
+        event.preventDefault();
+        setStatus("Vui lòng dành thêm một chút thời gian rồi gửi lại.", "error");
+        return;
+      }
+
+      const lastSubmittedAt = getLastSubmittedAt(RSVP_SUBMITTED_AT_KEY);
+      if (cooldownMs > 0 && Date.now() - lastSubmittedAt < cooldownMs) {
+        event.preventDefault();
+        const seconds = Math.ceil((cooldownMs - (Date.now() - lastSubmittedAt)) / 1000);
+        setStatus(
+          `Quý khách vừa gửi xác nhận. Vui lòng chờ khoảng ${seconds} giây nếu cần gửi lại.`,
+          "error"
+        );
+        return;
+      }
+
+      if (submitting) {
+        event.preventDefault();
+        return;
+      }
+
+      submitting = true;
+      submitButton.disabled = true;
+      requestId.value =
+        window.crypto?.randomUUID?.() ||
+        `rsvp-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      setStatus("Đang gửi xác nhận…");
+
+      submitTimer = window.setTimeout(() => {
+        submitting = false;
+        submitButton.disabled = false;
+        setStatus(
+          "Chưa nhận được phản hồi từ máy chủ. Quý khách vui lòng thử lại hoặc gọi trực tiếp cô dâu, chú rể.",
+          "error"
+        );
+      }, Number(settings.requestTimeoutMs) || 15000);
+    });
+
+    window.addEventListener("message", (event) => {
+      if (!isTrustedAppsScriptOrigin(event.origin)) return;
+
+      const payload = event.data;
+      if (
+        !payload ||
+        payload.type !== "wedding-rsvp-result-v1" ||
+        payload.requestId !== requestId.value
+      ) {
+        return;
+      }
+
+      window.clearTimeout(submitTimer);
+      submitTimer = 0;
+      submitting = false;
+      submitButton.disabled = false;
+
+      if (payload.ok && payload.stored === true) {
+        rememberSubmission(RSVP_SUBMITTED_AT_KEY);
+        setStatus(
+          "Cảm ơn Quý khách! Hai gia đình đã nhận được xác nhận tham dự.",
+          "success"
+        );
+        form.reset();
+        clientKey.value = getClientKey(RSVP_CLIENT_KEY);
+        siteOrigin.value = window.location.origin;
+        guestLink.value = window.location.href;
+        openedAt.value = String(Date.now());
+        requestId.value = "";
+        if (guestState.isPersonalized && guestState.name) {
+          guestName.value = guestState.name;
+        }
+        syncPartySizeVisibility();
+        return;
+      }
+
+      setStatus(
+        payload.message || "Chưa gửi được xác nhận. Quý khách vui lòng thử lại sau.",
+        "error"
+      );
+    });
+
+    syncPartySizeVisibility();
+    form.hidden = false;
   }
 
   function createWishCard(wish) {
@@ -1576,7 +1888,7 @@
     relationship.maxLength = wishes.maxRelationshipLength;
     message.minLength = wishes.minMessageLength;
     message.maxLength = wishes.maxMessageLength;
-    clientKey.value = getWishClientKey();
+    clientKey.value = getClientKey(WISH_CLIENT_KEY);
     siteOrigin.value = window.location.origin;
 
     const updateCounter = () => {
@@ -1640,7 +1952,7 @@
       const normalizedMessage = message.value.trim();
       const elapsed = Date.now() - Number(openedAt.value || 0);
       const cooldownMs = wishes.cooldownSeconds * 1000;
-      const lastSubmittedAt = getLastWishSubmittedAt();
+      const lastSubmittedAt = getLastSubmittedAt(WISH_SUBMITTED_AT_KEY);
 
       displayName.value = normalizedName;
       relationship.value = normalizedRelationship;
@@ -1708,25 +2020,8 @@
       }, wishes.requestTimeoutMs);
     });
 
-    function isAllowedWishMessageOrigin(origin) {
-      try {
-        const url = new URL(origin);
-        if (url.protocol !== "https:") return false;
-
-        const hostname = url.hostname.toLowerCase();
-
-        return (
-          hostname === "script.google.com" ||
-          hostname === "script.googleusercontent.com" ||
-          hostname.endsWith("-script.googleusercontent.com")
-        );
-      } catch {
-        return false;
-      }
-    }
-
     window.addEventListener("message", (event) => {
-      if (!isAllowedWishMessageOrigin(event.origin)) return;
+      if (!isTrustedAppsScriptOrigin(event.origin)) return;
 
       const payload = event.data;
       if (
@@ -1743,13 +2038,13 @@
       submitButton.disabled = false;
 
       if (payload.ok && payload.stored === true) {
-        rememberWishSubmission();
+        rememberSubmission(WISH_SUBMITTED_AT_KEY);
         setWishFormStatus(
           "Cảm ơn Quý khách! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt.",
           "success"
         );
         form.reset();
-        clientKey.value = getWishClientKey();
+        clientKey.value = getClientKey(WISH_CLIENT_KEY);
         siteOrigin.value = window.location.origin;
         openedAt.value = String(Date.now());
         requestId.value = "";
@@ -1945,18 +2240,21 @@
   function setupGiftDialog() {
     const dialog = $("#giftDialog");
     const grid = $("#giftGrid");
-    const openButton = $("#giftButton");
+    const buttons = $("#giftButtons");
+    const title = $("#gift-title");
     const closeButton = $("[data-close-dialog]", dialog);
 
-    if (!giftsAreReady() || !dialog || !grid || !openButton) return;
+    if (!giftsAreReady() || !dialog || !grid || !buttons) return;
 
-    let initialized = false;
+    let renderedGiftId = "";
 
-    const buildGiftCards = () => {
-      if (initialized) return;
+    const buildGiftCards = (giftId) => {
+      if (renderedGiftId === giftId) return;
+
+      const selected = config.gifts.filter((gift) => gift.id === giftId);
 
       grid.replaceChildren(
-        ...config.gifts.map((gift) => {
+        ...selected.map((gift) => {
           const card = document.createElement("article");
           card.className = "gift-card";
 
@@ -1970,8 +2268,8 @@
           image.width = 1024;
           image.height = 1024;
 
-          const title = document.createElement("h3");
-          title.textContent = gift.label;
+          const cardTitle = document.createElement("h3");
+          cardTitle.textContent = gift.label;
 
           const bank = document.createElement("p");
           bank.textContent = gift.bankName;
@@ -1997,16 +2295,24 @@
             }
           });
 
-          card.append(image, title, bank, name, number, copy);
+          card.append(image, cardTitle, bank, name, number, copy);
           return card;
         })
       );
 
-      initialized = true;
+      renderedGiftId = giftId;
     };
 
-    openButton.addEventListener("click", () => {
-      buildGiftCards();
+    buttons.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-gift-open]");
+      if (!trigger) return;
+
+      const giftId = trigger.dataset.giftOpen;
+      const gift = config.gifts.find((item) => item.id === giftId);
+      if (!gift) return;
+
+      buildGiftCards(giftId);
+      if (title) title.textContent = gift.buttonLabel || gift.label;
       dialog.showModal();
     });
     closeButton?.addEventListener("click", () => dialog.close());
@@ -2375,6 +2681,7 @@
     }, 2600);
   }
 
+  resetScrollForFreshLoad();
   setupPersonalization();
   applyConfig();
   setupEventSwitcher();
@@ -2385,6 +2692,9 @@
   setupShareAndCalendar();
   setupAttendanceContactDialog();
   setupRsvpDialog();
+  // Phải chạy trước setupCountdown: lifecycle là nơi quyết định ẩn biểu mẫu khi
+  // cổng xác nhận đã đóng, nên nó phải nói tiếng nói sau cùng.
+  setupRsvpForm();
   setupMapDialog();
   setupReveal();
   setupCountdown();

@@ -152,6 +152,14 @@ function doGet(e) {
 
 function doPost(e) {
   const parameters = (e && e.parameter) || {};
+
+  // Apps Script chỉ cho phép một doPost cho cả project, nên đây là nơi định
+  // tuyến. Biểu mẫu xác nhận tham dự nằm ở file wedding-rsvp-webapp.gs và ghi
+  // sang tab riêng trong cùng Google Sheet.
+  if (String(parameters.form || "") === "rsvp") {
+    return handleWeddingRsvpPost(parameters);
+  }
+
   const requestId = normalizeRequestId_(parameters.requestId);
 
   let result;
