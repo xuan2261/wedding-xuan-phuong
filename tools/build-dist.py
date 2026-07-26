@@ -49,7 +49,7 @@ shutil.copytree(ROOT / "assets", DIST / "assets", ignore=ignore_runtime_noise)
 
 def render_event_entry(event_id: str, event: dict) -> str:
     title = str(event.get("sharingTitle") or event.get("title") or "Thiệp cưới")
-    description = str(event.get("sharingText") or "Trân trọng kính mời Quý khách đến chung vui.")
+    description = str(event.get("sharingText") or "Trân trọng kính mời Quý vị đến chung vui.")
     event_url = f"{SITE_ROOT}events/{event_id}/"
     date_display = str(event.get("dateDisplay") or "")
     venue = str(event.get("venueName") or "")
@@ -94,7 +94,7 @@ def render_event_entry(event_id: str, event: dict) -> str:
     <p>Thiệp mời</p>
     <h1>{escape(title)}</h1>
     <p>{escape(visible_detail)}</p>
-    <p>Đang mở đúng lời mời dành cho Quý khách…</p>
+    <p>Đang mở đúng lời mời dành cho Quý vị…</p>
     <p><a href="../../#event={escape(event_id, quote=True)}" data-event-entry-link>Mở thiệp</a></p>
   </main>
 </body>
