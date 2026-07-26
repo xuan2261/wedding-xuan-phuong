@@ -22,32 +22,28 @@ def compact_datetime(value):
 
 
 def fold(line):
-    """Gấp dòng theo RFC 5545 §3.1: tối đa 75 octet, dòng nối bắt đầu bằng space.
+    """Gấp dòng theo RFC 5545 §3.1: tối đa 75 octet, dòng nối mở đầu bằng space.
 
     Phải đếm theo octet UTF-8 chứ không theo ký tự, và không được cắt giữa một
-    ký tự nhiều byte — tên địa điểm tiếng Việt sẽ vỡ nếu cắt sai.
+    ký tự nhiều byte — địa chỉ tiếng Việt sẽ vỡ nếu cắt sai.
     """
-    raw = line.encode("utf-8")
-    if len(raw) <= 75:
+    if len(line.encode("utf-8")) <= 75:
         return [line]
-    out, current = [], ""
-    limit = 75
+    out, current, limit = [], "", 75
     for char in line:
-        candidate = current + char
-        if len(candidate.encode("utf-8")) > limit:
+        if len((current + char).encode("utf-8")) > limit:
             out.append(current)
-            current = " " + char          # dòng nối mở đầu bằng một space
-            limit = 74                    # space đã chiếm 1 octet
+            current, limit = " " + char, 74   # space của dòng nối chiếm 1 octet
         else:
-            current = candidate
+            current += char
     if current:
         out.append(current)
     return out
 
 
-# Asia/Ho_Chi_Minh cố định UTC+7, không có DST kể từ 1975. DTSTART/DTEND dùng
-# TZID nên bắt buộc phải kèm VTIMEZONE, nếu không nhiều client sẽ coi là giờ
-# địa phương của máy và hiện sai giờ.
+# DTSTART/DTEND dùng TZID nên bắt buộc kèm VTIMEZONE, nếu không nhiều client sẽ
+# hiểu là giờ địa phương của máy và hiện sai giờ. Asia/Ho_Chi_Minh cố định
+# UTC+7, không có DST kể từ 1975.
 VTIMEZONE = [
     "BEGIN:VTIMEZONE",
     "TZID:Asia/Ho_Chi_Minh",
@@ -76,6 +72,8 @@ for event_id, filename in FILES.items():
         f"UID:{event_id}-{event['dateIso']}@xuan-phuong",
         "DTSTAMP:20260723T000000Z",
         f"DTSTART;TZID=Asia/Ho_Chi_Minh:{compact_datetime(first['datetime'])}",
+        # Thiếu DTEND thì lịch coi sự kiện dài 0 phút; giờ kết thúc hiện là giá
+        # trị tạm trong wedding-data.json (calendarEndIsProvisional).
         f"DTEND;TZID=Asia/Ho_Chi_Minh:{compact_datetime(event['calendarEndsAt'])}",
         f"SUMMARY:{escape(event['title'])}",
         f"LOCATION:{escape(event['address'])}",
@@ -89,5 +87,8 @@ for event_id, filename in FILES.items():
         "END:VCALENDAR",
     ]
     folded = [part for line in lines for part in fold(line)]
-    (OUT / filename).write_text("\r\n".join(folded) + "\r\n", encoding="utf-8")
+    # newline="" để Python không dịch lại "\r\n" khi chạy trên Windows.
+    (OUT / filename).write_text(
+        "\r\n".join(folded) + "\r\n", encoding="utf-8", newline=""
+    )
     print("WROTE", filename)

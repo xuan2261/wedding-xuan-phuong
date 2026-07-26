@@ -23,8 +23,8 @@ def parse_emv(payload):
     return out
 
 
-# Chỉ tìm trong khối giftCatalog: `bride: {` còn xuất hiện trong SOURCE.events
-# nên tra cứu trên toàn file sẽ lấy sai khối.
+# Chỉ tra trong khối giftCatalog: `bride: {` còn xuất hiện trong SOURCE.events
+# nên tìm trên toàn file sẽ lấy nhầm khối.
 GIFT_CATALOG = re.search(r"giftCatalog: \{(.*?)\n    \},", CONFIG, re.S)
 
 
@@ -58,9 +58,9 @@ for name in ["qr-nha-trai.png", "qr-nha-gai.png"]:
         errors.append(f"Không giải mã được QR: {name}")
         continue
 
-    # Chỉ kiểm tra "giải mã được" là chưa đủ: QR nhà trai từng mã hoá một định
-    # danh không hề xuất hiện trong config.js mà test vẫn xanh. Đối chiếu thẳng
-    # payload EMVCo với giá trị đã khai báo để hai bên không thể lệch nhau.
+    # Chỉ kiểm tra "giải mã được" là chưa đủ: QR nhà trai mã hoá một định danh
+    # không hề xuất hiện trong config.js mà test vẫn xanh. Đối chiếu thẳng
+    # payload EMVCo với giá trị đã khai để hai bên không thể lệch trong im lặng.
     gift_id = "groom" if "trai" in name else "bride"
     gift = read_gift(gift_id)
     if not gift:

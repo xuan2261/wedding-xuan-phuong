@@ -56,10 +56,10 @@
         bankName: "MB Bank",
         accountNumber: "0374037026",
         // Ảnh QR KHÔNG mã hoá accountNumber ở trên mà mã hoá alias VietQR dưới
-        // đây. Khai báo tường minh để test khoá được payload, và để khác biệt
+        // đây. Khai báo tường minh để test khoá được payload và để khác biệt
         // này nhìn thấy được thay vì ngầm định.
-        // CẦN GIA ĐÌNH XÁC NHẬN alias VQRQAKQFO1476 đúng là tài khoản
-        // 0374037026 tại MB Bank — không thể kiểm chứng từ trong repo.
+        // CẦN GIA ĐÌNH XÁC NHẬN alias VQRQAKQFO1476 đúng trỏ về tài khoản
+        // 0374037026 tại MB Bank — không kiểm chứng được từ trong repo.
         bankBin: "970422",
         qrAccountIdentifier: "VQRQAKQFO1476",
         qrIdentifierVerified: false,

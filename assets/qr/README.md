@@ -20,15 +20,14 @@ web. Hai thứ này hiện không giống nhau ở QR nhà trai.
 > - Nếu **sai**: tạo lại QR từ đúng tài khoản rồi cập nhật `qrAccountIdentifier`
 >   trong `config.js` cho khớp.
 >
-> Không thể sửa từ trong repo: không có dữ liệu nào ở đây chứng minh alias và số
+> Không sửa được từ trong repo: không có dữ liệu nào ở đây chứng minh alias và số
 > tài khoản là cùng một đích đến. Lưu ý `0374037026` cũng chính là
 > `contact.groomPhone`, nên gõ nhầm một chỗ sẽ hỏng cả link gọi lẫn đích chuyển tiền.
 
 `tests/verify_assets.py` đối chiếu payload EMVCo của cả hai ảnh với `bankBin` và
 `qrAccountIdentifier` khai trong `config.js`, nên ảnh và cấu hình không thể lệch
-nhau trong im lặng nữa (đã kiểm chứng: đổi định danh, đổi BIN, tráo hai ảnh —
-cả ba đều làm test đỏ).
+nhau trong im lặng nữa (đã kiểm chứng: đổi định danh, đổi BIN, tráo hai ảnh — cả
+ba trường hợp đều làm test đỏ).
 
-Hai file `.svg` là bản sao vector-container nhúng đúng PNG tương ứng, giữ làm
-bản dự phòng. Website production dùng PNG lossless 1024 × 1024 khai trong
-`config.js`.
+Hai file `.svg` là bản sao vector-container nhúng đúng PNG tương ứng, giữ làm bản
+dự phòng. Website production dùng PNG lossless 1024 × 1024 khai trong `config.js`.

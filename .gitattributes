@@ -1,0 +1,7 @@
+# RFC 5545 §3.1 bắt buộc iCalendar kết thúc dòng bằng CRLF.
+#
+# Không dùng `text eol=crlf`: với thuộc tính `text`, git luôn chuẩn hoá về LF khi
+# lưu vào repository và chỉ đổi lúc checkout — GitHub Pages phục vụ đúng blob đã
+# lưu, nên khách tải .ics vẫn nhận LF. `-text` tắt mọi chuyển đổi để byte CRLF do
+# tools/generate-multi-event-calendars.py ghi ra được giữ nguyên khi commit.
+*.ics -text
