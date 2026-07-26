@@ -4,6 +4,7 @@ from __future__ import annotations
 from html import escape
 import json
 from pathlib import Path
+import re
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,7 +12,25 @@ DIST = ROOT / "dist"
 DATA = json.loads((ROOT / "tools" / "wedding-data.json").read_text(encoding="utf-8"))
 BUILD = json.loads((ROOT / "BUILD.json").read_text(encoding="utf-8"))
 SITE_ROOT = "https://xuan2261.github.io/wedding-xuan-phuong/"
-META_IMAGE = f"{SITE_ROOT}assets/images/meta-v3.jpg"
+
+
+def resolve_meta_image() -> str:
+    """Lấy og:image từ index.html.
+
+    Trước đây giá trị này được ghi cứng nên bốn trang chia sẻ vẫn quảng bá ảnh
+    social của bản cũ sau khi index.html đã đổi sang ảnh mới — preview trên
+    Zalo/Messenger hiện sai ảnh. Đọc thẳng từ index.html để không lệch nữa.
+    """
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    match = re.search(
+        r'<meta\s+property="og:image"\s+content="([^"]+)"', html
+    )
+    if not match:
+        raise SystemExit("FAIL: không tìm thấy og:image trong index.html")
+    return match.group(1)
+
+
+META_IMAGE = resolve_meta_image()
 
 if DIST.exists():
     shutil.rmtree(DIST)

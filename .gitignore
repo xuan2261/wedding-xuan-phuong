@@ -1,7 +1,36 @@
+# Dependencies
 node_modules/
-.lighthouseci/
+
+# Python bytecode
+__pycache__/
 **/__pycache__/
+*.py[cod]
 *.pyc
+
+# Local environment / editor
+.env
+.env.local
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test and tooling output (reports/ is tracked intentionally)
+.lighthouseci/
+playwright-report/
+test-results/
+*.log
 reports/visual-safe-zone-*.png
 reports/browser-smoke-ci.log
 reports/audio-story-browser-ci.log
+
+# Scratch files
+tmp/
+*.tmp
+
+# Ad-hoc scratch scripts written into the repo root by tooling.
+# The history carries several "remove accidental temporary file" commits
+# from exactly this; keep them out of the tree instead.
+/.*-tmp*

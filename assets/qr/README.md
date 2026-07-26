@@ -1,7 +1,8 @@
 # Mã VietQR production
 
 Ghi đúng nội dung **thực sự được mã hoá** trong ảnh, không phải số hiển thị trên
-web. Hai thứ này hiện không giống nhau ở QR nhà trai.
+web. Ở QR nhà trai hai giá trị này khác nhau về mặt chuỗi ký tự, nhưng đã được
+xác nhận cùng trỏ về một tài khoản.
 
 | File | Ngân hàng (BIN) | Định danh trong QR | Số hiển thị trên web |
 |---|---|---|---|
@@ -13,16 +14,16 @@ web. Hai thứ này hiện không giống nhau ở QR nhà trai.
   (kèm trường tham chiếu `NPS6869`), **không phải** số tài khoản `0374037026`
   mà trang web hiển thị và nút "Sao chép số tài khoản" chép ra.
 
-> **Cần xác nhận:** gia đình vui lòng kiểm tra trong app MB Bank xem alias
-> `VQRQAKQFO1476` có đúng trỏ về tài khoản `0374037026` hay không.
+> **Đã xác nhận:** gia đình đã kiểm tra trong app MB Bank — alias
+> `VQRQAKQFO1476` trỏ đúng về tài khoản `0374037026`. Hai đường chuyển tiền (quét
+> QR và chép số tài khoản) cùng về một đích, nên **giữ nguyên ảnh QR**.
+> `config.js` ghi `qrIdentifierVerified: true`.
 >
-> - Nếu **đúng**: đặt `qrIdentifierVerified: true` trong `config.js`, giữ nguyên ảnh.
-> - Nếu **sai**: tạo lại QR từ đúng tài khoản rồi cập nhật `qrAccountIdentifier`
->   trong `config.js` cho khớp.
+> Nếu sau này đổi tài khoản: tạo QR mới trong app MB Bank rồi cập nhật
+> `qrAccountIdentifier` trong `config.js` cho khớp — test sẽ đỏ nếu quên.
 >
-> Không sửa được từ trong repo: không có dữ liệu nào ở đây chứng minh alias và số
-> tài khoản là cùng một đích đến. Lưu ý `0374037026` cũng chính là
-> `contact.groomPhone`, nên gõ nhầm một chỗ sẽ hỏng cả link gọi lẫn đích chuyển tiền.
+> Lưu ý `0374037026` cũng chính là `contact.groomPhone`, nên gõ nhầm một chỗ sẽ
+> hỏng cả link gọi lẫn đích chuyển tiền.
 
 `tests/verify_assets.py` đối chiếu payload EMVCo của cả hai ảnh với `bankBin` và
 `qrAccountIdentifier` khai trong `config.js`, nên ảnh và cấu hình không thể lệch

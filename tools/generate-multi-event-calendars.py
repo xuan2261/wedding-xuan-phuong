@@ -72,8 +72,8 @@ for event_id, filename in FILES.items():
         f"UID:{event_id}-{event['dateIso']}@xuan-phuong",
         "DTSTAMP:20260723T000000Z",
         f"DTSTART;TZID=Asia/Ho_Chi_Minh:{compact_datetime(first['datetime'])}",
-        # Thiếu DTEND thì lịch coi sự kiện dài 0 phút; giờ kết thúc hiện là giá
-        # trị tạm trong wedding-data.json (calendarEndIsProvisional).
+        # Thiếu DTEND thì lịch coi sự kiện dài 0 phút. Giờ kết thúc lấy từ
+        # calendarEndsAt trong wedding-data.json (giờ bắt đầu + 3h).
         f"DTEND;TZID=Asia/Ho_Chi_Minh:{compact_datetime(event['calendarEndsAt'])}",
         f"SUMMARY:{escape(event['title'])}",
         f"LOCATION:{escape(event['address'])}",

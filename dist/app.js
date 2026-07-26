@@ -26,6 +26,9 @@
     return Number.isFinite(parsed) ? parsed : null;
   }
 
+  // Cờ một lần: chuyển sự kiện phải reload, đừng bắt khách mở bìa lại.
+  const EVENT_SWITCH_KEY = "wedding-event-switch-v20-2";
+
   const guestState = {
     name: "",
     isPersonalized: false,
@@ -197,7 +200,9 @@
 
     const catalog = new Map((config.eventCatalog || []).map((item) => [item.id, item]));
     const personalization = config.personalization || {};
-    const baseUrl = config.site?.domain || window.location.href;
+    // Phải dựng link theo URL đang mở, không theo domain cấu hình: nếu không,
+    // khách đang ở domain riêng hoặc bản xem thử sẽ bị đá sang github.io.
+    const baseUrl = window.location.href;
 
     links.replaceChildren(...guestState.invitedEventIds.map((eventId) => {
       const event = catalog.get(eventId);
@@ -222,6 +227,66 @@
     }));
 
     nav.hidden = false;
+  }
+
+  // config.js phân giải sự kiện đúng một lần lúc tải trang rồi đóng băng
+  // WEDDING_CONFIG, nên đổi fragment thôi thì nội dung vẫn đứng yên. Nút chuyển
+  // sự kiện là điều hướng cùng tài liệu, vì vậy phải tự tải lại khi tham số
+  // sự kiện thay đổi — kể cả khi khách bấm nút back/forward.
+  function setupEventHashNavigation() {
+    const personalization = config.personalization || {};
+    const eventParameter = String(personalization.eventParameter || "event");
+    const eventsParameter = String(personalization.eventsParameter || "events");
+
+    const readEventParams = () => {
+      const params = new URLSearchParams(
+        String(window.location.hash || "").replace(/^#/, "")
+      );
+      return [
+        String(params.get(eventParameter) || "").trim().toLowerCase(),
+        String(params.get(eventsParameter) || "").trim().toLowerCase()
+      ].join("|");
+    };
+
+    let currentEventParams = readEventParams();
+
+    window.addEventListener("hashchange", () => {
+      const nextEventParams = readEventParams();
+      if (nextEventParams === currentEventParams) return;
+      currentEventParams = nextEventParams;
+      // Đánh dấu để lần tải lại ngay sau đây không bắt khách mở bìa lần nữa.
+      if (document.body.classList.contains("invitation-opened")) {
+        try {
+          window.sessionStorage.setItem(EVENT_SWITCH_KEY, "yes");
+        } catch {
+          // Bị chặn thì cùng lắm là hiện lại bìa, không phải lỗi chặn đường.
+        }
+      }
+      window.location.reload();
+    });
+  }
+
+  // Link nội trang (#main, #guest-invitation) sẽ ghi đè toàn bộ fragment và
+  // xoá mất #to=…&event=…, khiến khách mất tên và rơi về sự kiện mặc định sau
+  // lần tải lại kế tiếp. Cuộn bằng JS để giữ nguyên dữ liệu cá nhân hoá.
+  function setupInPageAnchors() {
+    document.addEventListener("click", (event) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const anchor = event.target?.closest?.('a[href^="#"]');
+      if (!anchor) return;
+
+      event.preventDefault();
+
+      const targetId = anchor.getAttribute("href").slice(1);
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      target.focus({ preventScroll: true });
+    });
   }
 
   function setupFamilies() {
@@ -959,12 +1024,25 @@
       }
     }
 
-    const skipCover = skipForTest || skipByUrl || openedInSession;
+    // Đổi sự kiện phải tải lại trang (cấu hình đóng băng lúc load). Nếu không có
+    // cờ này, khách đã mở thiệp rồi sẽ bị ném về màn bìa và phải bấm "Mở thiệp"
+    // lần nữa, nhạc tắt, story quay về chương 1. Cờ dùng một lần và độc lập với
+    // rememberSession để chỉ lần tải do chuyển sự kiện mới bỏ qua bìa.
+    let skipForEventSwitch = false;
+    try {
+      skipForEventSwitch = window.sessionStorage.getItem(EVENT_SWITCH_KEY) === "yes";
+      if (skipForEventSwitch) window.sessionStorage.removeItem(EVENT_SWITCH_KEY);
+    } catch {
+      // sessionStorage có thể bị chặn — khi đó chấp nhận hiện lại bìa.
+    }
+
+    const skipCover = skipForTest || skipByUrl || openedInSession || skipForEventSwitch;
 
     const finishOpening = (shouldStartStory, simpleMode = false) => {
       if (dialog.open) dialog.close();
       dialog.classList.remove("is-opening");
       document.body.classList.remove("invitation-is-opening");
+      document.documentElement.classList.remove("invitation-is-opening");
       document.body.classList.add("invitation-opened");
       document.body.classList.toggle("simple-mode", simpleMode);
 
@@ -1041,6 +1119,10 @@
       }
 
       document.body.classList.add("invitation-is-opening");
+      // Phải khoá ở <html>: overflow của <body> chỉ lan ra viewport khi <html>
+      // để overflow visible cả hai trục, mà ở đây <html> đang có
+      // `overflow-x: clip`, nên đặt hidden trên body không khoá được cuộn.
+      document.documentElement.classList.add("invitation-is-opening");
       dialog.classList.add("is-opening");
 
       window.setTimeout(
@@ -1883,8 +1965,10 @@
           image.alt = `Mã QR ${gift.label}`;
           image.loading = "lazy";
           image.decoding = "async";
-          image.width = 800;
-          image.height = 800;
+          // Kích thước thật của file QR là 1024×1024; khai đúng để trình duyệt
+          // giữ chỗ chính xác, không gây layout shift.
+          image.width = 1024;
+          image.height = 1024;
 
           const title = document.createElement("h3");
           title.textContent = gift.label;
@@ -2260,9 +2344,30 @@
 
   let toastTimer;
 
+  // Dialog mở bằng showModal() nằm ở top layer, nên toast gắn dưới <body> luôn
+  // bị che bất kể z-index. Phần lớn toast là xác nhận "Đã sao chép…" phát ra từ
+  // bên trong dialog quà mừng / liên hệ, nên phải gắn toast vào đúng dialog đang
+  // mở thì khách mới thấy.
+  function resolveToastHost() {
+    let host = document.body;
+    document.querySelectorAll("dialog[open]").forEach((dialog) => {
+      try {
+        if (dialog.matches(":modal")) host = dialog;
+      } catch {
+        // Trình duyệt cũ chưa có :modal — coi dialog đang mở là modal.
+        host = dialog;
+      }
+    });
+    return host;
+  }
+
   function showToast(message) {
     const toast = $("#toast");
     toast.textContent = message;
+
+    const host = resolveToastHost();
+    if (toast.parentElement !== host) host.appendChild(toast);
+
     toast.classList.add("is-visible");
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(() => {
@@ -2273,6 +2378,8 @@
   setupPersonalization();
   applyConfig();
   setupEventSwitcher();
+  setupEventHashNavigation();
+  setupInPageAnchors();
   setupFamilies();
   setupEventActions();
   setupShareAndCalendar();

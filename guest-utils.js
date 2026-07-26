@@ -2,11 +2,16 @@
   "use strict";
 
   function sanitizeGuestName(value, maxLength = 80) {
-    return String(value ?? "")
+    const limit = Math.max(1, Number(maxLength) || 80);
+    const cleaned = String(value ?? "")
+      // NFC gộp dấu tiếng Việt về một code point, tránh cắt rời dấu khỏi chữ.
+      .normalize("NFC")
       .replace(/[\u0000-\u001f\u007f]/g, " ")
       .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, Math.max(1, Number(maxLength) || 80));
+      .trim();
+    // slice() cắt theo đơn vị UTF-16 nên có thể chẻ đôi cặp surrogate (emoji
+    // trong tên nhóm khách) và để lại ký tự hỏng. Array.from cắt theo code point.
+    return Array.from(cleaned).slice(0, limit).join("");
   }
 
   function readGuestName(locationLike, options = {}) {
@@ -24,7 +29,14 @@
     const eventsParameter = String(options.eventsParameter || "events");
     const validIds = Array.isArray(options.validIds) ? options.validIds.map(String) : [];
     const fallbackId = String(options.fallbackId || validIds[0] || "");
-    const params = new URLSearchParams(String(locationLike?.hash || "").replace(/^#/, ""));
+    // readGuestName đã chấp nhận cả ?to= lẫn #to=, nên sự kiện cũng phải vậy.
+    // Trước đây chỉ đọc fragment: link dạng ?to=…&event=bride hiện đúng tên
+    // khách nhưng lại mở nhầm sự kiện mặc định. Fragment vẫn được ưu tiên.
+    const hashParams = new URLSearchParams(String(locationLike?.hash || "").replace(/^#/, ""));
+    const searchParams = new URLSearchParams(String(locationLike?.search || ""));
+    const params = {
+      get: (key) => hashParams.get(key) ?? searchParams.get(key)
+    };
     const requestedMany = String(params.get(eventsParameter) || "")
       .split(",")
       .map((value) => value.trim().toLowerCase())

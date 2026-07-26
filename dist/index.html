@@ -44,7 +44,7 @@
   <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.4">
 
   <script src="config.js?v=5.7" defer></script>
-  <script src="guest-utils.js?v=1.0" defer></script>
+  <script src="guest-utils.js?v=5.7" defer></script>
   <script src="app.js?v=5.7" defer></script>
 </head>
 
@@ -156,9 +156,9 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
 
-    <section class="section guest-invitation reveal" data-motion="zoom-in" data-story-stop="guest" data-story-title="Lời mời dành cho Quý khách" data-story-hold="5000" id="guest-invitation" aria-labelledby="guest-invitation-title">
+    <section class="section guest-invitation reveal" data-motion="zoom-in" data-story-stop="guest" data-story-title="Lời mời dành cho Quý khách" data-story-hold="5000" id="guest-invitation" tabindex="-1" aria-labelledby="guest-invitation-title">
       <div class="guest-invitation__seal" aria-hidden="true">XP</div>
       <p class="section-kicker">Trân trọng kính mời</p>
       <h2 id="guest-invitation-title" data-guest-name>Quý khách</h2>
@@ -698,7 +698,7 @@
         title="Bản đồ đến tư gia nhà trai"
         loading="lazy"
         allowfullscreen
-        referrerpolicy="no-referrer-when-downgrade"
+        referrerpolicy="no-referrer"
       ></iframe>
     </div>
 

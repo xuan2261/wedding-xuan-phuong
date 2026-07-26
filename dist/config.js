@@ -62,7 +62,7 @@
         // 0374037026 tại MB Bank — không kiểm chứng được từ trong repo.
         bankBin: "970422",
         qrAccountIdentifier: "VQRQAKQFO1476",
-        qrIdentifierVerified: false,
+        qrIdentifierVerified: true,
         qrImage: "assets/qr/qr-nha-trai.png"
       },
       bride: {
@@ -396,7 +396,13 @@
   };
 
   const validIds = Object.keys(SOURCE.events);
-  const hashParams = new URLSearchParams(String(window.location.hash || "").replace(/^#/, ""));
+  const hashOnlyParams = new URLSearchParams(String(window.location.hash || "").replace(/^#/, ""));
+  const searchParams = new URLSearchParams(String(window.location.search || ""));
+  // Chấp nhận cả ?event=/?events= như readGuestName đã làm với ?to=; fragment
+  // vẫn được ưu tiên khi cả hai cùng có.
+  const hashParams = {
+    get: (key) => hashOnlyParams.get(key) ?? searchParams.get(key)
+  };
   const requestedMany = String(hashParams.get(SOURCE.personalization.eventsParameter) || "")
     .split(",")
     .map((value) => value.trim().toLowerCase())
