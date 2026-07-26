@@ -59,17 +59,21 @@ Cấu trúc này cung cấp Open Graph metadata đúng sự kiện trước khi 
 
 ```powershell
 npm ci
-python tests/consistency_check.py
-python tests/build_metadata_check.py
-python tests/verify_release.py
-node tests/multi_event_check.mjs
-node tests/rsvp_form_check.mjs
-python tools/build-dist.py
-python tests/share_entry_pages_check.py
-python tests/verify_dist.py
-npm run test:browser
-npm run test:visual-safe-zones
+npm test
 ```
+
+`npm test` chạy đúng những gì CI chạy — danh sách khai báo một lần ở
+`package.json`, cả workflow lẫn máy cá nhân đều gọi vào đó.
+
+| Lệnh | Phạm vi |
+|---|---|
+| `npm test` | Toàn bộ (22 kiểm tra) |
+| `npm run test:static` | Kiểm tra tĩnh, dựng và kiểm `dist` — không mở trình duyệt |
+| `npm run test:browser-all` | Ba bộ chạy trình duyệt |
+| `npm run test:syntax` | Cú pháp file website và Apps Script |
+
+Cần Python với `pillow`, `opencv-python-headless` và Chromium của Playwright
+(`npx playwright install --with-deps chromium`).
 
 ## Triển khai
 
