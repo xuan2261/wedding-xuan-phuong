@@ -5,6 +5,10 @@ on:
     branches: [fix/visual-overlap-v20-1]
     paths:
       - .github/workflows/sync-generator-visual-v20-1.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/sync-generator-visual-v20-1.yml
 
 permissions:
   contents: write
