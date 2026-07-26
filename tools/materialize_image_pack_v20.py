@@ -161,6 +161,40 @@ def read_payload() -> bytes:
     return base64.b64decode(encoded, validate=True)
 
 
+def cleanup_temporary_artifacts() -> None:
+    shutil.rmtree(STAGING, ignore_errors=True)
+    Path(__file__).unlink(missing_ok=True)
+
+    for workflow_name in (
+        "materialize-image-pack-v20.yml",
+        "diagnose-image-pack-v20.yml",
+        "diagnose-old-image-pack.yml",
+        "recover-google-photos-v20.yml",
+    ):
+        (ROOT / ".github" / "workflows" / workflow_name).unlink(missing_ok=True)
+
+    for temporary in (
+        ROOT / "tools" / "diagnose_image_pack_v20.py",
+        ROOT / "tools" / "recover_google_photos_v20.py",
+        ROOT / "tools" / "run_google_photos_recovery_v20.py",
+        ROOT / "reports" / "materialize-image-pack-v20.log",
+        ROOT / "reports" / "image-pack-v20-diagnostic.json",
+        ROOT / "reports" / "old-image-pack-diagnosis.json",
+        ROOT / "reports" / "IMAGE-PACK-V20-HISTORY-RECOVERY.json",
+        ROOT / "reports" / "GOOGLE-PHOTOS-PAGE.html",
+        ROOT / "reports" / "GOOGLE-PHOTOS-V20-RECOVERY.json",
+        ROOT / "reports" / "google-photos-v20-recovery.log",
+        ROOT / "noop",
+        ROOT / "temp-test-path.txt",
+        ROOT / "TEMP-BASE-TREE-TEST.txt",
+        ROOT / "TEMP-BASE-TREE-TEST-2.txt",
+        ROOT / "TEMP-BASE-TREE-TEST-3.txt",
+        ROOT / "TEMP-BASE-TREE-TEST-4.txt",
+        ROOT / "TEMP-BASE-TREE-TEST-5.txt",
+    ):
+        temporary.unlink(missing_ok=True)
+
+
 def main() -> int:
     payload = read_payload()
     digest = hashlib.sha256(payload).hexdigest()
@@ -237,25 +271,7 @@ def main() -> int:
     )
     update_source_references()
     write_mapping(manifest)
-
-    shutil.rmtree(STAGING)
-    Path(__file__).unlink()
-    for workflow_name in (
-        "materialize-image-pack-v20.yml",
-        "diagnose-image-pack-v20.yml",
-        "diagnose-old-image-pack.yml",
-    ):
-        (ROOT / ".github" / "workflows" / workflow_name).unlink(missing_ok=True)
-    for temporary in (
-        ROOT / "tools" / "diagnose_image_pack_v20.py",
-        ROOT / "reports" / "materialize-image-pack-v20.log",
-        ROOT / "reports" / "image-pack-v20-diagnostic.json",
-        ROOT / "reports" / "old-image-pack-diagnosis.json",
-        ROOT / "reports" / "IMAGE-PACK-V20-HISTORY-RECOVERY.json",
-        ROOT / "noop",
-        ROOT / "temp-test-path.txt",
-    ):
-        temporary.unlink(missing_ok=True)
+    cleanup_temporary_artifacts()
 
     print(f"PASS: materialized {len(report)} Photoshop sources as responsive v20 assets")
     return 0
