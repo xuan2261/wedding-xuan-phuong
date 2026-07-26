@@ -14,7 +14,7 @@ Website:
 - hỗ trợ thêm `?to=...`;
 - giới hạn 80 ký tự;
 - chỉ gán tên bằng `textContent`;
-- fallback `Quý vị`;
+- fallback `Quý khách`;
 - mặc định không lưu tên vào `sessionStorage` để tránh nhầm tên trên thiết bị dùng chung;
 - có thể bật `persistSession: true` nếu thực sự cần.
 

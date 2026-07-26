@@ -190,11 +190,11 @@
 
 ## Bản cách xưng hô v9
 
-- Website đổi cách gọi khách mời thành “Quý vị”.
+- Website đổi cách gọi khách mời thành “Quý khách”.
 - Lời ngỏ dùng tên riêng và “hai gia đình” thay cho “chúng tôi”.
 - Đổi “Chúng tôi” thành “Đôi uyên ương”.
-- Đổi tiêu đề sự kiện thành “Hân hạnh đón tiếp Quý vị”.
-- Đổi tiêu đề RSVP thành “Sự hiện diện của Quý vị là niềm vui quý giá”.
+- Đổi tiêu đề sự kiện thành “Hân hạnh đón tiếp Quý khách”.
+- Đổi tiêu đề RSVP thành “Sự hiện diện của Quý khách là niềm vui quý giá”.
 - Cập nhật Open Graph và Twitter description.
 - Google Forms dùng “Quý khách” nhất quán.
 - Script cập nhật Form hiện có sửa cả câu hỏi và phần trợ giúp.

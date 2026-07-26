@@ -92,7 +92,7 @@
   function setupPersonalization() {
     const personalization = config.personalization || {};
     const fallbackName = String(
-      personalization.fallbackName || "Quý vị"
+      personalization.fallbackName || "Quý khách"
     ).trim();
 
     if (!personalization.enabled || !guestUtils) {
@@ -380,7 +380,7 @@
       const shareUrl = buildShareUrl(config.sharing.sharePersonalizedByDefault === true);
       const shareData = {
         title: config.sharing.title || document.title,
-        text: config.sharing.text || "Trân trọng kính mời Quý vị đến chung vui.",
+        text: config.sharing.text || "Trân trọng kính mời Quý khách đến chung vui.",
         url: shareUrl
       };
       try {
@@ -925,7 +925,6 @@
     const settings = config.openingExperience || {};
     const dialog = $("#invitationCover");
     const openButton = $("#coverOpenButton");
-    const simpleButton = $("#coverSimpleButton");
     const autoStory = $("#coverAutoStory");
     const dataHint = $("#coverDataHint");
     const focusTarget = $("#hero-title");
@@ -1011,7 +1010,7 @@
               if (retried) {
                 window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
               } else {
-                showToast("Không thể tự chạy. Quý vị có thể bấm nút Tự xem để tiếp tục.");
+                showToast("Không thể tự chạy. Quý khách có thể bấm nút Tự xem để tiếp tục.");
               }
             }, 240);
           });
@@ -1051,8 +1050,6 @@
     };
 
     openButton.addEventListener("click", () => openInvitation());
-    simpleButton?.addEventListener("click", () => openInvitation({ simpleMode: true }));
-    if (simpleButton && settings.simpleModeEnabled === false) simpleButton.hidden = true;
     dialog.addEventListener("cancel", (event) => {
       event.preventDefault();
       openInvitation({ simpleMode: true });
@@ -1114,7 +1111,7 @@
         rsvpNote.hidden = false;
         rsvpNote.textContent =
           lifecycle.rsvpClosedMessage ||
-          "Cổng xác nhận tham dự đã khép lại. Quý vị vui lòng liên hệ trực tiếp cô dâu hoặc chú rể nếu cần hỗ trợ.";
+          "Cổng xác nhận tham dự đã khép lại. Quý khách vui lòng liên hệ trực tiếp cô dâu hoặc chú rể nếu cần hỗ trợ.";
       }
     }
 
@@ -1131,13 +1128,13 @@
         title.textContent = "Hôm nay là ngày chung đôi";
         message.textContent =
           lifecycle.weddingDayMessage ||
-          "Hai gia đình hân hạnh được đón tiếp Quý vị.";
+          "Hai gia đình hân hạnh được đón tiếp Quý khách.";
       } else {
         kicker.textContent = "Lời cảm ơn";
-        title.textContent = "Cảm ơn Quý vị đã chung vui";
+        title.textContent = "Cảm ơn Quý khách đã chung vui";
         message.textContent =
           lifecycle.postWeddingMessage ||
-          "Thanh Xuân, Thị Phượng và hai gia đình trân trọng cảm ơn Quý vị.";
+          "Thanh Xuân, Thị Phượng và hai gia đình trân trọng cảm ơn Quý khách.";
       }
       return;
     }
@@ -1330,7 +1327,7 @@
 
       if (!payload?.ok || !Array.isArray(payload.wishes)) {
         resetWishLoadForRetry(
-          "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới."
+          "Chưa tải được lời chúc. Quý khách vẫn có thể gửi lời chúc mới."
         );
         return;
       }
@@ -1371,7 +1368,7 @@
     script.addEventListener("error", () => {
       cleanupWishJsonp(callbackName);
       resetWishLoadForRetry(
-        "Chưa tải được lời chúc. Quý vị vẫn có thể gửi lời chúc mới."
+        "Chưa tải được lời chúc. Quý khách vẫn có thể gửi lời chúc mới."
       );
     });
 
@@ -1600,7 +1597,7 @@
           (cooldownMs - (Date.now() - lastSubmittedAt)) / 1000
         );
         setWishFormStatus(
-          `Quý vị vừa gửi lời chúc. Vui lòng chờ khoảng ${seconds} giây trước khi gửi lại.`,
+          `Quý khách vừa gửi lời chúc. Vui lòng chờ khoảng ${seconds} giây trước khi gửi lại.`,
           "error"
         );
         return;
@@ -1666,7 +1663,7 @@
       if (payload.ok && payload.stored === true) {
         rememberWishSubmission();
         setWishFormStatus(
-          "Cảm ơn Quý vị! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt.",
+          "Cảm ơn Quý khách! Lời chúc đã được lưu và sẽ xuất hiện sau khi được hai gia đình duyệt.",
           "success"
         );
         form.reset();
@@ -1695,7 +1692,7 @@
     });
 
     setWishesStatus(
-      "Những lời chúc sẽ được tải khi Quý vị cuộn đến gần khu vực này."
+      "Những lời chúc sẽ được tải khi Quý khách cuộn đến gần khu vực này."
     );
     setupWishLazyLoading(wishesSection);
   }
@@ -1721,7 +1718,7 @@
     });
 
     if (recommendation) {
-      recommendation.textContent = `Đối với ${config.event.shortTitle}, Quý vị có thể ưu tiên liên hệ ${preferredLabel}.`;
+      recommendation.textContent = `Đối với ${config.event.shortTitle}, Quý khách có thể ưu tiên liên hệ ${preferredLabel}.`;
     }
 
     $$('[data-attendance-copy]', dialog).forEach((button) => {
@@ -1955,7 +1952,7 @@
       const nextIndex = normalizeIndex(index + 1);
       const key = items[nextIndex].dataset.lightbox;
       const preload = new Image();
-      preload.src = `assets/images/${key}-1280.webp?v=16`;
+      preload.src = `assets/images/${key}-1280.webp?v=20`;
     };
 
     const render = (index) => {
@@ -1964,7 +1961,7 @@
       const key = button.dataset.lightbox;
       const sourceImage = $("img", button);
 
-      image.src = `assets/images/${key}-1280.webp?v=16`;
+      image.src = `assets/images/${key}-1280.webp?v=20`;
       image.alt = sourceImage.alt;
       caption.textContent = sourceImage.alt;
       counter.textContent = `${currentIndex + 1} / ${items.length}`;

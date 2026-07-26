@@ -141,7 +141,7 @@ add_event(
     reception_end_compact,
     "Đón khách và dùng tiệc · Thanh Xuân & Thị Phượng",
     (
-        "Hân hạnh đón Quý vị đến chung vui cùng hai gia đình. "
+        "Hân hạnh đón Quý khách đến chung vui cùng hai gia đình. "
         f'Lễ Thành Hôn được cử hành lúc {event["ceremonyTime"]}.'
     ),
 )

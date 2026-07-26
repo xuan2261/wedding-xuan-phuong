@@ -2731,3 +2731,282 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   transform: var(--layout-transform, translate3d(0, 0, 0)) !important;
   transition: none !important;
 }
+
+/* ========================================================================
+   VISUAL OVERLAP HOTFIX V20.1
+   Safe text zones for portrait photography + refined cinematic cover.
+   ======================================================================== */
+
+.hero-names:focus {
+  outline: 0;
+}
+
+.hero__shade {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(6, 21, 14, .78) 0%,
+      rgba(6, 21, 14, .56) 22%,
+      rgba(6, 21, 14, .12) 43%,
+      rgba(6, 21, 14, .08) 66%,
+      rgba(6, 21, 14, .76) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(6, 21, 14, .16) 0%,
+      transparent 32%,
+      transparent 68%,
+      rgba(6, 21, 14, .16) 100%
+    );
+}
+
+.hero-names {
+  top: clamp(88px, 10.5svh, 112px);
+  right: clamp(24px, 6vw, 52px);
+  left: clamp(24px, 6vw, 52px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+  filter: drop-shadow(0 3px 14px rgba(0, 0, 0, .58));
+}
+
+.hero-name {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  gap: .18em;
+  font-size: clamp(2.35rem, 7.8vw, 4.15rem);
+  line-height: .9;
+  text-align: center;
+}
+
+.hero-name--groom,
+.hero-name--bride {
+  justify-self: auto;
+  --layout-transform: translate3d(0, 0, 0);
+  transform: var(--layout-transform);
+  align-items: baseline;
+}
+
+.hero-names__amp {
+  align-self: center;
+  margin: -.02em 0 -.08em;
+  color: #f3d49b;
+  font-size: clamp(1.05rem, 3vw, 1.45rem);
+  line-height: 1;
+}
+
+.closing {
+  place-items: start center;
+}
+
+.closing::after {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(8, 30, 20, .68) 0%,
+      rgba(8, 30, 20, .34) 27%,
+      rgba(8, 30, 20, .04) 54%,
+      rgba(8, 30, 20, .38) 100%
+    );
+}
+
+.closing__content {
+  width: min(92%, 620px);
+  margin-top: clamp(58px, 8.5svh, 96px);
+  padding: 18px 22px 20px;
+  border: 1px solid rgba(255, 245, 214, .26);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(10, 35, 24, .48), rgba(10, 35, 24, .18));
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .16);
+  backdrop-filter: blur(2px);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, .62);
+}
+
+.closing__content p {
+  font-size: clamp(2.7rem, 9vw, 4.8rem);
+  line-height: .98;
+}
+
+.closing__content h2 {
+  margin-top: 8px;
+  font-size: clamp(1.05rem, 3.5vw, 1.55rem);
+  line-height: 1.35;
+}
+
+.invitation-cover__seam,
+.invitation-cover__simple {
+  display: none !important;
+}
+
+.invitation-cover__stage {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(207, 171, 104, .13), transparent 25rem),
+    var(--green-950);
+}
+
+.invitation-cover__panel {
+  width: 50.05%;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, .06), transparent 23%),
+    radial-gradient(circle at 82% 78%, rgba(209, 174, 105, .055), transparent 30%),
+    linear-gradient(150deg, #35684b, #214b3a 54%, #143226);
+  box-shadow: inset 0 0 86px rgba(0, 0, 0, .16);
+}
+
+.invitation-cover__panel--left {
+  box-shadow:
+    inset -20px 0 28px -28px rgba(0, 0, 0, .62),
+    inset 0 0 86px rgba(0, 0, 0, .16);
+}
+
+.invitation-cover__panel--right {
+  box-shadow:
+    inset 20px 0 28px -28px rgba(0, 0, 0, .62),
+    inset 0 0 86px rgba(0, 0, 0, .16);
+}
+
+.invitation-cover__panel::before {
+  inset: 18px;
+  border-color: rgba(246, 232, 196, .24);
+  border-radius: 2px;
+}
+
+.invitation-cover__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(9px, 2svh, 18px);
+  isolation: isolate;
+}
+
+.invitation-cover__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 18%;
+  left: 50%;
+  width: min(86vw, 590px);
+  height: 54%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(5, 22, 15, .24), transparent 70%);
+  pointer-events: none;
+}
+
+.invitation-cover__eyebrow {
+  color: #f7e4b7;
+  font-size: clamp(1.85rem, 5.8vw, 2.75rem);
+  text-shadow: 0 3px 22px rgba(0, 0, 0, .38);
+}
+
+.invitation-cover__guest {
+  letter-spacing: .12em;
+}
+
+.invitation-cover__names {
+  margin-block: clamp(10px, 2svh, 22px);
+  font-size: clamp(2.2rem, 9vw, 4.8rem);
+  line-height: .94;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .3);
+}
+
+.invitation-cover__event {
+  position: relative;
+  padding-inline: 34px;
+}
+
+.invitation-cover__event::before,
+.invitation-cover__event::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(247, 228, 183, .72));
+}
+
+.invitation-cover__event::before {
+  left: 0;
+}
+
+.invitation-cover__event::after {
+  right: 0;
+  transform: rotate(180deg);
+}
+
+.invitation-cover__actions {
+  gap: 0;
+  margin-top: 4px;
+}
+
+.invitation-cover__seal {
+  border-color: rgba(255, 236, 190, .84);
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, .3),
+    0 0 0 7px rgba(255, 238, 195, .08),
+    inset 0 0 0 4px rgba(255, 235, 188, .15),
+    inset 0 0 0 7px rgba(70, 36, 18, .18);
+}
+
+.invitation-cover__seal-label {
+  top: calc(100% + 12px);
+}
+
+.invitation-cover__autoplay {
+  margin-top: 24px;
+}
+
+@media (max-width: 460px) {
+  .hero-names {
+    top: clamp(84px, 10svh, 102px);
+    right: 18px;
+    left: 18px;
+  }
+
+  .hero-name {
+    font-size: clamp(2.25rem, 10.7vw, 3.05rem);
+  }
+
+  .closing__content {
+    width: calc(100% - 36px);
+    margin-top: clamp(48px, 7svh, 76px);
+    padding: 15px 16px 17px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero-names {
+    top: 50px;
+    flex-direction: row;
+    justify-content: center;
+    gap: .35em;
+  }
+
+  .hero-name {
+    font-size: clamp(1.75rem, 4.7vw, 2.55rem);
+  }
+
+  .hero-names__amp {
+    margin: 0;
+  }
+
+  .closing__content {
+    margin-top: 24px;
+  }
+
+  .invitation-cover__content {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-name--groom,
+  .hero-name--bride {
+    transform: none !important;
+  }
+}
+
