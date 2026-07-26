@@ -1150,6 +1150,11 @@ dialog::backdrop {
 
 .gift-card img {
   width: min(100%, 340px);
+  /* Bắt buộc có height:auto. Ảnh QR mang thuộc tính height="…" nên nếu không
+     ghi đè, chiều cao đó thắng và aspect-ratio bị vô hiệu (chỉ áp dụng khi một
+     trục là auto) — khung QR phình thành 266×800, chừa ~534px trắng và đẩy số
+     tài khoản cùng nút "Sao chép" xuống dưới đáy dialog. */
+  height: auto;
   aspect-ratio: 1;
   object-fit: contain;
   border-radius: 14px;

@@ -26,6 +26,9 @@
     return Number.isFinite(parsed) ? parsed : null;
   }
 
+  // Cờ một lần: chuyển sự kiện phải reload, đừng bắt khách mở bìa lại.
+  const EVENT_SWITCH_KEY = "wedding-event-switch-v20-2";
+
   const guestState = {
     name: "",
     isPersonalized: false,
@@ -251,6 +254,14 @@
       const nextEventParams = readEventParams();
       if (nextEventParams === currentEventParams) return;
       currentEventParams = nextEventParams;
+      // Đánh dấu để lần tải lại ngay sau đây không bắt khách mở bìa lần nữa.
+      if (document.body.classList.contains("invitation-opened")) {
+        try {
+          window.sessionStorage.setItem(EVENT_SWITCH_KEY, "yes");
+        } catch {
+          // Bị chặn thì cùng lắm là hiện lại bìa, không phải lỗi chặn đường.
+        }
+      }
       window.location.reload();
     });
   }
@@ -1013,7 +1024,19 @@
       }
     }
 
-    const skipCover = skipForTest || skipByUrl || openedInSession;
+    // Đổi sự kiện phải tải lại trang (cấu hình đóng băng lúc load). Nếu không có
+    // cờ này, khách đã mở thiệp rồi sẽ bị ném về màn bìa và phải bấm "Mở thiệp"
+    // lần nữa, nhạc tắt, story quay về chương 1. Cờ dùng một lần và độc lập với
+    // rememberSession để chỉ lần tải do chuyển sự kiện mới bỏ qua bìa.
+    let skipForEventSwitch = false;
+    try {
+      skipForEventSwitch = window.sessionStorage.getItem(EVENT_SWITCH_KEY) === "yes";
+      if (skipForEventSwitch) window.sessionStorage.removeItem(EVENT_SWITCH_KEY);
+    } catch {
+      // sessionStorage có thể bị chặn — khi đó chấp nhận hiện lại bìa.
+    }
+
+    const skipCover = skipForTest || skipByUrl || openedInSession || skipForEventSwitch;
 
     const finishOpening = (shouldStartStory, simpleMode = false) => {
       if (dialog.open) dialog.close();
@@ -1942,8 +1965,10 @@
           image.alt = `Mã QR ${gift.label}`;
           image.loading = "lazy";
           image.decoding = "async";
-          image.width = 800;
-          image.height = 800;
+          // Kích thước thật của file QR là 1024×1024; khai đúng để trình duyệt
+          // giữ chỗ chính xác, không gây layout shift.
+          image.width = 1024;
+          image.height = 1024;
 
           const title = document.createElement("h3");
           title.textContent = gift.label;

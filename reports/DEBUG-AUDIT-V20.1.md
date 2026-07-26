@@ -197,6 +197,27 @@ cung cấp dữ liệu thật:
   `lifecycle_check.js` khớp cả giá trị rỗng, `npm test` bỏ sót 2 test.
 - Hai khối media query cho máy nhỏ bị đè hoàn toàn (`styles.css`) — cần ý đồ
   thiết kế mới sửa đúng, không đoán được.
+- **Chưa có `@media print`** — in thiệp ra 13 trang A4, khối đếm ngược và chân
+  trang thành mảng trắng. Cần quyết định bố cục bản in.
+
+## 5. Vòng kiểm tra bổ sung (completeness critic)
+
+Sau khi sửa xong, một vòng rà "còn sót gì" phát hiện thêm 3 lỗi — **hai trong số
+đó do chính các bản sửa ở trên gây ra**, đã xử lý:
+
+- **Ô QR trong dialog mừng cưới cao 800px** (`app.js`, `styles.css`): ảnh QR mang
+  `height="800"` nên `aspect-ratio` bị vô hiệu, khung phình 266×800 chừa ~534px
+  trắng, đẩy số tài khoản và nút "Sao chép" xuống dưới đáy dialog. Thêm
+  `height: auto` và khai đúng kích thước thật 1024×1024. Đo lại: khung còn
+  266×266, nút "Sao chép" từ y=1181 (ngoài tầm nhìn 743px) về y=647.
+- **Đổi sự kiện làm hiện lại màn bìa** — *do bản sửa nút chuyển sự kiện gây ra.*
+  Reload khiến khách đã mở thiệp bị ném về bìa, nhạc tắt, story về chương 1.
+  Thêm cờ một lần `wedding-event-switch-v20-2` để chỉ lần tải do chuyển sự kiện
+  mới bỏ qua bìa.
+- **Trang chia sẻ nuốt query string** — *do bản sửa `?event=` gây ra.* Trang gốc
+  đã nhận `?to=`/`?events=` nhưng `event-entry.js` chỉ đọc fragment, nên link
+  `events/<id>/?to=…` mất tên khách và mất luôn nút chuyển sự kiện. Đã gộp cả
+  hai nguồn, fragment vẫn thắng.
 
 ---
 
