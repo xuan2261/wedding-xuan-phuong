@@ -1,0 +1,7 @@
+node_modules/
+.lighthouseci/
+**/__pycache__/
+*.pyc
+reports/visual-safe-zone-*.png
+reports/browser-smoke-ci.log
+reports/audio-story-browser-ci.log
