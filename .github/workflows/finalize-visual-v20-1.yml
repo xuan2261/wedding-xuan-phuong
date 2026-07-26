@@ -1,0 +1,58 @@
+name: Finalize visual v20.1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/finalize-visual-v20-1.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/visual-overlap-v20-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Preserve keyboard fallback, rebuild and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('config.js')
+          text = path.read_text(encoding='utf-8').replace('simpleModeEnabled: false', 'simpleModeEnabled: true')
+          path.write_text(text, encoding='utf-8', newline='\n')
+          PY
+          python tools/build-dist.py
+          node --check app.js
+          node --check config.js
+          python tests/consistency_check.py
+          python tests/share_entry_pages_check.py
+          python tests/verify_dist.py
+          python tests/verify_release.py
+          rm -f reports/VISUAL-SOURCE-DIAGNOSIS-V20.1.log
+          rm -f .github/workflows/diagnose-visual-source-v20-1.yml
+          rm -f .github/workflows/finalize-visual-v20-1.yml
+      - name: Commit final production result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "fix(ui): finalize visual safe-zone release"
+          git push origin HEAD:fix/visual-overlap-v20-1
