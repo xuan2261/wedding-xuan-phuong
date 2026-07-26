@@ -1,6 +1,6 @@
-# Wedding Xuân & Phượng — v19 Multi-Event Journey
+# Wedding Xuân & Phượng — v20.2 Multi-Event Journey
 
-Build hiện tại: **v19.4-20260724** — Share Preview & Guided Story Hardening.
+Build hiện tại: **v20.2-20260726** — AK-DEBUG Full Audit & Deploy Hardening.
 
 Website phục vụ bốn sự kiện:
 
@@ -11,7 +11,7 @@ Website phục vụ bốn sự kiện:
 | `nhatrang` | Tiệc Báo Hỷ tại Nha Trang | 15/08/2026 |
 | `saigon` | Tiệc Báo Hỷ tại Sài Gòn | 22/08/2026 |
 
-## Nâng cấp v19.4
+## Nâng cấp v20.2
 
 - RSVP chưa có Google Form vẫn hoạt động bằng **Liên hệ xác nhận** qua điện thoại.
 - Thiệp tôn trọng Data Saver/mạng 2G: không tự chạy, không tự phát nhạc và giảm preload ảnh.
@@ -50,6 +50,7 @@ Cấu trúc này cung cấp Open Graph metadata đúng sự kiện trước khi 
 ```powershell
 npm ci
 python tests/consistency_check.py
+python tests/build_metadata_check.py
 python tests/verify_release.py
 node tests/multi_event_check.mjs
 node tests/story_asset_preload_check.mjs
@@ -57,6 +58,7 @@ python tools/build-dist.py
 python tests/share_entry_pages_check.py
 python tests/verify_dist.py
 npm run test:browser
+npm run test:visual-safe-zones
 ```
 
 ## Triển khai
@@ -71,7 +73,7 @@ Xem:
 - `tools/create-guest-links.html`
 
 
-## Trải nghiệm mở thiệp v19.2
+## Trải nghiệm mở thiệp
 
 - Bìa xanh rừng và con dấu XP hiển thị trước hero.
 - Bấm **Mở thiệp** để mở hai cánh, phát nhạc và tùy chọn tự động xem từng phần.
@@ -79,7 +81,7 @@ Xem:
 - Có thể kiểm thử nhanh bằng `?skipCover=1`.
 
 
-## Hardening v19.4
+## Hardening v20.2
 
 - Bốn trang chia sẻ tĩnh có Open Graph metadata riêng cho nhà gái, nhà trai, Nha Trang và Sài Gòn.
 - Auto-story chuẩn bị và giải mã ảnh của chương kế trước khi cuộn tới, có timeout bảo vệ.

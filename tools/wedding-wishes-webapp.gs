@@ -1,5 +1,5 @@
 /**
- * SỔ LỜI CHÚC CƯỚI — GOOGLE APPS SCRIPT WEB APP (release v17)
+ * SỔ LỜI CHÚC CƯỚI — GOOGLE APPS SCRIPT WEB APP (release v20.2)
  *
  * Luồng:
  * - POST: lưu lời chúc ở trạng thái pending.
@@ -271,7 +271,7 @@ function submitWeddingWish_(parameters) {
       ok: false,
       code: "RATE_LIMIT",
       message:
-        "Quý vị vừa gửi lời chúc. Vui lòng chờ một vài phút trước khi gửi lại.",
+        "Quý khách vừa gửi lời chúc. Vui lòng chờ một vài phút trước khi gửi lại.",
       requestId,
     };
   }
@@ -406,7 +406,7 @@ function validateWish_(wish) {
   }
 
   if (String(wish.consent || "") !== "yes") {
-    return "Quý vị cần đồng ý với việc hiển thị công khai sau khi lời chúc được duyệt.";
+    return "Quý khách cần đồng ý với việc hiển thị công khai sau khi lời chúc được duyệt.";
   }
 
   if (

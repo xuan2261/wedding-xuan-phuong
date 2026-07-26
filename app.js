@@ -933,7 +933,7 @@
     const params = new URLSearchParams(window.location.search);
     const skipForTest = window.__WEDDING_SKIP_COVER__ === true;
     const skipByUrl = params.get("skipCover") === "1";
-    const sessionKey = "wedding-cover-opened-v19";
+    const sessionKey = "wedding-cover-opened-v20-2";
     let opening = false;
 
     if (!settings.enabled || !dialog || !openButton) {

@@ -9,7 +9,7 @@ errors = []
 def require(value, message):
     if not value: errors.append(message)
 
-EXPECTED_BUILD = "v20.1-20260726"
+EXPECTED_BUILD = "v20.2-20260726"
 require(DATA["build"]["buildId"] == EXPECTED_BUILD, "wedding-data sai build")
 require(BUILD["buildId"] == DATA["build"]["buildId"], "BUILD lệch wedding-data")
 require(f'content="{EXPECTED_BUILD}"' in INDEX, "HTML lệch build")

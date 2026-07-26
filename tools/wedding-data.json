@@ -1,9 +1,9 @@
 {
   "build": {
-    "buildId": "v20.1-20260726",
-    "release": "v20.1",
+    "buildId": "v20.2-20260726",
+    "release": "v20.2",
     "backendVersion": "1.5.0",
-    "status": "visual-safe-zones-and-cover-refinement"
+    "status": "ak-debug-full-audit-and-deploy-hardening"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",

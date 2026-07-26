@@ -38,6 +38,7 @@ jobs:
       - name: Verify source and build
         run: |
           python tests/consistency_check.py
+          python tests/build_metadata_check.py
           python tests/verify_release.py
           node tests/multi_event_check.mjs
           node tests/opening_experience_check.mjs
@@ -57,6 +58,7 @@ jobs:
       - name: Browser regression
         run: |
           npm run test:browser
+          npm run test:visual-safe-zones
           npm run test:audio-story-browser
       - name: Lighthouse budgets
         run: |
@@ -70,6 +72,7 @@ jobs:
           path: |
             reports/GUEST-RELEASE-READINESS.json
             reports/GUEST-RELEASE-READINESS.md
+            reports/visual-safe-zone-*.png
             .lighthouseci/
           if-no-files-found: warn
           retention-days: 14
