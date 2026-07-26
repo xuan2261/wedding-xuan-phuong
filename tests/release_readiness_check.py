@@ -68,6 +68,7 @@ with tempfile.TemporaryDirectory() as temp_dir:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
     )
     assert normal.returncode == 0, normal.stderr or normal.stdout
@@ -81,6 +82,7 @@ with tempfile.TemporaryDirectory() as temp_dir:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
     )
     assert strict.returncode == 1, strict.stderr or strict.stdout

@@ -32,28 +32,12 @@ jobs:
           python -m pip install --disable-pip-version-check pillow opencv-python-headless
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
-      - name: Verify source
-        run: |
-          python tests/consistency_check.py
-          python tests/build_metadata_check.py
-          python tests/verify_release.py
-          node tests/multi_event_check.mjs
-          node tests/opening_experience_check.mjs
-          node tests/audio_story_regression_check.mjs
-          node tests/rsvp_form_check.mjs
-          node tests/release_hardening_check.mjs
-          python tests/guest_tool_check.py
-          python tests/release_readiness_check.py
-          python tests/live_pages_verifier_check.py
-          node tests/lifecycle_check.js
-          node tests/contract_check.js
-          node tests/personalization_check.js
-          python tests/verify_assets.py
-          node --check app.js
-          node --check config.js
-          node --check guest-utils.js
-          node --check event-entry.js
-          for file in tools/*.gs; do cp "$file" /tmp/apps-script-check.js; node --check /tmp/apps-script-check.js; done
+      # Danh sách kiểm tra nằm ở package.json để workflow và máy cá nhân dùng
+      # chung một đường. Trước đây workflow tự liệt kê nên xoá một file test là
+      # CI gãy trong khi `npm test` ở máy vẫn xanh.
+      # test:static bao gồm cả bước dựng và kiểm tra dist.
+      - name: Verify source and build dist
+        run: npm run test:static
       - name: Generate release-readiness evidence
         run: |
           python tools/release_readiness.py \
@@ -67,11 +51,6 @@ jobs:
             reports/RELEASE-READINESS.json
             reports/RELEASE-READINESS.md
           if-no-files-found: error
-      - name: Build and verify clean dist
-        run: |
-          python tools/build-dist.py
-          python tests/share_entry_pages_check.py
-          python tests/verify_dist.py
       - name: Browser smoke and visual safe zones
         run: |
           set -o pipefail

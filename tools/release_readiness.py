@@ -178,6 +178,12 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 
 def main() -> int:
+    # Báo cáo chứa tiếng Việt có dấu. Console Windows mặc định là cp1252 nên
+    # print() sẽ ném UnicodeEncodeError, trong khi CI Linux chạy UTF-8 vẫn xanh.
+    # Ép UTF-8 cho stdout để cùng một lệnh chạy được ở cả hai nơi.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--json", type=Path)
