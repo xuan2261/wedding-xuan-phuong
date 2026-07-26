@@ -66,6 +66,7 @@ jobs:
           approved_orphan_branches=(
             "staging/v20-binary-upload"
             "images/refresh-photoshop-v20-final"
+            "feature/photoshop-images-v20-clean"
           )
 
           declare -A approved_orphan=()
