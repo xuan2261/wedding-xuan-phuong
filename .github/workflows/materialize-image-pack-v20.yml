@@ -5,7 +5,9 @@ on:
     branches: [images/refresh-photoshop-v20]
     paths:
       - .image-pack-v20/wedding-image-pack-v20-q72.zip
+      - .image-pack-v20/upload-v20-*.b64
       - .image-pack-v20/DIRECT_READY
+      - .image-pack-v20/UPLOAD_READY
   workflow_dispatch:
 
 permissions:
@@ -46,7 +48,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add reports/materialize-image-pack-v20.log
-          git commit -m "debug(images): capture v20 materialization failure"
+          git commit -m "debug(images): capture v20 materialization failure" || true
           git push origin HEAD:images/refresh-photoshop-v20
       - name: Fail after preserving diagnostics
         if: steps.materialize.outputs.status != '0'
@@ -54,8 +56,12 @@ jobs:
       - name: Verify generated image dimensions and source syntax
         run: |
           python tests/verify_assets.py
+          python tests/share_entry_pages_check.py
           node --check app.js
           node --check config.js
+          node --check guest-utils.js
+          python tools/build-dist.py
+          python tests/verify_dist.py
       - name: Commit generated assets and remove staging payload
         shell: bash
         run: |
