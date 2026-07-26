@@ -1,4 +1,4 @@
-HEAD=0546e7ce88e2770a224f5b6174c30ca7acbb6858
+HEAD=f8c6886e1156593748bc28c4d530ecff93a10950
 == JavaScript syntax ==
 --- node --check app.js
 status=0
@@ -18,11 +18,8 @@ tests/verify_assets.py
 tests/verify_dist.py
 tests/verify_release.py
 --- python tests/consistency_check.py
-FAIL
-- wedding-data sai build
-- HTML lệch build
-- config lệch build
-status=1
+PASS: multi-event wedding data consistency
+status=0
 --- python tests/guest_tool_check.py
 PASS: guest link CSV import/export tool
 status=0
