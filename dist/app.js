@@ -1188,6 +1188,20 @@
     status.dataset.state = state;
   }
 
+  // Tên hiển thị của một ô nhập, để thông báo lỗi gọi đúng tên mục khách nhìn
+  // thấy. Nhóm chọn một nằm trong fieldset nên nhãn của nó là <legend>.
+  function labelTextFor(control) {
+    const legend = control.closest("fieldset")?.querySelector("legend");
+    // Nhãn riêng của một ô radio là tên lựa chọn ("Chú rể"), không phải tên mục
+    // đang thiếu. Với nhóm chọn một thì câu hỏi ở <legend> mới là thứ cần nói.
+    const isChoice = control.type === "radio" || control.type === "checkbox";
+    const label = (isChoice && legend) ? legend : (control.labels?.[0] || legend);
+    return String(label?.textContent || control.name || "")
+      .replace(/\s*\*\s*$/, "")
+      .replace(/\s*\(không bắt buộc\)\s*/, "")
+      .trim();
+  }
+
   // Biểu mẫu xác nhận tham dự nằm ngay trên thiệp và gửi thẳng vào Google Sheet.
   // Đường truyền giống hệt sổ lời chúc: POST vào iframe ẩn để tránh CORS, kết
   // quả thật do Apps Script trả về bằng postMessage. Nhờ vậy thiệp chỉ báo
@@ -1254,16 +1268,23 @@
     if (partySizeField) partySizeField.hidden = false;
     if (guestState.invitedEventIds.length <= 1) eventSelect.closest(".form-field").hidden = true;
 
-    // Không tham dự thì hỏi số người là vô nghĩa.
-    const syncPartySizeVisibility = () => {
+    // Không tham dự thì hỏi số người là vô nghĩa, nên ẩn ô đó đi.
+    //
+    // Phải TẮT ô chứ không chỉ ẩn: ô ẩn vẫn bị trình duyệt kiểm tra ràng buộc.
+    // Trước đây ô bị gán giá trị 0 trong khi thuộc tính min là 1, nên form luôn
+    // không hợp lệ và khách chọn "không thu xếp được" thì không tài nào gửi
+    // được — lại đúng câu trả lời gia đình cần biết nhất. Ô đã tắt thì không bị
+    // kiểm tra và cũng không được gửi đi; Apps Script vốn đã tự ghi số người là
+    // 0 cho trường hợp từ chối.
+    const syncPartySizeField = () => {
       const declined = form.querySelector('input[name="attending"]:checked')?.value === "no";
       if (partySizeField) partySizeField.hidden = declined;
-      if (declined) partySize.value = "0";
-      else if (partySize.value === "0") partySize.value = "1";
+      partySize.disabled = declined;
+      if (!declined && Number(partySize.value) < 1) partySize.value = "1";
     };
 
     form.querySelectorAll('input[name="attending"]').forEach((input) => {
-      input.addEventListener("change", syncPartySizeVisibility);
+      input.addEventListener("change", syncPartySizeField);
     });
 
     form.addEventListener("submit", (event) => {
@@ -1273,7 +1294,20 @@
       if (!form.checkValidity() || guestName.value.length < 2) {
         event.preventDefault();
         form.reportValidity();
-        setStatus("Vui lòng kiểm tra lại các mục còn thiếu.", "error");
+
+        // Nói rõ thiếu ở mục nào. Thông báo chung chung là ngõ cụt: nếu mục
+        // hỏng lại nằm trong phần đang ẩn thì trình duyệt không hiện được bóng
+        // nhắc, khách bấm mãi mà không hiểu vì sao — đúng thứ đã xảy ra với ô
+        // số người tham dự.
+        const firstInvalid = [...form.elements].find(
+          (element) => element.willValidate && !element.checkValidity()
+        );
+        setStatus(
+          firstInvalid
+            ? `Vui lòng kiểm tra lại mục "${labelTextFor(firstInvalid)}".`
+            : "Vui lòng kiểm tra lại các mục còn thiếu.",
+          "error"
+        );
         return;
       }
 
@@ -1348,7 +1382,7 @@
         if (guestState.isPersonalized && guestState.name) {
           guestName.value = guestState.name;
         }
-        syncPartySizeVisibility();
+        syncPartySizeField();
         return;
       }
 
@@ -1358,7 +1392,7 @@
       );
     });
 
-    syncPartySizeVisibility();
+    syncPartySizeField();
     form.hidden = false;
   }
 

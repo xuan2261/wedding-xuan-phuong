@@ -280,6 +280,44 @@ try {
     assert(formRequests === 0, `Fallback liên hệ không được tải Form: ${formRequests}`);
     await page.locator("[data-close-attendance-contact]").first().click();
 
+    // Chọn "không thu xếp được" từng làm form không bao giờ hợp lệ: ô số người
+    // bị ẩn nhưng vẫn mang value 0 trong khi min là 1, nên trình duyệt chặn gửi
+    // mà không hiện được bóng nhắc (ô ẩn thì không focus được). Khách từ chối
+    // lời mời — đúng câu trả lời gia đình cần nhất — thì không gửi nổi.
+    // Không bấm gửi ở đây: chỉ kiểm tra tính hợp lệ, tránh ghi vào Sheet thật.
+    if (await page.locator("#rsvpForm").isVisible()) {
+      await page.locator("#rsvpGuestName").fill("Khách kiểm thử");
+      await page.locator('input[name="attending"][value="no"]').check();
+      await page.locator('input[name="guestOf"][value="groom"]').check();
+
+      const declineState = await page.evaluate(() => {
+        const form = document.querySelector("#rsvpForm");
+        const hiddenInvalid = [...form.elements]
+          .filter((element) => element.willValidate && !element.checkValidity())
+          .map((element) => element.name);
+        return {
+          formValid: form.checkValidity(),
+          invalidControls: hiddenInvalid,
+          partySizeDisabled: document.querySelector("#rsvpPartySize").disabled
+        };
+      });
+
+      assert(
+        declineState.formValid,
+        `Từ chối lời mời phải gửi được: ${declineState.invalidControls.join(", ")}`
+      );
+      assert(
+        declineState.partySizeDisabled,
+        "Ô số người phải bị tắt khi khách không tham dự, không chỉ ẩn"
+      );
+
+      await page.locator('input[name="attending"][value="yes"]').check();
+      assert(
+        await page.evaluate(() => !document.querySelector("#rsvpPartySize").disabled),
+        "Ô số người phải sống lại khi khách đổi sang có tham dự"
+      );
+    }
+
     await page.locator("#mapButton").click();
     await page.waitForSelector("#mapDialog[open]");
     await page.waitForFunction(() => {
