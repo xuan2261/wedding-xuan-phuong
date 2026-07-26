@@ -6,6 +6,11 @@ on:
     paths:
       - tools/apply_visual_overlap_v20_1.py
       - .github/workflows/apply-visual-overlap-v20-1.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/apply_visual_overlap_v20_1.py
+      - .github/workflows/apply-visual-overlap-v20-1.yml
 
 permissions:
   contents: write
