@@ -1,0 +1,33 @@
+HEAD=60a980324ce1754aa3e9d6a670332e8be77c5259
+--- node --check app.js
+status=0
+--- node --check config.js
+status=0
+--- node --check guest-utils.js
+status=0
+--- node --check event-entry.js
+status=0
+--- python tests/consistency_check.py
+PASS: multi-event wedding data consistency
+status=0
+--- python tests/guest_tool_check.py
+PASS: guest link CSV import/export tool
+status=0
+--- python tests/live_pages_verifier_check.py
+PASS: live Pages verifier contract
+status=0
+--- python tests/release_readiness_check.py
+PASS: release readiness auditor detects four events, imports safely, and fails closed in strict mode (16 blockers, 13 warnings)
+status=0
+--- python tests/share_entry_pages_check.py
+PASS: four static event share entry pages
+status=0
+--- python tests/verify_assets.py
+PASS: images and QR decode
+status=0
+--- python tests/verify_dist.py
+PASS: clean multi-event dist
+status=0
+--- python tests/verify_release.py
+PASS: v20.1 multi-event release checks
+status=0
