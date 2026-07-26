@@ -55,6 +55,14 @@
         accountName: "BÙI THANH XUÂN",
         bankName: "MB Bank",
         accountNumber: "0374037026",
+        // Ảnh QR KHÔNG mã hoá accountNumber ở trên mà mã hoá alias VietQR dưới
+        // đây. Khai báo tường minh để test khoá được payload, và để khác biệt
+        // này nhìn thấy được thay vì ngầm định.
+        // CẦN GIA ĐÌNH XÁC NHẬN alias VQRQAKQFO1476 đúng là tài khoản
+        // 0374037026 tại MB Bank — không thể kiểm chứng từ trong repo.
+        bankBin: "970422",
+        qrAccountIdentifier: "VQRQAKQFO1476",
+        qrIdentifierVerified: false,
         qrImage: "assets/qr/qr-nha-trai.png"
       },
       bride: {
@@ -63,6 +71,9 @@
         accountName: "TRẦN THỊ PHƯỢNG",
         bankName: "SHB Bank",
         accountNumber: "0976699400",
+        bankBin: "970443",
+        qrAccountIdentifier: "0976699400",
+        qrIdentifierVerified: true,
         qrImage: "assets/qr/qr-nha-gai.png"
       }
     },

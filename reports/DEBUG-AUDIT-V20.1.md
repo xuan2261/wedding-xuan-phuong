@@ -170,10 +170,19 @@ trong dialog; lightbox không thông báo ảnh đổi; `#main` thiếu `tabinde
 Đã xác nhận nhưng **chưa** sửa trong đợt này — phần lớn cần bạn quyết định hoặc
 cung cấp dữ liệu thật:
 
-- **QR nhà trai lệch số tài khoản** (`config.js`) — liên quan tiền mừng, phải do
-  gia đình tự đối chiếu, không thể sửa mò.
-- **`.ics` thiếu `DTEND`, dùng LF thay CRLF, có `TZID` nhưng thiếu `VTIMEZONE`** —
-  cần giờ kết thúc thật của từng tiệc, hiện `BUILD.json` vẫn ghi là chưa có.
+- **QR nhà trai lệch số tài khoản** — *đã xử lý phần làm được, còn chờ xác nhận.*
+  Ảnh **không bị sửa**: `VQRQAKQFO1476` đúng định dạng alias VietQR của MB Bank
+  nên nhiều khả năng là mã thật; dựng lại QR theo số đang hiển thị có thể làm
+  hỏng đường chuyển tiền thật. Thay vào đó đã khai báo `bankBin` +
+  `qrAccountIdentifier` trong `config.js`, sửa `assets/qr/README.md` (trước đó
+  ghi sai sự thật), và siết `tests/verify_assets.py` để đối chiếu payload EMVCo
+  với cấu hình. **Gia đình cần kiểm tra trong app MB Bank** xem alias
+  `VQRQAKQFO1476` có trỏ về `0374037026` không, rồi đặt
+  `qrIdentifierVerified: true` hoặc tạo lại QR.
+- **`.ics`** — *đã sửa.* Bổ sung `DTEND`, `VTIMEZONE` cho `Asia/Ho_Chi_Minh`,
+  ghi CRLF và gấp dòng theo RFC 5545. Giờ kết thúc thật vẫn chưa được cung cấp
+  nên dùng tạm mốc cuối timeline + 2 giờ, đánh dấu `calendarEndIsProvisional`
+  trong `tools/wedding-data.json` để sửa một chỗ khi chốt.
 - **Công cụ tạo link khách** (`tools/create-guest-links.html`): CSV có dấu ngoặc
   chưa đóng nuốt mất các dòng sau; sửa tay trong textarea âm thầm huỷ CSV vừa
   nhập; CSV không phải UTF-8 sinh tên khách lỗi font.

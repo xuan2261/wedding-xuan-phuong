@@ -87,7 +87,9 @@
       "actionsTitle": "Xác nhận tham dự tiệc nhà gái",
       "actionsDescription": "Thông tin RSVP sẽ được bổ sung khi biểu mẫu đa sự kiện hoàn tất.",
       "sharingTitle": "Tiệc cưới nhà gái · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng.",
+      "calendarEndsAt": "2026-07-29T12:00:00+07:00",
+      "calendarEndIsProvisional": true
     },
     "groom": {
       "id": "groom",
@@ -157,7 +159,9 @@
       "actionsTitle": "Xác nhận tham dự lễ nhà trai",
       "actionsDescription": "Thông tin RSVP đa sự kiện sẽ được bổ sung sau khi Google Form mới được tạo.",
       "sharingTitle": "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng.",
+      "calendarEndsAt": "2026-07-30T12:00:00+07:00",
+      "calendarEndIsProvisional": true
     },
     "nhatrang": {
       "id": "nhatrang",
@@ -229,7 +233,9 @@
       "actionsTitle": "Xác nhận tham dự Báo Hỷ Nha Trang",
       "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa điểm và danh sách khách được chốt.",
       "sharingTitle": "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng.",
+      "calendarEndsAt": "2026-08-15T20:00:00+07:00",
+      "calendarEndIsProvisional": true
     },
     "saigon": {
       "id": "saigon",
@@ -301,7 +307,9 @@
       "actionsTitle": "Xác nhận tham dự Báo Hỷ Sài Gòn",
       "actionsDescription": "Biểu mẫu RSVP sẽ được bật sau khi địa chỉ và danh sách khách được chốt.",
       "sharingTitle": "Tiệc Báo Hỷ Sài Gòn · Thanh Xuân & Thị Phượng",
-      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng."
+      "sharingText": "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng.",
+      "calendarEndsAt": "2026-08-22T20:00:00+07:00",
+      "calendarEndIsProvisional": true
     }
   },
   "contact": {
