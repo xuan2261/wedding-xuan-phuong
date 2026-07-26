@@ -5,6 +5,8 @@ on:
     branches: [audit/ak-debug-v20-2]
     paths:
       - .github/workflows/ak-debug-v20-2-one-shot.yml
+      - tools/apply-ak-debug-v20-2.py
+      - tests/audio_story_browser_regression.mjs
 
 permissions:
   contents: write
