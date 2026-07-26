@@ -45,6 +45,13 @@ html {
   background: #e8eee9;
 }
 
+/* Trang đặt scroll-behavior: smooth cho các cú nhảy anchor. Trong lúc thiệp tự
+   trôi thì phải tắt: mỗi bước nhỏ mỗi khung hình sẽ biến thành một hoạt cảnh
+   riêng và kết quả là thiệp đứng ì. */
+html.is-auto-scrolling {
+  scroll-behavior: auto;
+}
+
 body {
   margin: 0 auto;
   max-width: 760px;
@@ -740,7 +747,6 @@ textarea {
   transform: scale(1.035);
 }
 
-
 .wishes {
   text-align: center;
   background:
@@ -1145,7 +1151,6 @@ body > footer {
   50% { transform: scale(1.08); }
 }
 
-
 dialog {
   width: min(92vw, 650px);
   max-height: 88svh;
@@ -1303,7 +1308,8 @@ dialog::backdrop {
     min-height: 570px;
   }
 
-  .gift-grid,
+  /* .gift-grid từng chia hai cột cho hai tài khoản. Giờ mỗi nút mở đúng một
+     thẻ nên cột thứ hai chỉ còn là khoảng trống bên phải mã QR. */
   .wishes-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1444,7 +1450,6 @@ dialog::backdrop {
 .closing img[src*="couple-garden"] {
   object-position: center 58%;
 }
-
 
 /* ========================================================================
    RELEASE V17 — CÁ NHÂN HÓA, TIMELINE, SHARE/CALENDAR VÀ LIGHTBOX
@@ -1822,7 +1827,6 @@ dialog::backdrop {
   }
 }
 
-
 .lightbox:not([open]) {
   display: none;
 }
@@ -2060,7 +2064,6 @@ dialog::backdrop {
   }
 }
 
-
 /* LIFECYCLE + MICRO-INTERACTION V18.2 */
 .countdown__message {
   max-width: 680px;
@@ -2095,7 +2098,6 @@ body[data-wedding-phase="after"] .countdown {
   outline: 3px solid rgba(159, 48, 48, 0.28);
   outline-offset: 2px;
 }
-
 
 /* Multi-event wedding journey — v19 */
 .event-switcher {
@@ -2146,7 +2148,6 @@ body[data-event-id="nhatrang"] .guest-invitation__seal,
 body[data-event-id="saigon"] .guest-invitation__seal {
   letter-spacing: .08em;
 }
-
 
 /* RSVP contact fallback — active until the multi-event Form is configured. */
 .contact-dialog {
@@ -2585,117 +2586,6 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   overflow: hidden;
 }
 
-.story-player {
-  position: fixed;
-  z-index: 20;
-  left: max(14px, calc((100vw - 760px) / 2 + 14px));
-  bottom: max(14px, env(safe-area-inset-bottom));
-  display: grid;
-  grid-template-columns: 34px 38px minmax(92px, 1fr) 34px;
-  grid-template-rows: auto 3px;
-  align-items: center;
-  gap: 7px;
-  width: min(272px, calc(100vw - 92px));
-  min-height: 58px;
-  padding: 8px 10px 7px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .55);
-  border-radius: 30px;
-  color: #fff;
-  background: rgba(33, 75, 58, .94);
-  box-shadow: 0 8px 25px rgba(16, 43, 32, .28);
-  backdrop-filter: blur(12px);
-}
-
-.story-player button {
-  display: grid;
-  place-items: center;
-  min-width: 34px;
-  min-height: 34px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  color: inherit;
-  background: rgba(255, 255, 255, .08);
-  cursor: pointer;
-}
-
-.story-player button:hover,
-.story-player button:focus-visible {
-  background: rgba(255, 255, 255, .18);
-}
-
-.story-player button:disabled {
-  opacity: .32;
-  cursor: default;
-}
-
-.story-player__nav svg,
-.story-player__icon {
-  width: 21px;
-  height: 21px;
-  fill: currentColor;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.story-player__nav svg {
-  fill: none;
-}
-
-.story-player__copy {
-  display: grid;
-  min-width: 0;
-  text-align: left;
-  line-height: 1.15;
-}
-
-.story-player__copy > span {
-  overflow: hidden;
-  font-size: .74rem;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.story-player__copy small {
-  margin-top: 3px;
-  color: rgba(255, 255, 255, .7);
-  font-size: .61rem;
-  white-space: nowrap;
-}
-
-.story-player__track {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  height: 3px;
-  overflow: hidden;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, .18);
-}
-
-.story-player__track > span {
-  display: block;
-  width: 0;
-  height: 100%;
-  border-radius: inherit;
-  background: #f3d49b;
-}
-
-.story-player:has(#storyButton[aria-pressed="true"]) {
-  background: rgba(25, 61, 45, .97);
-}
-
-
-@media (max-width: 480px) {
-  .story-player {
-    width: min(244px, calc(100vw - 88px));
-    grid-template-columns: 32px 36px minmax(72px, 1fr) 32px;
-  }
-}
-
 @media (max-width: 380px) {
   .invitation-cover__content {
     gap: 8px;
@@ -2710,16 +2600,6 @@ body[data-event-id="saigon"] .invitation-cover__panel {
     display: none;
   }
 
-  .story-player {
-    width: min(210px, calc(100vw - 82px));
-    grid-template-columns: 30px 34px minmax(54px, 1fr) 30px;
-    gap: 4px;
-    padding-inline: 7px;
-  }
-
-  .story-player__copy > span {
-    font-size: .66rem;
-  }
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
@@ -2773,7 +2653,6 @@ body[data-event-id="saigon"] .invitation-cover__panel {
     display: none;
   }
 
-  .story-player,
   .music-button {
     bottom: 10px;
   }
@@ -2782,7 +2661,6 @@ body[data-event-id="saigon"] .invitation-cover__panel {
 @media (prefers-reduced-motion: reduce) {
   .invitation-cover__seal,
   .invitation-cover__simple,
-  .story-player,
   .invitation-cover__panel,
   .invitation-cover__photo,
   .invitation-cover__content,
@@ -2834,9 +2712,7 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   }
 }
 
-
-/* Simple reading mode: no cinematic motion or guided scrolling. */
-.simple-mode .story-player { display: none !important; }
+/* Simple reading mode: no cinematic motion. */
 .simple-mode .reveal,
 .simple-mode .motion-load {
   opacity: 1 !important;

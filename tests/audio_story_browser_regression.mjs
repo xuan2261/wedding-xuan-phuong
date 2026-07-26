@@ -107,29 +107,57 @@ try {
   await page.evaluate(() => window.__enableNegativeRafSkew());
   await page.locator("#coverOpenButton").click();
   await page.waitForFunction(() => document.body.classList.contains("invitation-opened"));
-  await page.waitForFunction(() => document.body.dataset.storyAutostart === "started");
-  await page.waitForFunction(() => Number(document.body.dataset.storyChapterIndex || 0) >= 2);
-  await page.waitForTimeout(1200);
+  await page.waitForFunction(() => document.body.dataset.autoScroll === "running");
+
+  // Đo chính chuyển động: thiệp phải TRÔI đều chứ không nhảy. Lấy mẫu theo từng
+  // khung hình rồi kiểm tra bước nhảy lớn nhất giữa hai khung.
+  const motion = await page.evaluate(async () => {
+    const samples = [];
+    const started = performance.now();
+    await new Promise((resolve) => {
+      const tick = () => {
+        samples.push([performance.now() - started, window.scrollY]);
+        if (performance.now() - started < 3000) requestAnimationFrame(tick);
+        else resolve();
+      };
+      requestAnimationFrame(tick);
+    });
+    let biggestStep = 0;
+    for (let i = 1; i < samples.length; i += 1) {
+      biggestStep = Math.max(biggestStep, samples[i][1] - samples[i - 1][1]);
+    }
+    const seconds = (samples[samples.length - 1][0] - samples[0][0]) / 1000;
+    return {
+      distance: samples[samples.length - 1][1] - samples[0][1],
+      seconds,
+      biggestStep
+    };
+  });
 
   const result = await page.evaluate(() => ({
     build: document.querySelector('meta[name="wedding-build"]')?.content,
     volume: document.querySelector("#weddingMusic")?.volume,
-    storyState: document.body.dataset.storyState,
+    autoScroll: document.body.dataset.autoScroll,
     storyAutostart: document.body.dataset.storyAutostart,
-    storyChapterIndex: Number(document.body.dataset.storyChapterIndex || 0),
     scrollY: window.scrollY
   }));
 
   assert(result.build === "v20.2-20260726", `Sai build: ${result.build}`);
   assert(result.volume >= 0 && result.volume <= 1, `Volume ngoài [0,1]: ${result.volume}`);
-  assert(result.storyState === "running", `Story không running: ${result.storyState}`);
+  assert(result.autoScroll === "running", `Tự cuộn không chạy: ${result.autoScroll}`);
   assert(result.storyAutostart === "started", `Autostart lỗi: ${result.storyAutostart}`);
-  assert(result.storyChapterIndex >= 2, `Story chưa chuyển chương: ${result.storyChapterIndex}`);
-  assert(result.scrollY > 0, `Story chưa cuộn trang: ${result.scrollY}`);
+  assert(result.scrollY > 0, `Thiệp chưa cuộn: ${result.scrollY}`);
+  assert(motion.distance > 60, `Thiệp trôi quá ít trong 3s: ${motion.distance}px`);
+  assert(
+    motion.biggestStep <= 8,
+    `Thiệp đang nhảy chứ không trôi: bước lớn nhất ${motion.biggestStep}px`
+  );
+  const speed = motion.distance / motion.seconds;
+  assert(speed > 15 && speed < 90, `Tốc độ trôi bất thường: ${speed.toFixed(1)} px/s`);
   assert(pageErrors.length === 0, `Page errors: ${pageErrors.join(" | ")}`);
   assert(consoleErrors.length === 0, `Console errors: ${consoleErrors.join(" | ")}`);
 
-  console.log(JSON.stringify({ verdict: "PASS", result }, null, 2));
+  console.log(JSON.stringify({ verdict: "PASS", result, motion }, null, 2));
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));

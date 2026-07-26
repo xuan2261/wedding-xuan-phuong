@@ -20,8 +20,9 @@ Website phục vụ bốn sự kiện:
 - Quà mừng cưới tách thành **hai nút riêng** cho chú rể và cô dâu, hiện ở cả bốn
   sự kiện, kèm một dòng ghi chú nhẹ đặt sự hiện diện của khách lên trước.
 - Tải lại trang luôn mở từ đầu thiệp thay vì rơi vào giữa nội dung sau màn bìa.
-- Tự xem chỉ dừng khi khách cuộn thật; chạm hoặc click để ngắm không còn làm chết tour.
-- Chế độ tiết giảm chuyển động vẫn tự đi qua từng phần (nhảy tức thì) và vẫn có thanh điều khiển.
+- Thiệp **tự trôi xuống đều đặn ~40px/giây** thay cho kiểu nhảy tới từng phần rồi
+  đứng yên. Không còn thanh điều khiển theo chương.
+- Tự cuộn chỉ dừng khi khách cuộn thật; chạm hoặc click để ngắm thì không.
 - Thiệp tôn trọng Data Saver/mạng 2G: không tự chạy, không tự phát nhạc và giảm preload ảnh.
 - Cover xử lý tên khách dài và chuyển focus đúng sau khi mở.
 - `tools/create-guest-links.html` hỗ trợ CSV riêng cho từng khách/sự kiện.
@@ -63,7 +64,6 @@ python tests/build_metadata_check.py
 python tests/verify_release.py
 node tests/multi_event_check.mjs
 node tests/rsvp_form_check.mjs
-node tests/story_asset_preload_check.mjs
 python tools/build-dist.py
 python tests/share_entry_pages_check.py
 python tests/verify_dist.py
@@ -87,15 +87,16 @@ Xem:
 ## Trải nghiệm mở thiệp
 
 - Bìa xanh rừng và con dấu XP hiển thị trước hero.
-- Bấm **Mở thiệp** để mở hai cánh, phát nhạc và tùy chọn tự động xem từng phần.
-- Cuộn hoặc dùng bàn phím sẽ tạm dừng tự động xem; chạm để ngắm thì không.
+- Bấm **Mở thiệp** để mở hai cánh, phát nhạc và tùy chọn để thiệp tự trôi xuống.
+- Cuộn hoặc dùng bàn phím sẽ dừng hẳn tự cuộn; chạm để ngắm thì không.
+- Tốc độ trôi đổi ở `config.js` → `openingExperience.autoScrollSpeedPxPerSecond`.
 - Có thể kiểm thử nhanh bằng `?skipCover=1`.
 
 
 ## Hardening v20.2
 
 - Bốn trang chia sẻ tĩnh có Open Graph metadata riêng cho nhà gái, nhà trai, Nha Trang và Sài Gòn.
-- Auto-story chuẩn bị và giải mã ảnh của chương kế trước khi cuộn tới, có timeout bảo vệ.
+- Tự cuộn tính theo thời gian thực từng khung hình nên tốc độ không đổi theo máy.
 - Nhạc dùng timestamp của chính `requestAnimationFrame`, pause khi tab bị ẩn và không tự bật lại.
-- Story chapter có `aria-live`; debug state dùng `data-story-chapter-index` để không xung đột selector.
+- Trạng thái tự cuộn lộ ra ở `data-auto-scroll` để test đo được chuyển động thật.
 - Workflow kiểm tra marker live, `release.json` và đủ bốn trang sự kiện sau deploy.

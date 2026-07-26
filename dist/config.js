@@ -109,8 +109,7 @@
 
     sharingDefaults: {
       enabled: true,
-      sharePersonalizedByDefault: false,
-      personalizedCopyEnabled: true
+      sharePersonalizedByDefault: false
     },
 
     events: {
@@ -390,22 +389,20 @@
       autoStoryDefault: true,
       simpleModeEnabled: true,
       openingDurationMs: 1580,
-      // Chương một là ảnh hero đang hiển thị sẵn, nên cú "cuộn" đầu tiên không
-      // nhìn thấy được. Delay dài khiến khách tưởng thiệp không tự chạy.
+      // Khoảng lặng sau khi mở thiệp rồi mới bắt đầu trôi, để khách kịp nhìn
+      // ảnh mở đầu.
       storyStartDelayMs: 1400,
-      storyHoldMs: 6500,
+      // Tốc độ thiệp tự trôi xuống. Đủ chậm để đọc kịp, đủ nhanh để không sốt
+      // ruột; khách cuộn tay lúc nào cũng giành lại quyền điều khiển.
+      autoScrollSpeedPxPerSecond: 40,
       pauseOnInteraction: true,
       // Khoảng lặng sau khi mở thiệp để thao tác mở và những cú chạm thăm dò
-      // đầu tiên không bị hiểu nhầm là muốn dừng tự xem.
+      // đầu tiên không bị hiểu nhầm là muốn dừng tự cuộn.
       interactionGraceMs: 1200,
       pauseOnDialogs: true,
-      preloadNextScene: true,
-      preloadImageLimit: 4,
-      preloadWaitMs: 700,
       sealPulseIterations: 2,
       respectDataSaver: true,
       constrainedEffectiveTypes: ["slow-2g", "2g"],
-      constrainedPreloadImageLimit: 1,
       disableAutoStoryOnConstrainedNetwork: true,
       disableAutoMusicOnConstrainedNetwork: true
     },

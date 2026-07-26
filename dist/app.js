@@ -412,7 +412,6 @@
 
   function setupShareAndCalendar() {
     const shareButton = $("#shareButton");
-    const personalizedCopyButton = $("#copyPersonalizedLinkButton");
     const calendarButton = $("#calendarButton");
     const personalization = config.personalization || {};
 
@@ -445,20 +444,6 @@
       }
       return String(baseUrl).split("#")[0];
     };
-
-    if (personalizedCopyButton) {
-      personalizedCopyButton.hidden =
-        config.sharing?.personalizedCopyEnabled === false || !guestState.isPersonalized;
-      personalizedCopyButton.addEventListener("click", async () => {
-        const url = buildShareUrl(true);
-        try {
-          await navigator.clipboard.writeText(url);
-          showToast("Đã sao chép link có tên khách mời và đúng sự kiện.");
-        } catch {
-          window.prompt("Sao chép link có tên khách mời:", url);
-        }
-      });
-    }
 
     if (!shareButton) return;
     if (!config.sharing?.enabled) {
@@ -750,315 +735,108 @@
     });
   }
 
-  function setupGuidedStory() {
+  // Thiệp tự trôi xuống đều đặn như cuộn credits, thay cho kiểu nhảy tới từng
+  // phần rồi đứng yên. Kiểu nhảy cũ dùng scrollIntoView({behavior:"smooth"}),
+  // nhưng trình duyệt hoàn tất quãng đường trong chưa tới một khung hình nên
+  // khách chỉ thấy giật cục, không thấy thiệp trôi.
+  function setupAutoScroll() {
     const settings = config.openingExperience || {};
-    const player = $("#storyPlayer");
-    const button = $("#storyButton");
-    const previousButton = $("#storyPreviousButton");
-    const nextButton = $("#storyNextButton");
-    const playIcon = $("[data-story-icon=\"play\"]", button);
-    const pauseIcon = $("[data-story-icon=\"pause\"]", button);
-    const label = $("[data-story-label]", player);
-    const counter = $("[data-story-counter]", player);
-    const chapter = $("[data-story-chapter]", player);
-    const progress = $("[data-story-progress]", player);
     const reduceMotion =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const speed = Math.max(5, Number(settings.autoScrollSpeedPxPerSecond) || 40);
 
-    let timer = 0;
+    let frame = 0;
     let running = false;
-    let completed = false;
-    let currentIndex = 0;
-    let stops = [];
-    let scrollFrame = 0;
-    let suppressScrollSyncUntil = 0;
-    let interactionGraceUntil = 0;
+    let lastTimestamp = 0;
+    let position = 0;
+    let expectedScrollY = -1;
+    let graceUntil = 0;
 
-    const refreshStops = () => {
-      stops = $$("[data-story-stop]").filter((element) => {
-        if (element.hidden) return false;
-        const style = window.getComputedStyle(element);
-        return style.display !== "none" && style.visibility !== "hidden";
-      });
-      currentIndex = Math.min(currentIndex, Math.max(0, stops.length - 1));
-      return stops;
+    const maxScroll = () =>
+      Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+    const setState = (state) => {
+      document.body.dataset.autoScroll = state;
     };
 
-    const titleFor = (element, index) =>
-      String(element?.dataset.storyTitle || `Phần ${index + 1}`).trim();
-
-    const holdFor = (element) => {
-      const explicit = Number(element?.dataset.storyHold);
-      return Number.isFinite(explicit) && explicit >= 1500
-        ? explicit
-        : Number(settings.storyHoldMs || 6500);
-    };
-
-    const prepareStoryAssets = async (index) => {
-      if (settings.preloadNextScene === false) return;
-      const target = stops[index];
-      if (!target) return;
-
-      const configuredLimit = adaptiveDataState.constrained
-        ? Number(settings.constrainedPreloadImageLimit) || 1
-        : Number(settings.preloadImageLimit) || 4;
-      const limit = Math.max(1, configuredLimit);
-      const waitMs = Math.max(100, Number(settings.preloadWaitMs) || 700);
-      const images = $$('img', target).slice(0, limit);
-      if (!images.length) return;
-
-      document.body.dataset.storyAssetState = "preparing";
-      images.forEach((image) => {
-        image.loading = "eager";
-        image.fetchPriority = adaptiveDataState.constrained ? "auto" : "high";
-        image.dataset.storyPreloaded = "true";
-      });
-
-      const decodeTasks = images.map(async (image) => {
-        try {
-          if (typeof image.decode === "function") {
-            await image.decode();
-          } else if (!image.complete) {
-            await new Promise((resolve) => {
-              image.addEventListener("load", resolve, { once: true });
-              image.addEventListener("error", resolve, { once: true });
-            });
-          }
-        } catch {
-          // Decode errors must not block navigation; the browser can still paint the image.
-        }
-      });
-
-      await Promise.race([
-        Promise.allSettled(decodeTasks),
-        new Promise((resolve) => window.setTimeout(resolve, waitMs))
-      ]);
-      document.body.dataset.storyAssetState = "ready";
-    };
-
-    const resetProgress = (duration = 0) => {
-      if (!progress) return;
-      progress.style.transition = "none";
-      progress.style.width = "0%";
-      void progress.offsetWidth;
-
-      if (duration > 0 && running) {
-        progress.style.transition = `width ${duration}ms linear`;
-        requestAnimationFrame(() => {
-          progress.style.width = "100%";
-        });
-      }
-    };
-
-    const syncPlayer = () => {
-      if (!player || !button) return;
-      const count = Math.max(1, stops.length);
-      const position = Math.min(currentIndex + 1, count);
-      const replay = completed && !running;
-
-      player.hidden = false;
-      document.body.dataset.storyState = completed
-        ? "completed"
-        : running
-          ? "running"
-          : "paused";
-      document.body.dataset.storyChapterIndex = String(position);
-      button.setAttribute("aria-pressed", String(running));
-      button.setAttribute(
-        "aria-label",
-        running
-          ? "Tạm dừng xem thiệp tự động"
-          : replay
-            ? "Xem lại thiệp từ đầu"
-            : "Bắt đầu xem thiệp tự động"
-      );
-      button.title = button.getAttribute("aria-label");
-
-      if (label) {
-        label.textContent = running
-          ? "Đang tự xem"
-          : replay
-            ? "Xem lại"
-            : "Tự xem";
-      }
-      if (counter) counter.textContent = `${position}/${count}`;
-      if (chapter) chapter.textContent = titleFor(stops[currentIndex], currentIndex);
-
-      playIcon?.toggleAttribute("hidden", running);
-      pauseIcon?.toggleAttribute("hidden", !running);
-      if (previousButton) previousButton.disabled = currentIndex <= 0;
-      if (nextButton) nextButton.disabled = currentIndex >= stops.length - 1;
-    };
-
-    const clearTimer = () => {
-      window.clearTimeout(timer);
-      timer = 0;
-    };
-
-    const nearestIndex = () => {
-      refreshStops();
-      if (!stops.length) return 0;
-
-      const targetY = window.innerHeight * 0.24;
-      let bestIndex = 0;
-      let bestDistance = Number.POSITIVE_INFINITY;
-
-      stops.forEach((element, index) => {
-        const distance = Math.abs(element.getBoundingClientRect().top - targetY);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          bestIndex = index;
-        }
-      });
-
-      return bestIndex;
-    };
-
-    const pause = ({ announce = false, reason = "user" } = {}) => {
+    const stop = (reason) => {
       if (!running) return;
       running = false;
-      clearTimer();
-      resetProgress();
-      syncPlayer();
-      document.body.dataset.storyPauseReason = reason;
-      if (announce) {
-        showToast("Đã tạm dừng tự xem. Bấm nút Tự xem để tiếp tục.");
-      }
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      expectedScrollY = -1;
+      document.documentElement.classList.remove("is-auto-scrolling");
+      setState(reason === "end" ? "done" : "paused");
+      if (reason) document.body.dataset.autoScrollStopReason = reason;
     };
 
-    const scrollToCurrent = () => {
-      const target = stops[currentIndex];
-      if (!target) return;
-      suppressScrollSyncUntil = performance.now() + (reduceMotion ? 80 : 950);
-      target.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start"
-      });
-    };
+    const step = (timestamp) => {
+      if (!running) return;
 
-    const finish = () => {
-      running = false;
-      completed = true;
-      clearTimer();
-      resetProgress();
-      syncPlayer();
-    };
-
-    const scheduleNext = (delayMs) => {
-      clearTimer();
-      resetProgress(delayMs);
-      timer = window.setTimeout(async () => {
-        refreshStops();
-        if (!running || !stops.length) return;
-        if (currentIndex >= stops.length - 1) {
-          finish();
-          return;
-        }
-        currentIndex += 1;
-        completed = false;
-        await prepareStoryAssets(currentIndex);
-        if (!running) return;
-        scrollToCurrent();
-        syncPlayer();
-        void prepareStoryAssets(currentIndex + 1);
-        scheduleNext(holdFor(stops[currentIndex]));
-      }, Math.max(250, delayMs));
-    };
-
-    const start = ({ fromStart = false, initialDelayMs = 0 } = {}) => {
-      refreshStops();
-      if (!player || !button || !stops.length ||
-          document.body.classList.contains("simple-mode")) {
-        if (player) player.hidden = true;
-        return false;
+      // Khách tự cuộn bằng thanh cuộn hoặc phím thì vị trí thật lệch khỏi vị trí
+      // ta vừa đặt. Đây là lưới an toàn cho những cách cuộn không phát ra
+      // wheel/touchmove, để thiệp không giằng co với khách.
+      if (expectedScrollY >= 0 && Math.abs(window.scrollY - expectedScrollY) > 2) {
+        stop("manual-scroll");
+        return;
       }
 
-      interactionGraceUntil = performance.now() +
-        Math.max(0, Number(settings.interactionGraceMs ?? 1200));
-      currentIndex = fromStart || completed ? 0 : nearestIndex();
-      completed = false;
+      const elapsed = lastTimestamp ? Math.min(120, timestamp - lastTimestamp) : 0;
+      lastTimestamp = timestamp;
+      position = Math.min(position + (speed * elapsed) / 1000, maxScroll());
+
+      // scrollTo nhận số thực nên phần lẻ dưới 1px vẫn được cộng dồn qua từng
+      // khung hình; làm tròn ở đây sẽ khiến tốc độ chậm bị mất mát và đứng im.
+      window.scrollTo(0, position);
+      expectedScrollY = window.scrollY;
+
+      if (position >= maxScroll() - 1) {
+        stop("end");
+        return;
+      }
+
+      frame = window.requestAnimationFrame(step);
+    };
+
+    const start = () => {
+      if (running || reduceMotion) return false;
+
+      position = window.scrollY;
+      lastTimestamp = 0;
+      expectedScrollY = -1;
       running = true;
-      delete document.body.dataset.storyPauseReason;
-      if (fromStart) scrollToCurrent();
-      syncPlayer();
-      void prepareStoryAssets(currentIndex);
-      void prepareStoryAssets(currentIndex + 1);
-      scheduleNext(
-        initialDelayMs > 0
-          ? initialDelayMs
-          : holdFor(stops[currentIndex])
-      );
+      graceUntil = performance.now() +
+        Math.max(0, Number(settings.interactionGraceMs ?? 1200));
+      delete document.body.dataset.autoScrollStopReason;
+      setState("running");
+      // CSS đặt scroll-behavior: smooth cho cả trang. Nếu không tắt trong lúc
+      // tự cuộn, mỗi bước nhỏ lại thành một hoạt cảnh riêng và thiệp đứng ì.
+      document.documentElement.classList.add("is-auto-scrolling");
+      frame = window.requestAnimationFrame(step);
       return true;
     };
 
-    const move = (delta) => {
-      refreshStops();
-      if (!stops.length) return;
-      pause({ reason: "navigation" });
-      currentIndex = Math.max(0, Math.min(stops.length - 1, currentIndex + delta));
-      completed = currentIndex >= stops.length - 1;
-      scrollToCurrent();
-      syncPlayer();
-    };
-
-    const show = () => {
-      refreshStops();
-      if (player) {
-        // Tiết giảm chuyển động chỉ bỏ hiệu ứng, không bỏ chức năng: khách vẫn
-        // cần thanh điều khiển để tự đi tới từng phần của thiệp.
-        player.hidden = document.body.classList.contains("simple-mode");
-        if (!player.hidden) syncPlayer();
-      }
-    };
-
-    button?.addEventListener("click", () => {
-      if (running) pause({ reason: "toggle" });
-      else start({ fromStart: completed });
-    });
-    previousButton?.addEventListener("click", () => move(-1));
-    nextButton?.addEventListener("click", () => move(1));
-
     if (settings.pauseOnInteraction !== false) {
-      const pauseForInteraction = (event) => {
-        if (!running || player?.contains(event.target)) return;
-        // Ngay sau khi mở thiệp, chuỗi sự kiện của chính cú bấm "Mở thiệp" và
-        // những cú chạm thăm dò đầu tiên không phải ý muốn dừng tự xem.
-        if (performance.now() < interactionGraceUntil) return;
-        pause({ announce: true, reason: "interaction" });
+      const stopForInteraction = () => {
+        if (!running || performance.now() < graceUntil) return;
+        stop("interaction");
       };
 
-      // Chỉ cuộn thật mới là ý định tự điều khiển. Trước đây `touchstart` và
-      // `pointerdown` cũng dừng tour, nghĩa là chạm màn hình để ngắm hoặc click
-      // chuột vào bất kỳ đâu là tự xem chết hẳn ở chương một.
-      window.addEventListener("wheel", pauseForInteraction, { passive: true });
-      window.addEventListener("touchmove", pauseForInteraction, { passive: true });
+      // Chỉ cuộn thật mới là ý muốn tự điều khiển; chạm để ngắm thì không.
+      window.addEventListener("wheel", stopForInteraction, { passive: true });
+      window.addEventListener("touchmove", stopForInteraction, { passive: true });
       window.addEventListener("keydown", (event) => {
         if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]
           .includes(event.key)) {
-          pauseForInteraction(event);
+          stopForInteraction();
         }
       });
     }
 
-    window.addEventListener("scroll", () => {
-      if (running || scrollFrame || performance.now() < suppressScrollSyncUntil) return;
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        const index = nearestIndex();
-        if (index !== currentIndex) {
-          currentIndex = index;
-          completed = currentIndex >= stops.length - 1;
-          syncPlayer();
-        }
-      });
-    }, { passive: true });
-
     if (settings.pauseOnDialogs !== false && "MutationObserver" in window) {
-      const dialogs = $$('dialog').filter((dialog) => dialog.id !== "invitationCover");
+      const dialogs = $$("dialog").filter((dialog) => dialog.id !== "invitationCover");
       const observer = new MutationObserver((entries) => {
-        if (entries.some((entry) => entry.target.open)) {
-          pause({ reason: "dialog" });
-        }
+        if (entries.some((entry) => entry.target.open)) stop("dialog");
       });
       dialogs.forEach((dialog) => observer.observe(dialog, {
         attributes: true,
@@ -1067,26 +845,19 @@
     }
 
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) pause({ reason: "hidden-tab" });
+      if (document.hidden) stop("hidden-tab");
     });
+
+    setState(reduceMotion ? "reduced-motion" : "idle");
 
     return Object.freeze({
       start,
-      pause,
-      show,
-      refreshStops,
-      next: () => move(1),
-      previous: () => move(-1),
-      getState: () => Object.freeze({
-        running,
-        completed,
-        currentIndex,
-        chapterCount: stops.length
-      })
+      stop: () => stop("api"),
+      isRunning: () => running
     });
   }
 
-  function setupOpeningExperience(storyController) {
+  function setupOpeningExperience(autoScroll) {
     const settings = config.openingExperience || {};
     const dialog = $("#invitationCover");
     const openButton = $("#coverOpenButton");
@@ -1102,7 +873,6 @@
     let opening = false;
 
     if (!settings.enabled || !dialog || !openButton) {
-      storyController?.show();
       return;
     }
 
@@ -1153,7 +923,6 @@
       }
 
       window.dispatchEvent(new CustomEvent("wedding:cover-opened"));
-      storyController?.show();
 
       requestAnimationFrame(() => {
         if (focusTarget && typeof focusTarget.focus === "function") {
@@ -1162,35 +931,15 @@
       });
 
       if (shouldStartStory) {
-        const startOptions = {
-          fromStart: true,
-          initialDelayMs: Number(settings.storyStartDelayMs || 1400)
-        };
-
-        // Đợi dialog đóng và layout ổn định qua hai frame rồi mới bắt đầu.
-        // Nếu DOM/ảnh vừa cập nhật khiến lần đầu chưa có story stop, retry đúng một lần.
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const started = storyController?.start(startOptions) === true;
-            document.body.dataset.storyAutostart = started ? "started" : "retrying";
-
-            if (started) {
-              window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
-              return;
-            }
-
-            window.setTimeout(() => {
-              storyController?.refreshStops();
-              const retried = storyController?.start(startOptions) === true;
-              document.body.dataset.storyAutostart = retried ? "started" : "blocked";
-              if (retried) {
-                window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
-              } else {
-                showToast("Không thể tự chạy. Quý khách có thể bấm nút Tự xem để tiếp tục.");
-              }
-            }, 240);
-          });
-        });
+        // Chờ dialog đóng hẳn và layout ổn định rồi mới đo chiều cao trang;
+        // bắt đầu sớm hơn thì chiều dài cuộn còn tính theo layout của màn bìa.
+        window.setTimeout(() => {
+          const started = autoScroll?.start() === true;
+          document.body.dataset.storyAutostart = started ? "started" : "blocked";
+          if (started) {
+            window.dispatchEvent(new CustomEvent("wedding:story-autostarted"));
+          }
+        }, Math.max(0, Number(settings.storyStartDelayMs || 1400)));
       } else {
         document.body.dataset.storyAutostart = simpleMode
           ? "simple-mode"
@@ -1244,7 +993,6 @@
 
     if (skipCover) {
       document.body.classList.add("invitation-opened");
-      storyController?.show();
       return;
     }
 
@@ -2701,7 +2449,7 @@
   setupGiftDialog();
   setupWishes();
   setupLightbox();
-  const storyController = setupGuidedStory();
+  const autoScroll = setupAutoScroll();
   setupMusic();
-  setupOpeningExperience(storyController);
+  setupOpeningExperience(autoScroll);
 })();
