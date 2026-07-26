@@ -340,7 +340,10 @@ textarea {
 }
 
 .section {
-  padding: 84px 7vw;
+  /* 7vw đo theo viewport nhưng body đã bị chặn ở 760px, nên màn hình càng rộng
+     cột chữ càng hẹp (608px ở 760 xuống 446px ở 1920). Chặn trần như cách
+     .timeline đang làm để cột chữ ngừng co lại. */
+  padding: 84px clamp(20px, 7vw, 54px);
 }
 
 .section h2 {
@@ -589,7 +592,7 @@ textarea {
 }
 
 .countdown {
-  padding: 80px 7vw;
+  padding: 80px clamp(20px, 7vw, 54px);
   color: white;
   background:
     linear-gradient(rgba(16, 43, 32, 0.93), rgba(16, 43, 32, 0.93)),
@@ -2506,6 +2509,8 @@ body[data-event-id="saigon"] .invitation-cover__panel {
   background: linear-gradient(155deg, #344f42, #203f34 58%, #142d27);
 }
 
+/* Áp cho cả <html> (app.js gắn class lên documentElement): overflow của body
+   không lan ra viewport vì html đang có overflow-x: clip. */
 .invitation-is-opening {
   overflow: hidden;
 }

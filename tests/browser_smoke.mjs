@@ -206,6 +206,23 @@ try {
     assert(centered.open < 3, `Nút mở thiệp lệch tâm: ${centered.open}`);
 
     if (viewport.height <= 520) {
+      // getBoundingClientRect() tính cả transform đang chạy dở. Hiệu ứng vào
+      // trang dịch phần tử 28px (--motion-transform), đúng bằng mức làm phép so
+      // sánh dưới đây lúc đỏ lúc xanh. Chờ hiệu ứng hero kết thúc rồi mới đo.
+      await page.waitForFunction(() =>
+        [...document.querySelectorAll(".hero .motion-load")].every((element) =>
+          element.classList.contains("is-visible")
+        )
+      );
+      await page.evaluate(() =>
+        Promise.all(
+          document
+            .querySelector(".hero")
+            .getAnimations({ subtree: true })
+            .map((animation) => animation.finished.catch(() => {}))
+        )
+      );
+
       const heroLayout = await page.evaluate(() => {
         const hero = document.querySelector(".hero").getBoundingClientRect();
         const names = document.querySelector(".hero-names").getBoundingClientRect();

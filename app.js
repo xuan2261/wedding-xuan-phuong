@@ -1019,6 +1019,7 @@
       if (dialog.open) dialog.close();
       dialog.classList.remove("is-opening");
       document.body.classList.remove("invitation-is-opening");
+      document.documentElement.classList.remove("invitation-is-opening");
       document.body.classList.add("invitation-opened");
       document.body.classList.toggle("simple-mode", simpleMode);
 
@@ -1095,6 +1096,10 @@
       }
 
       document.body.classList.add("invitation-is-opening");
+      // Phải khoá ở <html>: overflow của <body> chỉ lan ra viewport khi <html>
+      // để overflow visible cả hai trục, mà ở đây <html> đang có
+      // `overflow-x: clip`, nên đặt hidden trên body không khoá được cuộn.
+      document.documentElement.classList.add("invitation-is-opening");
       dialog.classList.add("is-opening");
 
       window.setTimeout(

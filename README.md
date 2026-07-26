@@ -1,6 +1,6 @@
-# Wedding Xuân & Phượng — v19 Multi-Event Journey
+# Wedding Xuân & Phượng — v20 Multi-Event Journey
 
-Build hiện tại: **v19.4-20260724** — Share Preview & Guided Story Hardening.
+Build hiện tại: **v20.1-20260726** — Visual Safe Zones & Cover Refinement.
 
 Website phục vụ bốn sự kiện:
 

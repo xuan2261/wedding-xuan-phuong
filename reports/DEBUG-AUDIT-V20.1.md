@@ -2,6 +2,11 @@
 
 Ngày: 2026-07-26 · Nhánh: `claude/debug-audit-comprehensive-kzchzy`
 
+> **Trạng thái cuối:** 12/12 nhóm kiểm tra đã hoàn tất và qua vòng phản biện
+> đối kháng (81 phát hiện được xác nhận trên 129 báo cáo — 48 bị bác bỏ).
+> Toàn bộ lỗi nêu ở mục 2 và phần lớn mục 3 đã được sửa và kiểm chứng lại bằng
+> Chromium. `npm test` hiện xanh hoàn toàn (exit 0).
+
 Phạm vi: toàn bộ mã nguồn (`index.html`, `app.js`, `config.js`, `guest-utils.js`,
 `styles.css`), pipeline build `dist/`, bộ test, GitHub Actions, tài liệu và tài sản.
 
@@ -160,12 +165,29 @@ trong dialog; lightbox không thông báo ảnh đổi; `#main` thiếu `tabinde
 
 ---
 
-## 4. Chưa kiểm tra
+## 4. Còn lại chưa sửa
 
-6 nhóm còn lại đang chạy dở (giới hạn 2 tiến trình song song trên 4 nhân):
-chất lượng test, bảo mật CI, Google Apps Script, hiệu năng asset, công cụ tạo
-link khách, tính nhất quán tài liệu. Riêng phần tài liệu, CI và asset đã được
-kiểm tra thủ công một phần ở mục 1–2.
+Đã xác nhận nhưng **chưa** sửa trong đợt này — phần lớn cần bạn quyết định hoặc
+cung cấp dữ liệu thật:
+
+- **QR nhà trai lệch số tài khoản** (`config.js`) — liên quan tiền mừng, phải do
+  gia đình tự đối chiếu, không thể sửa mò.
+- **`.ics` thiếu `DTEND`, dùng LF thay CRLF, có `TZID` nhưng thiếu `VTIMEZONE`** —
+  cần giờ kết thúc thật của từng tiệc, hiện `BUILD.json` vẫn ghi là chưa có.
+- **Công cụ tạo link khách** (`tools/create-guest-links.html`): CSV có dấu ngoặc
+  chưa đóng nuốt mất các dòng sau; sửa tay trong textarea âm thầm huỷ CSV vừa
+  nhập; CSV không phải UTF-8 sinh tên khách lỗi font.
+- **Web app lời chúc** (`tools/wedding-wishes-webapp.gs`): chống spam hoàn toàn
+  nằm ở phía client nên bỏ qua được.
+- **Tài liệu lệch thực tế**: `CALENDAR-SETUP.md` trỏ tới file `.ics` không tồn
+  tại, `RSVP-MAP-MOTION-SETUP.md` trỏ script đã đổi chỗ, `check-live-build`
+  vẫn ghim v19.4, `MULTI-EVENT-SETUP.md` hướng dẫn các bước làm hỏng CI.
+- **CI**: workflow chạy trên pull request dùng chung concurrency group với
+  deploy; job thực thi mã từ PR vẫn được cấp `pages: write` và `id-token: write`.
+- **Chất lượng test**: `contract_check.js` là phép lặp thừa tự đúng,
+  `lifecycle_check.js` khớp cả giá trị rỗng, `npm test` bỏ sót 2 test.
+- Hai khối media query cho máy nhỏ bị đè hoàn toàn (`styles.css`) — cần ý đồ
+  thiết kế mới sửa đúng, không đoán được.
 
 ---
 

@@ -1,3 +1,42 @@
+# v20.1 — Visual Safe Zones & Cover Refinement (2026-07-26)
+
+- Làm mới toàn bộ ảnh cưới từ bản dựng Photoshop và giữ chữ tránh vùng mặt.
+- Tinh chỉnh bìa thiệp và vùng an toàn thị giác cho ảnh nền.
+
+## Debug & audit toàn diện (cùng ngày)
+
+Xem `reports/DEBUG-AUDIT-V20.1.md`. Các lỗi đã sửa:
+
+- Nút chuyển sự kiện không đổi nội dung: link chỉ khác fragment nên không tải
+  lại, mà cấu hình sự kiện được đóng băng lúc tải trang. Nay dựng link theo URL
+  đang mở và tải lại khi tham số sự kiện đổi; nút back/forward hoạt động đúng.
+- Link nội trang (`#main`, `#guest-invitation`) ghi đè fragment làm mất tên
+  khách và rơi về sự kiện mặc định. Nay cuộn bằng JS và giữ nguyên fragment.
+- Hai workflow ghim cứng `EXPECTED_BUILD` ở v19.4 nên cổng kiểm tra hậu-deploy
+  chỉ xanh khi trang public còn cũ. Nay đọc từ `BUILD.json`.
+- Bốn trang chia sẻ quảng bá ảnh social cũ (`meta-v3.jpg`); nay lấy `og:image`
+  từ `index.html`. Test trước đó khẳng định giá trị sai nên cũng đã sửa theo.
+- Nút "Đóng" trong dialog liên hệ chỉ đạt 1.54:1 do quy tắc `footer` trần tràn
+  vào dialog; nay còn `body > footer` và độ tương phản đạt 9.69:1.
+- Bốn custom property (`--green-900`, `--green-700`, `--gold-700`, `--gold-300`)
+  được dùng nhưng chưa định nghĩa nên màu bị rơi về giá trị kế thừa.
+- Viền báo lỗi ô đồng ý không hiện vì selector trỏ vào class không tồn tại.
+- Toast "Đã sao chép…" bị dialog modal che do top layer; nay gắn vào dialog.
+- Dialog bản đồ sập bố cục khi máy nằm ngang: bản đồ 152px còn footer 154px.
+- Bìa thiệp cắt mất dòng đầu ở máy nằm ngang và không cuộn tới được.
+- Khoá cuộn khi mở thiệp không có tác dụng vì overflow của body không lan ra
+  viewport; nay khoá ở `<html>`.
+- `?event=`/`?events=` bị bỏ qua dù `?to=` được chấp nhận.
+- Cắt tên khách theo đơn vị UTF-16 làm hỏng emoji; nay cắt theo code point.
+- iframe bản đồ dùng `no-referrer-when-downgrade`, yếu hơn chính sách trang.
+- `padding: 84px 7vw` trong body rộng tối đa 760px khiến màn hình càng rộng cột
+  chữ càng hẹp (608px xuống 446px); nay chặn trần 54px.
+- Bổ sung `.gitignore` (repo trước đó không có).
+
+# v20.0 — Photoshop Image Pack (2026-07-25)
+
+- Thay toàn bộ ảnh bằng bản dựng mới và bổ sung quy trình khôi phục ảnh v20.
+
 # v19.4 — Adaptive Guest-Ready Hardening (2026-07-24)
 
 - Sửa cover bị cắt khi tên khách dài ở màn hình ngang thấp; cover có thể cuộn nội bộ an toàn.
