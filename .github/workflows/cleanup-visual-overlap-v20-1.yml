@@ -1,0 +1,42 @@
+name: Clean visual overlap PR scope
+
+on:
+  push:
+    branches: [fix/visual-overlap-v20-1]
+    paths:
+      - .github/workflows/cleanup-visual-overlap-v20-1.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/visual-overlap-v20-1
+          fetch-depth: 0
+      - name: Restore historical and tooling files outside the UI scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout origin/main -- \
+            CHANGELOG.md \
+            PERSONALIZATION-SETUP.md \
+            docs/history/reports-v15/BROWSER-SMOKE-V15.json \
+            docs/history/reports-v15/FINAL-VALIDATION-V15.json \
+            tools/build-dist.py \
+            tools/legacy-single-event/generate-calendar.py \
+            tools/wedding-data.json
+          rm -f .github/workflows/cleanup-visual-overlap-v20-1.yml
+      - name: Commit clean production scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(ui): keep visual fix production-scoped"
+          git push origin HEAD:fix/visual-overlap-v20-1
