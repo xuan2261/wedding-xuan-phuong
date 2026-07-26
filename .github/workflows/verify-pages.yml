@@ -40,7 +40,7 @@ jobs:
           node tests/multi_event_check.mjs
           node tests/opening_experience_check.mjs
           node tests/audio_story_regression_check.mjs
-          node tests/story_asset_preload_check.mjs
+          node tests/rsvp_form_check.mjs
           node tests/release_hardening_check.mjs
           python tests/guest_tool_check.py
           python tests/release_readiness_check.py
