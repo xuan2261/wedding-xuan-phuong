@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Local environment / editor
+.env
+.env.local
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test and tooling output (reports/ is tracked intentionally)
+.lighthouseci/
+playwright-report/
+test-results/
+*.log
+
+# Scratch files
+tmp/
+*.tmp
