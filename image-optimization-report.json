@@ -1,298 +1,320 @@
 [
   {
     "asset": "bride",
-    "source": "DRS06549(1).jpg",
+    "source": "DRS06549(3).jpg",
     "original_size": [
       1366,
       2047
     ],
-    "original_bytes": 373362,
+    "original_bytes": 504735,
     "outputs": {
       "720": {
         "size": [
           720,
-          1079
+          1080
         ],
-        "bytes": 47770,
-        "format": "WebP"
+        "bytes": 49658,
+        "format": "WEBP",
+        "sha256": "24ba0010f8eb681b7de3f6dfdb5e4222e1c2c54513e302e1e209f449119bcab6"
       },
       "1280": {
         "size": [
           1280,
-          1918
+          1920
         ],
-        "bytes": 110914,
-        "format": "WebP"
+        "bytes": 107700,
+        "format": "WEBP",
+        "sha256": "3048391a1a744772a603561c8bdcd3de268fbbcd5de877ba15c1eb6933fda075"
       }
     }
   },
   {
     "asset": "couple-formal",
-    "source": "DRS06605(1).jpg",
+    "source": "DRS06605(3).jpg",
     "original_size": [
-      1366,
+      1365,
       2048
     ],
-    "original_bytes": 457422,
+    "original_bytes": 545296,
     "outputs": {
       "720": {
         "size": [
           720,
-          1079
+          1080
         ],
-        "bytes": 61144,
-        "format": "WebP"
+        "bytes": 59716,
+        "format": "WEBP",
+        "sha256": "b1cec435c141fdd172fa8835b9f7d1e885377ed6d295f360f43f472cb6c0623d"
       },
       "1280": {
         "size": [
           1280,
-          1919
+          1920
         ],
-        "bytes": 141698,
-        "format": "WebP"
+        "bytes": 130758,
+        "format": "WEBP",
+        "sha256": "304f510af968eb2901ea930e89a53571d8ba0dfc2269e3f2018dd5a0445c8a1e"
       }
     }
   },
   {
     "asset": "hero",
-    "source": "DRS06640(1).jpg",
+    "source": "DRS06640(3).jpg",
     "original_size": [
-      1364,
+      1365,
       2048
     ],
-    "original_bytes": 644983,
+    "original_bytes": 607030,
     "outputs": {
       "720": {
         "size": [
           720,
-          1081
+          1080
         ],
-        "bytes": 107928,
-        "format": "WebP"
+        "bytes": 71156,
+        "format": "WEBP",
+        "sha256": "8ed63c059a0ea9b979572fae8151c1c6e74eba80ce28bb90d02246acdba8a839"
       },
       "1280": {
         "size": [
           1280,
-          1922
+          1920
         ],
-        "bytes": 264284,
-        "format": "WebP"
+        "bytes": 157376,
+        "format": "WEBP",
+        "sha256": "b1326d961896443a94338d2797b96a95cb14115a4e0771cd1e92b0aff27c7603"
       }
     }
   },
   {
     "asset": "couple-hands",
-    "source": "DRS06659(1).jpg",
+    "source": "DRS06659(3).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 454726,
+    "original_bytes": 558612,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 61740,
-        "format": "WebP"
+        "bytes": 58688,
+        "format": "WEBP",
+        "sha256": "bcf8b17c906fe4fa17120b39f1fb190dc45c0e30030fdb5032ba1f2eebd9430e"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 141826,
-        "format": "WebP"
+        "bytes": 127630,
+        "format": "WEBP",
+        "sha256": "5aea5459d28ced98b0510e6911fd570bc7397fbec5b25e7885642a4dd801b084"
       }
     }
   },
   {
     "asset": "couple-playful",
-    "source": "DRS06669(1).jpg",
+    "source": "DRS06669(3).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 658395,
+    "original_bytes": 769544,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 111368,
-        "format": "WebP"
+        "bytes": 108602,
+        "format": "WEBP",
+        "sha256": "0589917701236cad1a76f6158f4e6f4c45fbe9736d3c6c809bb9fff0bc9430e4"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 273144,
-        "format": "WebP"
+        "bytes": 248080,
+        "format": "WEBP",
+        "sha256": "7c8c9376fafa74147a0fc327efa58daa028b9bcec3aa5d0f3c6e04dc0c4e7aff"
       }
     }
   },
   {
     "asset": "couple-intimate",
-    "source": "DRS06828.jpg",
+    "source": "DRS06828(1).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 848572,
+    "original_bytes": 844456,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 95594,
-        "format": "WebP"
+        "bytes": 74398,
+        "format": "WEBP",
+        "sha256": "f46466bce9c0eed83b4b93aa5e5a81628f96abe96114467427e0cb31e0d848df"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 402814,
-        "format": "WebP"
+        "bytes": 237182,
+        "format": "WEBP",
+        "sha256": "0e554b30b7e85ad700733d032c2ba73e463ace8aea03fbcaf5f3cb4c1ec711b4"
       }
     }
   },
   {
     "asset": "groom",
-    "source": "DRS07188(1).jpg",
+    "source": "DRS07188(3).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 904589,
+    "original_bytes": 947705,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 170100,
-        "format": "WebP"
+        "bytes": 147564,
+        "format": "WEBP",
+        "sha256": "6d4467e3422658ac37dbea57e5759d19ba373277e858a027fbef634287d7fb7b"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 432752,
-        "format": "WebP"
+        "bytes": 346158,
+        "format": "WEBP",
+        "sha256": "f55ee18149ad58fe27ee5015975358496ea4ba69c123a4a0b62b28942b2e2537"
       }
     }
   },
   {
     "asset": "couple-seated",
-    "source": "DRS07290.JPG",
+    "source": "DRS07290(1).JPG",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 450217,
+    "original_bytes": 444532,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 68264,
-        "format": "WebP"
+        "bytes": 53346,
+        "format": "WEBP",
+        "sha256": "546af86ad0ddf1238aeca3106ce84a10b5aa045f94926d6d0949608554988242"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 155812,
-        "format": "WebP"
+        "bytes": 113474,
+        "format": "WEBP",
+        "sha256": "e29ab2e4eb9b135d6630168ef4c9e559134117d6ef9e18b1b284a042f67d3d64"
       }
     }
   },
   {
     "asset": "couple-aodai",
-    "source": "DRS07389(1).jpg",
+    "source": "DRS07389(3).jpg",
     "original_size": [
       1365,
       2048
     ],
-    "original_bytes": 468618,
+    "original_bytes": 472689,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 70338,
-        "format": "WebP"
+        "bytes": 52706,
+        "format": "WEBP",
+        "sha256": "781c2a267093049a02a82a9ab70eb4e4365a8df79f41593a2be23a1d40688fe7"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 155864,
-        "format": "WebP"
+        "bytes": 109830,
+        "format": "WEBP",
+        "sha256": "8e3107ebe570326872384f98fa4f541b718e3785135f45b9b3182ebfde929e1e"
       }
     }
   },
   {
     "asset": "couple-garden",
-    "source": "DRS07446.JPG",
+    "source": "DRS07446(1).JPG",
     "original_size": [
       1365,
-      2047
+      2048
     ],
-    "original_bytes": 725272,
+    "original_bytes": 708435,
     "outputs": {
       "720": {
         "size": [
           720,
           1080
         ],
-        "bytes": 153080,
-        "format": "WebP"
+        "bytes": 109062,
+        "format": "WEBP",
+        "sha256": "aa2e0fac666c50d17b535c4d9b07458183478642a873fbe4d7d6f54735e892ef"
       },
       "1280": {
         "size": [
           1280,
           1920
         ],
-        "bytes": 329656,
-        "format": "WebP"
+        "bytes": 232356,
+        "format": "WEBP",
+        "sha256": "08a0bac0767b17ca89ff200c08e8f4049143c901183a5e325109bfa634f7cfe3"
       }
     }
   },
   {
     "asset": "couple-studio",
-    "source": "DRS07545(1).jpg",
+    "source": "DRS07545(3).jpg",
     "original_size": [
       1366,
       2048
     ],
-    "original_bytes": 290539,
+    "original_bytes": 287949,
     "outputs": {
       "720": {
         "size": [
           720,
-          1079
+          1080
         ],
-        "bytes": 34184,
-        "format": "WebP"
+        "bytes": 26374,
+        "format": "WEBP",
+        "sha256": "0435ce8d2e8648d2d9038a0c5a966eb5d30a5f5071a1752408bd26b2b7260523"
       },
       "1280": {
         "size": [
           1280,
-          1919
+          1920
         ],
-        "bytes": 85762,
-        "format": "WebP"
+        "bytes": 58144,
+        "format": "WEBP",
+        "sha256": "494a43a8bc5840fb340798985d174f1f35bd3f62736adf8977f9e1d9cb35bf50"
       }
     }
   }
