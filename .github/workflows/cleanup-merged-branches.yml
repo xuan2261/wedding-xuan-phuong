@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
   group: cleanup-merged-branches
@@ -31,10 +32,10 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         shell: bash
         run: |
-          echo "Deleting merged branch ${HEAD_REF}"
-          gh api \
-            --method DELETE \
-            "repos/${GITHUB_REPOSITORY}/git/refs/heads/${HEAD_REF}"
+          set -euo pipefail
+          encoded_ref=$(jq -rn --arg value "$HEAD_REF" '$value|@uri')
+          echo "DELETE: merged PR head ${HEAD_REF}"
+          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}"
 
   cleanup-historical-branches:
     if: github.event_name != 'pull_request'
@@ -43,33 +44,81 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Delete only fully merged historical branches
+
+      - name: Delete merged and approved temporary branches
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          branches=(
+          set -euo pipefail
+
+          default_branch="${{ github.event.repository.default_branch }}"
+
+          merged_pr_branches=(
             "audit/v19.4-release-readiness"
             "hardening/v19.5-release-gates"
             "chore/dependency-rollup-and-redeploy"
             "ops/pages-live-watch-and-branch-cleanup"
+            "ops/recover-image-pack-v20-history"
+            "fix/image-pack-recovery-evidence"
           )
 
-          for branch in "${branches[@]}"; do
-            if ! git ls-remote --exit-code --heads origin "${branch}" >/dev/null 2>&1; then
-              echo "SKIP: ${branch} does not exist"
-              continue
-            fi
+          approved_orphan_branches=(
+            "staging/v20-binary-upload"
+            "images/refresh-photoshop-v20-final"
+          )
 
-            git fetch --no-tags origin \
-              "+refs/heads/${branch}:refs/remotes/origin/${branch}"
-            if ! git merge-base --is-ancestor "refs/remotes/origin/${branch}" HEAD; then
-              echo "KEEP: ${branch} contains commits not in main"
-              continue
-            fi
-
-            echo "DELETE: ${branch} is fully merged into main"
-            gh api \
-              --method DELETE \
-              "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"
+          declare -A approved_orphan=()
+          for branch in "${approved_orphan_branches[@]}"; do
+            approved_orphan["$branch"]=1
           done
+
+          candidates=("${merged_pr_branches[@]}" "${approved_orphan_branches[@]}")
+
+          for branch in "${candidates[@]}"; do
+            if [[ "$branch" == "$default_branch" ]]; then
+              echo "BLOCKED: refusing to delete default branch $branch"
+              continue
+            fi
+
+            if ! git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+              echo "SKIP: $branch does not exist"
+              continue
+            fi
+
+            open_prs=$(gh pr list \
+              --repo "$GITHUB_REPOSITORY" \
+              --state open \
+              --head "$branch" \
+              --json number \
+              --jq 'length')
+            if [[ "$open_prs" != "0" ]]; then
+              echo "KEEP: $branch is referenced by $open_prs open pull request(s)"
+              continue
+            fi
+
+            if [[ -z "${approved_orphan[$branch]+x}" ]]; then
+              merged_prs=$(gh pr list \
+                --repo "$GITHUB_REPOSITORY" \
+                --state merged \
+                --head "$branch" \
+                --json number \
+                --jq 'length')
+              if [[ "$merged_prs" == "0" ]]; then
+                echo "BLOCKED: $branch has no merged pull request evidence"
+                continue
+              fi
+            else
+              echo "APPROVED: $branch is an explicitly reviewed temporary orphan"
+            fi
+
+            encoded_ref=$(jq -rn --arg value "$branch" '$value|@uri')
+            echo "DELETE: $branch"
+            gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}"
+          done
+
+          echo "## Branch cleanup" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Protected default branch: \`$default_branch\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Open-PR branches are always kept." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Merged branches require merged-PR evidence." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Temporary orphan deletion is restricted to the reviewed allowlist." >> "$GITHUB_STEP_SUMMARY"
