@@ -1,0 +1,48 @@
+name: Apply visual overlap fix v20.1
+
+on:
+  push:
+    branches: [fix/visual-overlap-v20-1]
+    paths:
+      - tools/apply_visual_overlap_v20_1.py
+      - .github/workflows/apply-visual-overlap-v20-1.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-visual-overlap-v20-1
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/visual-overlap-v20-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install verification dependency
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Apply audited visual safe zones and rebuild dist
+        run: python tools/apply_visual_overlap_v20_1.py
+      - name: Commit production-only result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "fix(ui): keep wedding text clear of faces"
+          git push origin HEAD:fix/visual-overlap-v20-1
