@@ -1,4 +1,4 @@
-HEAD=7beb1e4086c504ec16d073d1851d931d79ec0ef2
+HEAD=0546e7ce88e2770a224f5b6174c30ca7acbb6858
 == JavaScript syntax ==
 --- node --check app.js
 status=0
@@ -58,5 +58,9 @@ status=1
 PASS: rebuilt optimized clean dist v20.1-20260726 with 4 event entry pages
 status=0
 == Working tree after build ==
-?? reports/VISUAL-SOURCE-DIAGNOSIS-V20.1.log
+ M dist/events/bride/index.html
+ M dist/events/groom/index.html
+ M dist/events/nhatrang/index.html
+ M dist/events/saigon/index.html
+ M reports/VISUAL-SOURCE-DIAGNOSIS-V20.1.log
 ?? tools/__pycache__/
