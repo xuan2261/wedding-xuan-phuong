@@ -11,7 +11,7 @@ DIST = ROOT / "dist"
 DATA = json.loads((ROOT / "tools" / "wedding-data.json").read_text(encoding="utf-8"))
 BUILD = json.loads((ROOT / "BUILD.json").read_text(encoding="utf-8"))
 SITE_ROOT = "https://xuan2261.github.io/wedding-xuan-phuong/"
-META_IMAGE = f"{SITE_ROOT}assets/images/meta-v4.jpg"
+META_IMAGE = f"{SITE_ROOT}assets/images/meta-v3.jpg"
 
 if DIST.exists():
     shutil.rmtree(DIST)
