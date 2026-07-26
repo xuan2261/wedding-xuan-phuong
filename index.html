@@ -351,6 +351,87 @@
       <h2 id="actions-title" data-actions-title>Xác nhận tham dự</h2>
       <p id="rsvpDeadlineCopy" hidden>Vui lòng xác nhận tham dự trước <strong data-rsvp-deadline></strong> để gia đình chuẩn bị đón tiếp chu đáo.</p>
       <p id="actionsDescription" data-actions-description>Thông tin RSVP đa sự kiện sẽ được cập nhật sau.</p>
+      <form class="rsvp-form" id="rsvpForm" method="post" target="rsvpSubmitFrame" novalidate hidden>
+        <input type="hidden" name="form" value="rsvp">
+        <input type="hidden" name="clientKey" id="rsvpClientKey">
+        <input type="hidden" name="openedAt" id="rsvpOpenedAt">
+        <input type="hidden" name="requestId" id="rsvpRequestId">
+        <input type="hidden" name="siteOrigin" id="rsvpSiteOrigin">
+        <input type="hidden" name="guestLink" id="rsvpGuestLink">
+
+        <div class="form-field">
+          <label for="rsvpGuestName">Họ và tên <span aria-hidden="true">*</span></label>
+          <input
+            id="rsvpGuestName"
+            name="guestName"
+            type="text"
+            minlength="2"
+            maxlength="80"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <fieldset class="form-choice">
+          <legend>Quý khách có tham dự không? <span aria-hidden="true">*</span></legend>
+          <label>
+            <input type="radio" name="attending" value="yes" required>
+            <span>Có, tôi sẽ tham dự</span>
+          </label>
+          <label>
+            <input type="radio" name="attending" value="no">
+            <span>Rất tiếc, tôi không thu xếp được</span>
+          </label>
+        </fieldset>
+
+        <div class="form-field" id="rsvpPartySizeField">
+          <label for="rsvpPartySize">Số người tham dự</label>
+          <input
+            id="rsvpPartySize"
+            name="partySize"
+            type="number"
+            inputmode="numeric"
+            value="1"
+            min="1"
+            max="20"
+            step="1"
+          >
+        </div>
+
+        <fieldset class="form-choice">
+          <legend>Quý khách là khách của <span aria-hidden="true">*</span></legend>
+          <label>
+            <input type="radio" name="guestOf" value="groom" required>
+            <span>Chú rể</span>
+          </label>
+          <label>
+            <input type="radio" name="guestOf" value="bride">
+            <span>Cô dâu</span>
+          </label>
+        </fieldset>
+
+        <div class="form-field" id="rsvpEventField">
+          <label for="rsvpEventSelect">Sự kiện Quý khách tham dự</label>
+          <select id="rsvpEventSelect" name="eventId" required></select>
+        </div>
+
+        <div class="form-field">
+          <label for="rsvpMessage">Lời nhắn cho Cô dâu &amp; Chú rể <span class="form-optional">(không bắt buộc)</span></label>
+          <textarea id="rsvpMessage" name="message" rows="3" maxlength="280"></textarea>
+        </div>
+
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="rsvpWebsite">Không điền trường này</label>
+          <input id="rsvpWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="form-status" id="rsvpFormStatus" role="status" aria-live="polite"></p>
+
+        <button class="button rsvp-form__submit" type="submit" id="rsvpSubmitButton">
+          Xác nhận
+        </button>
+      </form>
+
       <div class="actions__buttons">
         <a
           class="button"
@@ -372,9 +453,8 @@
           Gửi lời chúc
         </button>
       </div>
-      <button class="actions__gift-link" type="button" id="giftButton" hidden>
-        Thông tin mừng cưới dành cho khách ở xa
-      </button>
+      <p class="actions__gift-note" id="giftNote" hidden></p>
+      <div class="actions__gifts" id="giftButtons" hidden></div>
       <p class="actions__note" id="rsvpNote" hidden>Link xác nhận tham dự sẽ được cập nhật sau.</p>
     </section>
 
@@ -715,13 +795,13 @@
   <dialog class="gift-dialog" id="giftDialog" aria-labelledby="gift-title">
     <div class="dialog-header">
       <div>
-        <p class="section-kicker">Khách ở xa</p>
-        <h2 id="gift-title">Thông tin mừng cưới</h2>
+        <p class="section-kicker">Quà mừng cưới</p>
+        <h2 id="gift-title">Quà mừng cưới</h2>
         <p class="dialog-event-label" data-gift-dialog-event></p>
       </div>
       <button class="icon-button" type="button" data-close-dialog aria-label="Đóng cửa sổ">×</button>
     </div>
-    <p class="dialog-intro">Thông tin mừng cưới dành cho khách ở xa.</p>
+    <p class="dialog-intro">Quý khách có thể quét mã QR hoặc sao chép số tài khoản bên dưới.</p>
     <div class="gift-grid" id="giftGrid"></div>
   </dialog>
 
@@ -819,6 +899,15 @@
     id="wishSubmitFrame"
     name="wishSubmitFrame"
     title="Kết quả gửi lời chúc"
+    aria-hidden="true"
+    tabindex="-1"
+  ></iframe>
+
+  <iframe
+    class="wish-submit-frame"
+    id="rsvpSubmitFrame"
+    name="rsvpSubmitFrame"
+    title="Kết quả xác nhận tham dự"
     aria-hidden="true"
     tabindex="-1"
   ></iframe>

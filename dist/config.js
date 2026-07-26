@@ -52,14 +52,15 @@
       groom: {
         id: "groom",
         label: "Mừng cưới nhà trai",
+        buttonLabel: "Quà mừng cưới chú rể",
         accountName: "BÙI THANH XUÂN",
         bankName: "MB Bank",
         accountNumber: "0374037026",
         // Ảnh QR KHÔNG mã hoá accountNumber ở trên mà mã hoá alias VietQR dưới
         // đây. Khai báo tường minh để test khoá được payload và để khác biệt
         // này nhìn thấy được thay vì ngầm định.
-        // CẦN GIA ĐÌNH XÁC NHẬN alias VQRQAKQFO1476 đúng trỏ về tài khoản
-        // 0374037026 tại MB Bank — không kiểm chứng được từ trong repo.
+        // Gia đình đã xác nhận alias VQRQAKQFO1476 trỏ đúng về tài khoản
+        // 0374037026 tại MB Bank (qrIdentifierVerified: true).
         bankBin: "970422",
         qrAccountIdentifier: "VQRQAKQFO1476",
         qrIdentifierVerified: true,
@@ -68,6 +69,7 @@
       bride: {
         id: "bride",
         label: "Mừng cưới nhà gái",
+        buttonLabel: "Quà mừng cưới cô dâu",
         accountName: "TRẦN THỊ PHƯỢNG",
         bankName: "SHB Bank",
         accountNumber: "0976699400",
@@ -83,6 +85,26 @@
       lazyLoad: true,
       embedded: true,
       eventEntry: ""
+    },
+
+    // Biểu mẫu xác nhận tham dự ngay trên thiệp, gửi thẳng vào Google Sheet dùng
+    // chung với sổ lời chúc. Dùng lại đúng đường truyền của lời chúc: POST qua
+    // iframe ẩn tới Apps Script Web App rồi nhận kết quả bằng postMessage, nên
+    // không cần backend riêng và chạy được trên GitHub Pages.
+    //
+    // apiUrl để trống thì form tự ẩn và thiệp giữ nguyên nút "Liên hệ xác nhận".
+    // Xem tools/wedding-rsvp-webapp.gs để lấy URL /exec.
+    rsvpForm: {
+      enabled: true,
+      // Cùng URL với sổ lời chúc: RSVP là một module trong chính project Apps
+      // Script đó, dùng chung một deployment và một Google Sheet.
+      apiUrl: "https://script.google.com/macros/s/AKfycbzQN36EPuVLINaK4FPeQzJYFqf-iqob_FN5Ov0eUMmMZ2Yuxbw8YiW8L64pT3AjFT5o/exec",
+      maxNameLength: 80,
+      maxMessageLength: 280,
+      maxPartySize: 20,
+      cooldownSeconds: 60,
+      requestTimeoutMs: 15000,
+      minFormOpenMs: 1200
     },
 
     sharingDefaults: {
@@ -134,11 +156,11 @@
           actionsTitle: "Xác nhận tham dự tiệc nhà gái",
           actionsDescription: "Thông tin RSVP sẽ được bổ sung khi biểu mẫu đa sự kiện hoàn tất."
         },
-        rsvp: { enabled: false, url: "", deadline: "", guestNameEntry: "", pendingMessage: "RSVP cho tiệc nhà gái sẽ được cập nhật sau." },
+        rsvp: { enabled: false, url: "", deadline: "28/07/2026", guestNameEntry: "", pendingMessage: "RSVP cho tiệc nhà gái sẽ được cập nhật sau." },
         calendar: { enabled: true, file: "assets/calendar/tiec-cuoi-nha-gai-2026-07-29.ics", label: "Thêm tiệc nhà gái vào lịch" },
         lifecycle: {
           enabled: true,
-          rsvpClosesAt: "",
+          rsvpClosesAt: "2026-07-28T23:59:59+07:00",
           weddingDayStartsAt: "2026-07-29T00:00:00+07:00",
           weddingDayEndsAt: "2026-07-29T23:59:59+07:00",
           giftsHideAt: "",
@@ -146,7 +168,7 @@
           postWeddingMessage: "Thanh Xuân, Thị Phượng và gia đình nhà gái trân trọng cảm ơn Quý khách đã chung vui.",
           rsvpClosedMessage: "RSVP cho tiệc nhà gái đã khép lại. Quý khách vui lòng liên hệ trực tiếp cô dâu hoặc chú rể nếu cần hỗ trợ."
         },
-        giftIds: ["bride"],
+        giftIds: ["groom", "bride"],
         sharing: {
           title: "Tiệc cưới nhà gái · Thanh Xuân & Thị Phượng",
           text: "Trân trọng kính mời Quý khách đến chung vui trong Tiệc cưới tại nhà gái của Thanh Xuân và Thị Phượng."
@@ -194,11 +216,11 @@
           actionsTitle: "Xác nhận tham dự lễ nhà trai",
           actionsDescription: "Thông tin RSVP đa sự kiện sẽ được bổ sung sau khi Google Form mới được tạo."
         },
-        rsvp: { enabled: false, url: "", deadline: "", guestNameEntry: "", pendingMessage: "RSVP đa sự kiện đang được hoàn thiện. Quý khách cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể." },
+        rsvp: { enabled: false, url: "", deadline: "29/07/2026", guestNameEntry: "", pendingMessage: "RSVP đa sự kiện đang được hoàn thiện. Quý khách cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể." },
         calendar: { enabled: true, file: "assets/calendar/le-thanh-hon-nha-trai-2026-07-30.ics", label: "Thêm lễ nhà trai vào lịch" },
         lifecycle: {
           enabled: true,
-          rsvpClosesAt: "",
+          rsvpClosesAt: "2026-07-29T23:59:59+07:00",
           weddingDayStartsAt: "2026-07-30T00:00:00+07:00",
           weddingDayEndsAt: "2026-07-30T23:59:59+07:00",
           giftsHideAt: "",
@@ -206,7 +228,7 @@
           postWeddingMessage: "Thanh Xuân, Thị Phượng và hai gia đình trân trọng cảm ơn Quý khách đã hiện diện và gửi lời chúc phúc.",
           rsvpClosedMessage: "RSVP lễ nhà trai đã khép lại. Quý khách vui lòng liên hệ trực tiếp cô dâu hoặc chú rể nếu cần hỗ trợ."
         },
-        giftIds: ["groom"],
+        giftIds: ["groom", "bride"],
         sharing: {
           title: "Lễ Thành Hôn · Thanh Xuân & Thị Phượng",
           text: "Trân trọng kính mời Quý khách đến chung vui trong Lễ Thành Hôn của Thanh Xuân và Thị Phượng."
@@ -255,11 +277,11 @@
           actionsTitle: "Xác nhận tham dự Báo Hỷ Nha Trang",
           actionsDescription: "Biểu mẫu RSVP sẽ được bật sau khi địa điểm và danh sách khách được chốt."
         },
-        rsvp: { enabled: false, url: "", deadline: "", guestNameEntry: "", pendingMessage: "RSVP Tiệc Báo Hỷ Nha Trang sẽ cập nhật sau." },
+        rsvp: { enabled: false, url: "", deadline: "14/08/2026", guestNameEntry: "", pendingMessage: "RSVP Tiệc Báo Hỷ Nha Trang sẽ cập nhật sau." },
         calendar: { enabled: true, file: "assets/calendar/bao-hy-nha-trang-2026-08-15.ics", label: "Thêm Báo Hỷ Nha Trang vào lịch" },
         lifecycle: {
           enabled: true,
-          rsvpClosesAt: "",
+          rsvpClosesAt: "2026-08-14T23:59:59+07:00",
           weddingDayStartsAt: "2026-08-15T00:00:00+07:00",
           weddingDayEndsAt: "2026-08-15T23:59:59+07:00",
           giftsHideAt: "",
@@ -316,11 +338,11 @@
           actionsTitle: "Xác nhận tham dự Báo Hỷ Sài Gòn",
           actionsDescription: "Biểu mẫu RSVP sẽ được bật sau khi địa chỉ và danh sách khách được chốt."
         },
-        rsvp: { enabled: false, url: "", deadline: "", guestNameEntry: "", pendingMessage: "RSVP Tiệc Báo Hỷ Sài Gòn sẽ cập nhật sau." },
+        rsvp: { enabled: false, url: "", deadline: "21/08/2026", guestNameEntry: "", pendingMessage: "RSVP Tiệc Báo Hỷ Sài Gòn sẽ cập nhật sau." },
         calendar: { enabled: true, file: "assets/calendar/bao-hy-sai-gon-2026-08-22.ics", label: "Thêm Báo Hỷ Sài Gòn vào lịch" },
         lifecycle: {
           enabled: true,
-          rsvpClosesAt: "",
+          rsvpClosesAt: "2026-08-21T23:59:59+07:00",
           weddingDayStartsAt: "2026-08-22T00:00:00+07:00",
           weddingDayEndsAt: "2026-08-22T23:59:59+07:00",
           giftsHideAt: "",
@@ -368,9 +390,14 @@
       autoStoryDefault: true,
       simpleModeEnabled: true,
       openingDurationMs: 1580,
-      storyStartDelayMs: 2600,
+      // Chương một là ảnh hero đang hiển thị sẵn, nên cú "cuộn" đầu tiên không
+      // nhìn thấy được. Delay dài khiến khách tưởng thiệp không tự chạy.
+      storyStartDelayMs: 1400,
       storyHoldMs: 6500,
       pauseOnInteraction: true,
+      // Khoảng lặng sau khi mở thiệp để thao tác mở và những cú chạm thăm dò
+      // đầu tiên không bị hiểu nhầm là muốn dừng tự xem.
+      interactionGraceMs: 1200,
       pauseOnDialogs: true,
       preloadNextScene: true,
       preloadImageLimit: 4,
@@ -391,7 +418,10 @@
     },
 
     site: {
-      domain: "https://xuan2261.github.io/wedding-xuan-phuong/"
+      domain: "https://xuan2261.github.io/wedding-xuan-phuong/",
+      // Dòng dẫn nhẹ phía trên hai nút quà mừng cưới: đặt sự hiện diện của khách
+      // lên trước, để lời mời mừng cưới không đứng trần.
+      giftNote: "Sự hiện diện của Quý khách đã là món quà quý giá nhất với hai gia đình."
     }
   };
 
@@ -451,6 +481,7 @@
     invitation: Object.freeze(profile.invitation),
     labels: Object.freeze(profile.labels),
     rsvp: Object.freeze({ ...SOURCE.rsvpDefaults, ...profile.rsvp }),
+    rsvpForm: Object.freeze(SOURCE.rsvpForm),
     calendar: Object.freeze(profile.calendar),
     lifecycle: Object.freeze(profile.lifecycle),
     sharing: Object.freeze({ ...SOURCE.sharingDefaults, ...profile.sharing }),
