@@ -28,6 +28,10 @@ jobs:
           cache: npm
       - name: Apply deterministic root-cause fixes
         run: python tools/apply-ak-debug-v20-2.py
+      - name: Preserve connector-managed workflow files
+        run: |
+          git checkout -- .github/workflows/verify-pages.yml
+          git checkout -- .github/workflows/guest-release.yml
       - name: Install complete audit dependencies
         run: |
           python -m pip install --disable-pip-version-check pillow opencv-python-headless
