@@ -24,3 +24,8 @@ test-results/
 # Scratch files
 tmp/
 *.tmp
+
+# Ad-hoc scratch scripts written into the repo root by tooling.
+# The history carries several "remove accidental temporary file" commits
+# from exactly this; keep them out of the tree instead.
+/.*-tmp*
