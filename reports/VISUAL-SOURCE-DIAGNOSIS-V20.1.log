@@ -1,0 +1,62 @@
+HEAD=7beb1e4086c504ec16d073d1851d931d79ec0ef2
+== JavaScript syntax ==
+--- node --check app.js
+status=0
+--- node --check config.js
+status=0
+--- node --check guest-utils.js
+status=0
+--- node --check event-entry.js
+status=0
+== Python tests ==
+tests/consistency_check.py
+tests/guest_tool_check.py
+tests/live_pages_verifier_check.py
+tests/release_readiness_check.py
+tests/share_entry_pages_check.py
+tests/verify_assets.py
+tests/verify_dist.py
+tests/verify_release.py
+--- python tests/consistency_check.py
+FAIL
+- wedding-data sai build
+- HTML lệch build
+- config lệch build
+status=1
+--- python tests/guest_tool_check.py
+PASS: guest link CSV import/export tool
+status=0
+--- python tests/live_pages_verifier_check.py
+PASS: live Pages verifier contract
+status=0
+--- python tests/release_readiness_check.py
+PASS: release readiness auditor detects four events, imports safely, and fails closed in strict mode (16 blockers, 13 warnings)
+status=0
+--- python tests/share_entry_pages_check.py
+FAIL
+- bride: thiếu OG image
+- groom: thiếu OG image
+- nhatrang: thiếu OG image
+- saigon: thiếu OG image
+status=1
+--- python tests/verify_assets.py
+Traceback (most recent call last):
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tests/verify_assets.py", line 3, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
+status=1
+--- python tests/verify_dist.py
+FAIL
+- dist sai build
+status=1
+--- python tests/verify_release.py
+FAIL
+- sai build marker
+- thiếu simple mode
+status=1
+== Build dist ==
+PASS: rebuilt optimized clean dist v20.1-20260726 with 4 event entry pages
+status=0
+== Working tree after build ==
+?? reports/VISUAL-SOURCE-DIAGNOSIS-V20.1.log
+?? tools/__pycache__/
