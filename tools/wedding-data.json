@@ -50,13 +50,13 @@
       "addressLine2": "Xã Tuy Phước Bắc, Tỉnh Gia Lai",
       "address": "Thôn Định Thiện Tây, Xã Tuy Phước Bắc, Tỉnh Gia Lai",
       "mapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
-      "mapEmbedUrl": "",
-      "mapsVerified": false,
-      "venueStatusNote": "Liên kết bản đồ đã được nhập nhưng chưa xác minh điểm ghim; popup bản đồ tạm ẩn.",
+      "mapEmbedUrl": "https://www.google.com/maps?q=13.8889284,109.1379013&z=17&output=embed",
+      "mapsVerified": true,
+      "venueStatusNote": "",
       "rsvp": {
         "enabled": false,
         "url": "",
-        "deadlineDisplay": "",
+        "deadlineDisplay": "28/07/2026",
         "guestNameEntry": "",
         "pendingMessage": "RSVP cho tiệc nhà gái sẽ được cập nhật sau."
       },
@@ -67,7 +67,7 @@
       },
       "lifecycle": {
         "enabled": true,
-        "rsvpClosesAt": "",
+        "rsvpClosesAt": "2026-07-28T23:59:59+07:00",
         "eventDayStartsAt": "2026-07-29T00:00:00+07:00",
         "eventDayEndsAt": "2026-07-29T23:59:59+07:00",
         "giftsHideAt": ""
@@ -127,7 +127,7 @@
       "rsvp": {
         "enabled": false,
         "url": "",
-        "deadlineDisplay": "",
+        "deadlineDisplay": "29/07/2026",
         "guestNameEntry": "",
         "pendingMessage": "RSVP đa sự kiện đang được hoàn thiện. Quý khách cần xác nhận sớm vui lòng liên hệ cô dâu hoặc chú rể."
       },
@@ -138,7 +138,7 @@
       },
       "lifecycle": {
         "enabled": true,
-        "rsvpClosesAt": "",
+        "rsvpClosesAt": "2026-07-29T23:59:59+07:00",
         "eventDayStartsAt": "2026-07-30T00:00:00+07:00",
         "eventDayEndsAt": "2026-07-30T23:59:59+07:00",
         "giftsHideAt": ""
@@ -164,7 +164,7 @@
     "nhatrang": {
       "id": "nhatrang",
       "kind": "wedding-reception",
-      "status": "draft",
+      "status": "confirmed-partial",
       "title": "Tiệc Báo Hỷ tại Nha Trang",
       "shortTitle": "Nha Trang · 15/08",
       "heroKicker": "Tiệc Báo Hỷ · Nha Trang",
@@ -187,19 +187,19 @@
           "note": "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật."
         }
       ],
-      "venueName": "Nhà hàng Nha Trang",
-      "addressLine1": "Nha Trang",
-      "addressLine2": "Địa chỉ cụ thể sẽ cập nhật",
-      "address": "Nha Trang",
-      "mapsUrl": "",
+      "venueName": "Sảnh Sea Flower, Khách sạn Xavia",
+      "addressLine1": "09 Hoàng Diệu",
+      "addressLine2": "Phường Nha Trang, Khánh Hoà",
+      "address": "09 Hoàng Diệu, Phường Nha Trang, Khánh Hoà",
+      "mapsUrl": "https://maps.app.goo.gl/kg3KhpvKhCz36LXw8",
       "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
-      "mapEmbedUrl": "",
-      "mapsVerified": false,
-      "venueStatusNote": "Tên nhà hàng, địa chỉ chi tiết và bản đồ đang chờ xác nhận. Liên kết đã cung cấp trùng với sự kiện nhà gái nên chưa được sử dụng.",
+      "mapEmbedUrl": "https://www.google.com/maps?q=12.2202026,109.2004447&z=17&output=embed",
+      "mapsVerified": true,
+      "venueStatusNote": "",
       "rsvp": {
         "enabled": false,
         "url": "",
-        "deadlineDisplay": "",
+        "deadlineDisplay": "14/08/2026",
         "guestNameEntry": "",
         "pendingMessage": "RSVP Tiệc Báo Hỷ Nha Trang sẽ cập nhật sau."
       },
@@ -210,7 +210,7 @@
       },
       "lifecycle": {
         "enabled": true,
-        "rsvpClosesAt": "",
+        "rsvpClosesAt": "2026-08-14T23:59:59+07:00",
         "eventDayStartsAt": "2026-08-15T00:00:00+07:00",
         "eventDayEndsAt": "2026-08-15T23:59:59+07:00",
         "giftsHideAt": ""
@@ -237,7 +237,7 @@
     "saigon": {
       "id": "saigon",
       "kind": "wedding-reception",
-      "status": "draft",
+      "status": "confirmed-partial",
       "title": "Tiệc Báo Hỷ tại Sài Gòn",
       "shortTitle": "Sài Gòn · 22/08",
       "heroKicker": "Tiệc Báo Hỷ · Sài Gòn",
@@ -260,19 +260,19 @@
           "note": "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật."
         }
       ],
-      "venueName": "Nhà hàng hải sản Seasan",
-      "addressLine1": "Sài Gòn",
-      "addressLine2": "Địa chỉ cụ thể sẽ cập nhật",
-      "address": "Sài Gòn",
-      "mapsUrl": "",
+      "venueName": "Nhà hàng Sesan",
+      "addressLine1": "16 Einstein",
+      "addressLine2": "Thủ Đức, Hồ Chí Minh",
+      "address": "16 Einstein, Thủ Đức, Hồ Chí Minh",
+      "mapsUrl": "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949",
       "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
-      "mapEmbedUrl": "",
-      "mapsVerified": false,
-      "venueStatusNote": "Địa chỉ chi tiết và bản đồ đang chờ xác nhận. Liên kết đã cung cấp trùng với sự kiện nhà gái nên chưa được sử dụng.",
+      "mapEmbedUrl": "https://www.google.com/maps?q=10.8438291,106.7642708&z=17&output=embed",
+      "mapsVerified": true,
+      "venueStatusNote": "",
       "rsvp": {
         "enabled": false,
         "url": "",
-        "deadlineDisplay": "",
+        "deadlineDisplay": "21/08/2026",
         "guestNameEntry": "",
         "pendingMessage": "RSVP Tiệc Báo Hỷ Sài Gòn sẽ cập nhật sau."
       },
@@ -283,7 +283,7 @@
       },
       "lifecycle": {
         "enabled": true,
-        "rsvpClosesAt": "",
+        "rsvpClosesAt": "2026-08-21T23:59:59+07:00",
         "eventDayStartsAt": "2026-08-22T00:00:00+07:00",
         "eventDayEndsAt": "2026-08-22T23:59:59+07:00",
         "giftsHideAt": ""
@@ -322,5 +322,9 @@
     "local": "assets/audio/music.mp3",
     "remoteFallback": "https://statics.pancake.vn/web-media-262/80/79/16/63/c3d171f86975dc7197c9c2031c739b0ef172a024b237d6156af08760-w:0-h:0-l:3821592-t:audio/mpeg.mp3",
     "volume": 0.8
+  },
+  "rsvpForm": {
+    "enabled": true,
+    "apiUrl": "https://script.google.com/macros/s/AKfycbzQN36EPuVLINaK4FPeQzJYFqf-iqob_FN5Ov0eUMmMZ2Yuxbw8YiW8L64pT3AjFT5o/exec"
   }
 }

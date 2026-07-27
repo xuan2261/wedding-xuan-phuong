@@ -1,5 +1,10 @@
 from pathlib import Path
 import json, re, sys
+
+# Thông báo lỗi có tiếng Việt; console Windows mặc định cp1252 sẽ ném
+# UnicodeEncodeError và giấu mất lỗi thật.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 DATA = json.loads((ROOT / "tools/wedding-data.json").read_text(encoding="utf-8"))
 CONFIG = (ROOT / "config.js").read_text(encoding="utf-8")
@@ -24,8 +29,11 @@ for event_id, event in DATA["events"].items():
     require(event["sharingTitle"] in CONFIG, f"config thiếu sharing title {event_id}")
     require(event["sharingText"] in CONFIG, f"config thiếu sharing text {event_id}")
     require((ROOT / event["calendar"]["file"]).exists(), f"thiếu ICS {event_id}")
-require(DATA["events"]["nhatrang"]["mapsUrl"] == "", "Nha Trang map phải tắt tới khi xác minh")
-require(DATA["events"]["saigon"]["mapsUrl"] == "", "Sài Gòn map phải tắt tới khi xác minh")
+# Không bao giờ chỉ khách tới một điểm ghim chưa ai mở ra kiểm. Trước đây điều
+# này được viết cứng cho Nha Trang và Sài Gòn; nay là bất biến cho mọi sự kiện.
+for event_id, event in DATA["events"].items():
+    if event["mapsUrl"] or event["mapEmbedUrl"]:
+        require(event["mapsVerified"], f"{event_id}: có bản đồ nhưng chưa xác minh điểm ghim")
 require(all(not event["rsvp"]["enabled"] for event in DATA["events"].values()), "RSVP phải tắt an toàn trước khi tạo Form mới")
 require('id="eventSwitcher"' in INDEX, "thiếu event switcher")
 require('data-invitation-event-name' in INDEX, "thiếu event invitation hook")
