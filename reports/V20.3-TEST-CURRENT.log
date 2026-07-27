@@ -1,0 +1,28 @@
+
+> wedding-xuan-phuong@20.3.0 test
+> npm run test:static && npm run test:browser-all
+
+
+> wedding-xuan-phuong@20.3.0 test:static
+> python tests/consistency_check.py && python tests/event_location_consistency_check.py && python tests/build_metadata_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/rsvp_form_check.mjs && node tests/rsvp_dedup_check.mjs && node tests/audio_story_regression_check.mjs && node tests/release_hardening_check.mjs && python tests/guest_tool_check.py && python tests/release_readiness_check.py && python tests/live_pages_verifier_check.py && node tests/lifecycle_check.js && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && node tools/check-syntax.mjs && python tools/build-dist.py && python tests/share_entry_pages_check.py && python tests/verify_dist.py
+
+PASS: multi-event wedding data consistency
+PASS: event map/address/calendar consistency
+PASS: v20.3 build metadata, deploy contract and wording consistency
+PASS: v20.1 multi-event release checks
+PASS: multi-event config resolution
+PASS: cinematic opening and auto-scroll contract
+PASS: inline RSVP form and Google Sheet contract
+PASS: RSVP dedup theo nội dung và tổng hợp theo câu trả lời mới nhất
+PASS: audio fade and story autostart regression contract
+PASS: v20.2 adaptive, contact and focus hardening
+PASS: guest link CSV import/export tool
+PASS: release readiness auditor detects four events, imports safely, and fails closed in strict mode (0 blockers, 0 warnings)
+PASS: live Pages verifier contract
+PASS: multi-event lifecycle contract
+PASS: wishes storage contract
+PASS: personalization utilities
+Traceback (most recent call last):
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tests/verify_assets.py", line 2, in <module>
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
