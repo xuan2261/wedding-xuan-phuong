@@ -32,7 +32,10 @@ assert.equal(bride.gifts[1].buttonLabel, "Quà mừng cưới cô dâu");
 
 const nhaTrang = load("#event=nhatrang");
 assert.equal(nhaTrang.event.dateDisplay, "15.08.2026");
-assert.equal(nhaTrang.event.mapsUrl, "");
+// Gia đình đã chốt địa điểm và xác minh điểm ghim, nên map Nha Trang đã bật.
+assert.ok(nhaTrang.event.mapsUrl.startsWith("https://maps.app.goo.gl/"), "Nha Trang thiếu link map");
+assert.equal(nhaTrang.event.mapsVerified, true);
+assert.ok(nhaTrang.event.venueName.includes("Xavia"), "Sai địa điểm Nha Trang");
 assert.equal(nhaTrang.gifts.length, 2);
 assert.equal(nhaTrang.sharing.title, "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng");
 

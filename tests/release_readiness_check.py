@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import subprocess
@@ -34,17 +35,39 @@ assert report["summary"]["events"] == 4
 assert isinstance(report["guestReady"], bool)
 assert all(item["severity"] in {"blocker", "warning"} for item in report["findings"])
 
-# The current source intentionally has known external-data blockers. This gate
-# prevents a future tool regression from incorrectly declaring it guest-ready.
-assert report["guestReady"] is False
-assert any(item["code"] == "rsvp-not-configured" for item in report["findings"])
-assert any(item["code"] == "event-still-draft" for item in report["findings"])
-assert any(item["code"] == "map-unverified" for item in report["findings"])
-
 markdown = module.render_markdown(report)
-assert "NOT GUEST READY" in markdown
 assert "`bride`" in markdown
 assert "`saigon`" in markdown
+
+# Trước đây phần này khẳng định dữ liệu thật CHƯA sẵn sàng, nên khi gia đình bổ
+# sung xong địa điểm thì test đổ — nó khoá trạng thái dở dang chứ không kiểm
+# công cụ. Nay dùng một bản dữ liệu cố tình hỏng để chứng minh công cụ vẫn phát
+# hiện đúng và vẫn báo chặn, độc lập với việc dự án đã sẵn sàng hay chưa.
+broken = copy.deepcopy(source)
+broken_event = broken["events"]["saigon"]
+broken_event["status"] = "draft"
+broken_event["mapsVerified"] = False
+broken_event["addressLine2"] = "Địa chỉ cụ thể sẽ cập nhật"
+broken["rsvpForm"] = {"enabled": False, "apiUrl": ""}
+for event in broken["events"].values():
+    event["rsvp"] = {**event.get("rsvp", {}), "enabled": False, "url": ""}
+
+broken_report = module.build_report(broken)
+assert broken_report["guestReady"] is False
+codes = {item["code"] for item in broken_report["findings"]}
+assert "rsvp-not-configured" in codes
+assert "event-still-draft" in codes
+assert "map-unverified" in codes
+assert "placeholder-addressLine2" in codes
+assert "NOT GUEST READY" in module.render_markdown(broken_report)
+
+# Biểu mẫu trên thiệp phải được tính là một cách xác nhận hợp lệ, dù Google Form
+# đa sự kiện vẫn tắt.
+inline_only = copy.deepcopy(broken)
+inline_only["rsvpForm"] = {"enabled": True, "apiUrl": "https://script.google.com/macros/s/X/exec"}
+assert "rsvp-not-configured" not in {
+    item["code"] for item in module.build_report(inline_only)["findings"]
+}
 
 # Exercise the real CLI as well as the imported API.  Non-strict mode must
 # produce both evidence files and exit successfully; strict mode must fail
@@ -77,8 +100,13 @@ with tempfile.TemporaryDirectory() as temp_dir:
     cli_report = json.loads(json_path.read_text(encoding="utf-8"))
     assert cli_report["summary"] == report["summary"]
 
+    # Chế độ strict phải báo chặn khi còn blocker. Chạy trên bản dữ liệu cố tình
+    # hỏng để tính chất "fail closed" được chứng minh kể cả khi dữ liệu thật đã
+    # sẵn sàng.
+    broken_path = temp / "broken.json"
+    broken_path.write_text(json.dumps(broken, ensure_ascii=False), encoding="utf-8")
     strict = subprocess.run(
-        [sys.executable, str(MODULE_PATH), "--data", str(DATA_PATH), "--strict"],
+        [sys.executable, str(MODULE_PATH), "--data", str(broken_path), "--strict"],
         cwd=ROOT,
         capture_output=True,
         text=True,
@@ -86,6 +114,17 @@ with tempfile.TemporaryDirectory() as temp_dir:
         check=False,
     )
     assert strict.returncode == 1, strict.stderr or strict.stdout
+
+    # Và phải cho qua khi dữ liệu thật không còn blocker.
+    strict_real = subprocess.run(
+        [sys.executable, str(MODULE_PATH), "--data", str(DATA_PATH), "--strict"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    assert strict_real.returncode == (0 if report["guestReady"] else 1)
 
 print(
     "PASS: release readiness auditor detects four events, imports safely, and "

@@ -51,7 +51,7 @@ def require(findings: list[Finding], event_id: str, code: str, value: Any, messa
         findings.append(Finding(event_id, "blocker", code, message))
 
 
-def audit_event(event_id: str, event: dict[str, Any]) -> list[Finding]:
+def audit_event(event_id: str, event: dict[str, Any], inline_form: dict[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
 
     require(findings, event_id, "missing-title", event.get("title"), "Thiếu tên sự kiện.")
@@ -78,8 +78,13 @@ def audit_event(event_id: str, event: dict[str, Any]) -> list[Finding]:
         findings.append(Finding(event_id, "warning", "map-embed-missing", "Thiếu URL nhúng bản đồ; popup Maps sẽ không hoạt động."))
 
     rsvp = event.get("rsvp") if isinstance(event.get("rsvp"), dict) else {}
-    if not (rsvp.get("enabled") and text(rsvp.get("url"))):
-        findings.append(Finding(event_id, "blocker", "rsvp-not-configured", "RSVP đa sự kiện chưa được cấu hình; đang dùng liên hệ điện thoại."))
+    # Biểu mẫu trên thiệp gửi thẳng vào Google Sheet là đường chính hiện nay;
+    # Google Form đa sự kiện chỉ còn là phương án dự phòng. Chỉ báo thiếu khi cả
+    # hai đều chưa có, nếu không công cụ sẽ báo chặn cho thứ đã chạy thật.
+    inline_ready = bool(inline_form.get("enabled") and text(inline_form.get("apiUrl")))
+    legacy_ready = bool(rsvp.get("enabled") and text(rsvp.get("url")))
+    if not (inline_ready or legacy_ready):
+        findings.append(Finding(event_id, "blocker", "rsvp-not-configured", "Chưa có cách xác nhận tham dự trực tuyến; đang dùng liên hệ điện thoại."))
     if not text(rsvp.get("deadlineDisplay")):
         findings.append(Finding(event_id, "warning", "rsvp-deadline-missing", "Chưa chốt hạn RSVP."))
 
@@ -103,6 +108,9 @@ def audit_event(event_id: str, event: dict[str, Any]) -> list[Finding]:
 
 def build_report(data: dict[str, Any]) -> dict[str, Any]:
     events = data.get("events") if isinstance(data.get("events"), dict) else {}
+    # Biểu mẫu xác nhận trên thiệp khai báo một lần ở cấp trên, dùng chung cho
+    # cả bốn sự kiện, nên phải đọc ở đây rồi truyền xuống từng sự kiện.
+    inline_form = data.get("rsvpForm") if isinstance(data.get("rsvpForm"), dict) else {}
     findings: list[Finding] = []
 
     for event_id in EVENT_IDS:
@@ -110,7 +118,7 @@ def build_report(data: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(event, dict):
             findings.append(Finding(event_id, "blocker", "event-missing", "Không tìm thấy cấu hình sự kiện."))
             continue
-        findings.extend(audit_event(event_id, event))
+        findings.extend(audit_event(event_id, event, inline_form))
 
     blockers = [item for item in findings if item.severity == "blocker"]
     warnings = [item for item in findings if item.severity == "warning"]

@@ -51,9 +51,11 @@ Cấu trúc này cung cấp Open Graph metadata đúng sự kiện trước khi 
 
 - Biểu mẫu xác nhận tham dự đã hoạt động; nút **Liên hệ xác nhận** giữ vai trò dự phòng.
 - Luồng Google Form đa sự kiện cũ giữ nguyên làm phương án dự phòng, đang tắt.
-- Popup map chỉ bật cho nhà trai; link nhà gái được giữ dưới dạng mở ngoài.
-- Map Nha Trang/Sài Gòn chưa dùng vì link cung cấp trùng link nhà gái.
-- Địa chỉ Nha Trang/Sài Gòn, giờ kết thúc và phân nhóm khách còn là dữ liệu nháp.
+- Cả bốn sự kiện đã có địa điểm, địa chỉ và bản đồ đã xác minh điểm ghim; popup
+  map bật cho cả bốn.
+- `python tools/release_readiness.py` hiện báo 0 blocker, `guestReady: true`.
+- Bốn sự kiện đang ở `confirmed-partial`; đổi sang `confirmed` khi gia đình chốt hẳn.
+- Phân nhóm khách và link cá nhân hoá còn phải tạo bằng `tools/create-guest-links.html`.
 
 ## Kiểm tra
 

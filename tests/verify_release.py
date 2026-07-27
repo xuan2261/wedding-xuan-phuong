@@ -1,5 +1,10 @@
 from pathlib import Path
 import re, sys, json
+
+# Thông báo lỗi có tiếng Việt; console Windows mặc định cp1252 sẽ ném
+# UnicodeEncodeError và giấu mất lỗi thật.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 errors=[]
 def require(value,message):
@@ -42,7 +47,17 @@ require('sharing: {\n          title: "Tiệc Báo Hỷ Nha Trang' in config,'sh
 require('openingExperience:' in config,'thiếu opening config')
 require('prefers-reduced-motion: reduce' in (ROOT/'assets/css/wedding-motion.css').read_text(encoding='utf-8'),'thiếu reduced motion')
 require('guestLead' in config and 'eventName' in config,'thiếu copy theo event')
-require('mapsUrl: ""' in config,'draft maps phải có trạng thái disabled')
+# Trước đây dòng này khẳng định "phải còn ít nhất một map bị tắt", tức là khoá
+# cứng trạng thái dở dang. Bất biến thật cần giữ là: không bao giờ chỉ khách tới
+# một điểm ghim chưa ai mở ra kiểm.
+_nl = chr(10)
+_events_src = config[config.index(_nl + '    events: {'):]
+for _eid in ('bride', 'groom', 'nhatrang', 'saigon'):
+    _start = _events_src.index(_nl + '      ' + _eid + ': {')
+    _block = _events_src[_start:_events_src.index(_nl + '        sharing: {', _start)]
+    _has_map = bool(re.search(r'map(?:s|Embed)Url: "[^"]+"', _block))
+    _verified = 'mapsVerified: true' in _block
+    require(not _has_map or _verified, f'{_eid}: có bản đồ nhưng chưa xác minh điểm ghim')
 require('rsvp: { enabled: false' in config,'RSVP cũ chưa bị vô hiệu hóa an toàn')
 require((ROOT/'tools/create-google-forms-rsvp-multi-event.gs').exists(),'thiếu Form builder')
 require((ROOT/'MULTI-EVENT-SETUP.md').exists(),'thiếu setup doc')
