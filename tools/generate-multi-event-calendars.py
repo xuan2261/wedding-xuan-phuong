@@ -66,7 +66,7 @@ for event_id, filename in FILES.items():
         "VERSION:2.0",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        "PRODID:-//Xuân Phượng//Multi-Event Wedding v19//VI",
+        "PRODID:-//Xuân Phượng//Multi-Event Wedding v20.3//VI",
         *VTIMEZONE,
         "BEGIN:VEVENT",
         f"UID:{event_id}-{event['dateIso']}@xuan-phuong",
@@ -76,7 +76,7 @@ for event_id, filename in FILES.items():
         # calendarEndsAt trong wedding-data.json (giờ bắt đầu + 3h).
         f"DTEND;TZID=Asia/Ho_Chi_Minh:{compact_datetime(event['calendarEndsAt'])}",
         f"SUMMARY:{escape(event['title'])}",
-        f"LOCATION:{escape(event['address'])}",
+        f"LOCATION:{escape(event['venueName'] + ", " + event['address'])}",
         f"DESCRIPTION:{escape(description)}",
         "BEGIN:VALARM",
         "TRIGGER:-P1D",

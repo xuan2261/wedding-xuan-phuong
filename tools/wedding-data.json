@@ -1,9 +1,9 @@
 {
   "build": {
-    "buildId": "v20.2-20260726",
-    "release": "v20.2",
+    "buildId": "v20.3-20260727",
+    "release": "v20.3",
     "backendVersion": "1.5.0",
-    "status": "ak-debug-full-audit-and-deploy-hardening"
+    "status": "event-map-binding-and-location-consistency"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",
@@ -73,6 +73,7 @@
         "giftsHideAt": ""
       },
       "giftIds": [
+        "groom",
         "bride"
       ],
       "directionPhoneRole": "bride",
@@ -144,7 +145,8 @@
         "giftsHideAt": ""
       },
       "giftIds": [
-        "groom"
+        "groom",
+        "bride"
       ],
       "directionPhoneRole": "groom",
       "invitationHeading": "Trân trọng kính mời",
@@ -192,7 +194,6 @@
       "addressLine2": "Phường Nha Trang, Khánh Hoà",
       "address": "09 Hoàng Diệu, Phường Nha Trang, Khánh Hoà",
       "mapsUrl": "https://maps.app.goo.gl/kg3KhpvKhCz36LXw8",
-      "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
       "mapEmbedUrl": "https://www.google.com/maps?q=12.2202026,109.2004447&z=17&output=embed",
       "mapsVerified": true,
       "venueStatusNote": "",
@@ -261,11 +262,10 @@
         }
       ],
       "venueName": "Nhà hàng Sesan",
-      "addressLine1": "16 Einstein",
-      "addressLine2": "Thủ Đức, Hồ Chí Minh",
-      "address": "16 Einstein, Thủ Đức, Hồ Chí Minh",
+      "addressLine1": "14 Einstein",
+      "addressLine2": "Phường Thủ Đức, Thành phố Hồ Chí Minh",
+      "address": "14 Einstein, Phường Thủ Đức, Thành phố Hồ Chí Minh",
       "mapsUrl": "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949",
-      "draftMapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
       "mapEmbedUrl": "https://www.google.com/maps?q=10.8438291,106.7642708&z=17&output=embed",
       "mapsVerified": true,
       "venueStatusNote": "",

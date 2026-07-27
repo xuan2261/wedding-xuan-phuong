@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-PRODID:-//Xuân Phượng//Multi-Event Wedding v19//VI
+PRODID:-//Xuân Phượng//Multi-Event Wedding v20.3//VI
 BEGIN:VTIMEZONE
 TZID:Asia/Ho_Chi_Minh
 BEGIN:STANDARD
@@ -18,7 +18,8 @@ DTSTAMP:20260723T000000Z
 DTSTART;TZID=Asia/Ho_Chi_Minh:20260815T170000
 DTEND;TZID=Asia/Ho_Chi_Minh:20260815T200000
 SUMMARY:Tiệc Báo Hỷ tại Nha Trang
-LOCATION:Nha Trang
+LOCATION:Sảnh Sea Flower\, Khách sạn Xavia\, 09 Hoàng Diệu\, Phư
+ ờng Nha Trang\, Khánh Hoà
 DESCRIPTION:17h00 Đón khách · 18h00 Bắt đầu Tiệc Báo Hỷ
 BEGIN:VALARM
 TRIGGER:-P1D

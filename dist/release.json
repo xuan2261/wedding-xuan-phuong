@@ -1,8 +1,8 @@
 {
-  "buildId": "v20.2-20260726",
-  "release": "v20.2",
-  "generatedAtUtc": "2026-07-26T09:20:00+00:00",
-  "status": "ak-debug-full-audit-and-deploy-hardening",
+  "buildId": "v20.3-20260727",
+  "release": "v20.3",
+  "generatedAtUtc": "2026-07-27T12:00:00+00:00",
+  "status": "event-map-binding-and-location-consistency",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",

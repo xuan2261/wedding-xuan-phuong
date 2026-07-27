@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-PRODID:-//Xuân Phượng//Multi-Event Wedding v19//VI
+PRODID:-//Xuân Phượng//Multi-Event Wedding v20.3//VI
 BEGIN:VTIMEZONE
 TZID:Asia/Ho_Chi_Minh
 BEGIN:STANDARD
@@ -18,7 +18,8 @@ DTSTAMP:20260723T000000Z
 DTSTART;TZID=Asia/Ho_Chi_Minh:20260730T083000
 DTEND;TZID=Asia/Ho_Chi_Minh:20260730T113000
 SUMMARY:Lễ Thành Hôn và tiệc nhà trai
-LOCATION:346 Nguyễn Huệ\, Xã Bình Dương\, Tỉnh Gia Lai
+LOCATION:Tư gia nhà trai\, 346 Nguyễn Huệ\, Xã Bình Dương\, Tỉn
+ h Gia Lai
 DESCRIPTION:08h30 Lễ Thành Hôn · 10h00 Đón khách và dùng tiệc
 BEGIN:VALARM
 TRIGGER:-P1D

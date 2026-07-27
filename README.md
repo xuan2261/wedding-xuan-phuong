@@ -1,6 +1,6 @@
 # Wedding Xuân & Phượng — v20.2 Multi-Event Journey
 
-Build hiện tại: **v20.2-20260726** — AK-DEBUG Full Audit & Deploy Hardening.
+Build hiện tại: **v20.3-20260727** — AK-DEBUG Full Audit & Deploy Hardening.
 
 Website phục vụ bốn sự kiện:
 

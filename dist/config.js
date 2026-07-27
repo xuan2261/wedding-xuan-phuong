@@ -1,5 +1,5 @@
 /**
- * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.2
+ * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.3
  *
  * URL mẫu:
  *   #to=Gia%20đình%20cô%20Lan&event=bride
@@ -12,9 +12,9 @@
 
   const SOURCE = {
     build: {
-      buildId: "v20.2-20260726",
-      release: "v20.2",
-      status: "ak-debug-full-audit-and-deploy-hardening"
+      buildId: "v20.3-20260727",
+      release: "v20.3",
+      status: "event-map-binding-and-location-consistency"
     },
 
     couple: {
@@ -254,7 +254,6 @@
           addressLine2: "Phường Nha Trang, Khánh Hoà",
           mapsUrl: "https://maps.app.goo.gl/kg3KhpvKhCz36LXw8",
           mapEmbedUrl: "https://www.google.com/maps?q=12.2202026,109.2004447&z=17&output=embed",
-          draftMapsUrl: "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
           mapsVerified: true,
           venueStatusNote: "",
           landmarkNote: "",
@@ -311,11 +310,10 @@
             { time: "18h00", datetime: "2026-08-22T18:00:00+07:00", label: "Bắt đầu Tiệc Báo Hỷ", note: "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật." }
           ],
           venueName: "Nhà hàng Sesan",
-          addressLine1: "16 Einstein",
-          addressLine2: "Thủ Đức, Hồ Chí Minh",
+          addressLine1: "14 Einstein",
+          addressLine2: "Phường Thủ Đức, Thành phố Hồ Chí Minh",
           mapsUrl: "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949",
           mapEmbedUrl: "https://www.google.com/maps?q=10.8438291,106.7642708&z=17&output=embed",
-          draftMapsUrl: "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
           mapsVerified: true,
           venueStatusNote: "",
           landmarkNote: "",
