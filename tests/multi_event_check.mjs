@@ -39,6 +39,10 @@ assert.ok(nhaTrang.event.venueName.includes("Xavia"), "Sai địa điểm Nha Tr
 assert.equal(nhaTrang.gifts.length, 2);
 assert.equal(nhaTrang.sharing.title, "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng");
 
+const saiGon = load("#event=saigon");
+assert.equal(saiGon.event.venueName, "Sesan Restaurant");
+assert.equal(saiGon.event.addressLine1, "14-15-16 Einstein");
+
 const multi = load("#events=bride,groom&event=bride");
 assert.deepEqual([...multi.eventContext.invitedEventIds], ["bride", "groom"]);
 assert.equal(multi.eventContext.activeEventId, "bride");
