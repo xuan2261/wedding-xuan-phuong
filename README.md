@@ -53,8 +53,8 @@ Cấu trúc này cung cấp Open Graph metadata đúng sự kiện trước khi 
 - Luồng Google Form đa sự kiện cũ giữ nguyên làm phương án dự phòng, đang tắt.
 - Cả bốn sự kiện đã có địa điểm, địa chỉ và bản đồ đã xác minh điểm ghim; popup
   map bật cho cả bốn.
-- `python tools/release_readiness.py` hiện báo 0 blocker, `guestReady: true`.
-- Bốn sự kiện đang ở `confirmed-partial`; đổi sang `confirmed` khi gia đình chốt hẳn.
+- Cả bốn sự kiện ở trạng thái `confirmed`.
+- `python tools/release_readiness.py` báo 0 blocker, 0 warning, `guestReady: true`.
 - Phân nhóm khách và link cá nhân hoá còn phải tạo bằng `tools/create-guest-links.html`.
 
 ## Kiểm tra
