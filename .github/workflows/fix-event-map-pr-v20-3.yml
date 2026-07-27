@@ -1,4 +1,4 @@
-name: Apply event map fix v20.3
+name: Verify event map fix v20.3
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  apply-fix:
+  verify-fix:
     if: github.head_ref == 'fix/event-map-binding-v20-2'
     runs-on: ubuntu-latest
     timeout-minutes: 40
@@ -28,39 +28,33 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Apply source and data fixes
-        run: |
-          python tools/apply-event-map-fix-v20-3.py
-          python tools/finalize-event-map-fix-v20-3.py
-          python tools/generate-multi-event-calendars.py
-          python tools/build-dist.py
-
       - name: Install dependencies and Chromium
         run: |
           npm ci
           npx playwright install --with-deps chromium
 
-      - name: Run full test suite and preserve evidence
+      - name: Run full test suite and preserve tail
         id: tests
         shell: bash
         run: |
           set +e
-          mkdir -p reports
-          npm test 2>&1 | tee reports/V20.3-TEST.log
+          npm test 2>&1 | tee /tmp/v20-3-test.log
           code=${PIPESTATUS[0]}
+          mkdir -p reports
+          tail -n 260 /tmp/v20-3-test.log > reports/V20.3-TEST-CURRENT.log
           echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Commit patched source and evidence
+      - name: Commit test evidence
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "fix(maps): apply v20.3 patch and capture test evidence"
+          git add -f reports/V20.3-TEST-CURRENT.log
+          git commit -m "test(ci): record v20.3 full-suite evidence"
           git push origin HEAD:${{ github.head_ref }}
 
       - name: Enforce test result
         if: steps.tests.outputs.exit_code != '0'
         run: |
-          echo "Full test suite failed; inspect reports/V20.3-TEST.log"
+          echo "Full test suite failed; inspect reports/V20.3-TEST-CURRENT.log"
           exit 1
