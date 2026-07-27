@@ -115,7 +115,7 @@
     events: {
       bride: {
         id: "bride",
-        status: "confirmed-partial",
+        status: "confirmed",
         title: "Tiệc cưới nhà gái",
         shortTitle: "Nhà gái · 29/07",
         heroKicker: "Tiệc cưới nhà gái",
@@ -176,7 +176,7 @@
 
       groom: {
         id: "groom",
-        status: "confirmed-partial",
+        status: "confirmed",
         title: "Lễ Thành Hôn và tiệc nhà trai",
         shortTitle: "Nhà trai · 30/07",
         heroKicker: "Lễ Thành Hôn",
@@ -236,7 +236,7 @@
 
       nhatrang: {
         id: "nhatrang",
-        status: "confirmed-partial",
+        status: "confirmed",
         title: "Tiệc Báo Hỷ tại Nha Trang",
         shortTitle: "Nha Trang · 15/08",
         heroKicker: "Tiệc Báo Hỷ · Nha Trang",
@@ -297,7 +297,7 @@
 
       saigon: {
         id: "saigon",
-        status: "confirmed-partial",
+        status: "confirmed",
         title: "Tiệc Báo Hỷ tại Sài Gòn",
         shortTitle: "Sài Gòn · 22/08",
         heroKicker: "Tiệc Báo Hỷ · Sài Gòn",
