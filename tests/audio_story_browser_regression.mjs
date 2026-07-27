@@ -142,7 +142,7 @@ try {
     scrollY: window.scrollY
   }));
 
-  assert(result.build === "v20.2-20260726", `Sai build: ${result.build}`);
+  assert(result.build === "v20.3-20260727", `Sai build: ${result.build}`);
   assert(result.volume >= 0 && result.volume <= 1, `Volume ngoài [0,1]: ${result.volume}`);
   assert(result.autoScroll === "running", `Tự cuộn không chạy: ${result.autoScroll}`);
   assert(result.storyAutostart === "started", `Autostart lỗi: ${result.storyAutostart}`);

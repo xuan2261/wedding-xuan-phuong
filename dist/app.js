@@ -570,6 +570,20 @@
     setText("[data-venue-name]", event.venueName);
     setText("[data-address-line1]", event.addressLine1);
     setText("[data-address-line2]", event.addressLine2);
+
+    const fullEventAddress = [event.addressLine1, event.addressLine2]
+      .filter(Boolean)
+      .join(", ");
+    const mapDialogIntro = $("#map-dialog-intro");
+    const mapFrame = $("#mapFrame");
+    if (mapDialogIntro) {
+      mapDialogIntro.textContent = fullEventAddress || "Địa chỉ đang được cập nhật.";
+    }
+    if (mapFrame) {
+      mapFrame.title = event.venueName
+        ? `Bản đồ đến ${event.venueName}`
+        : "Bản đồ địa điểm sự kiện";
+    }
     setText("[data-guest-invitation-lead]", invitation.guestLead);
     setText("[data-invitation-event-name]", invitation.eventName);
     setText("[data-event-section-kicker]", labels.eventKicker);

@@ -1,9 +1,9 @@
 {
-  "buildId": "v20.2-20260726",
-  "release": "v20.2",
-  "generatedAtUtc": "2026-07-26T09:20:00+00:00",
+  "buildId": "v20.3-20260727",
+  "release": "v20.3",
+  "generatedAtUtc": "2026-07-27T12:00:00+00:00",
   "backendVersion": "1.5.0",
-  "status": "ak-debug-full-audit-and-deploy-hardening",
+  "status": "event-map-binding-and-location-consistency",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",
@@ -13,8 +13,6 @@
   ],
   "knownBlockers": [
     "Multi-event Google Form URLs are not configured; phone contact fallback is active.",
-    "Nha Trang and Sài Gòn addresses/maps are incomplete.",
-    "Bride map pin is not verified.",
     "RSVP deadlines and event end times are not supplied.",
     "Final guest grouping data has not been supplied.",
     "Physical Android/iPhone and Zalo/Messenger tests have not been completed."

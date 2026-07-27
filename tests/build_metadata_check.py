@@ -3,9 +3,9 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_BUILD = "v20.2-20260726"
-EXPECTED_RELEASE = "v20.2"
-EXPECTED_PACKAGE = "20.2.0"
+EXPECTED_BUILD = "v20.3-20260727"
+EXPECTED_RELEASE = "v20.3"
+EXPECTED_PACKAGE = "20.3.0"
 errors = []
 
 
@@ -50,4 +50,4 @@ if errors:
         print("-", error)
     sys.exit(1)
 
-print("PASS: v20.2 build metadata, deploy contract and wording consistency")
+print("PASS: v20.3 build metadata, deploy contract and wording consistency")

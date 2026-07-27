@@ -1,3 +1,10 @@
+## v20.3 — 2026-07-27
+
+- Sửa triệt để địa chỉ và nhãn trợ năng trong hộp thoại bản đồ theo đúng từng sự kiện.
+- Sửa địa chỉ Nhà hàng Sesan thành 14 Einstein, Phường Thủ Đức, Thành phố Hồ Chí Minh.
+- Xóa `draftMapsUrl` nhiễm chéo, đồng bộ chính sách quà mừng và dữ liệu lịch ICS.
+- Thêm regression test render đủ nhà gái, nhà trai, Nha Trang và Sài Gòn.
+
 # v20.1 — Visual Safe Zones & Cover Refinement (2026-07-26)
 
 - Làm mới toàn bộ ảnh cưới từ bản dựng Photoshop và giữ chữ tránh vùng mặt.

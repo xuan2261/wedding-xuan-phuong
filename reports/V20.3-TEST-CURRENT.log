@@ -1,0 +1,360 @@
+      },
+      "initial": {
+        "build": "v20.3-20260727",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "timelineTimes": [
+          "08h30",
+          "10h00"
+        ],
+        "timelineLabels": [
+          "Lễ Thành Hôn",
+          "Đón khách và dùng tiệc"
+        ],
+        "deadline": "29/07/2026",
+        "audioPaused": true,
+        "audioSources": 2,
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "albumCount": 9,
+        "eventId": "groom",
+        "hasPersonalizedCopyButton": false,
+        "expectedGiftCount": 2,
+        "rsvpEnabled": false
+      },
+      "formRequests": 0,
+      "mapRequests": 1,
+      "wishRequests": 1,
+      "lightboxCounter": "2 / 9",
+      "qrRequests": 2
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "initial": {
+        "build": "v20.3-20260727",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "timelineTimes": [
+          "08h30",
+          "10h00"
+        ],
+        "timelineLabels": [
+          "Lễ Thành Hôn",
+          "Đón khách và dùng tiệc"
+        ],
+        "deadline": "29/07/2026",
+        "audioPaused": true,
+        "audioSources": 2,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "albumCount": 9,
+        "eventId": "groom",
+        "hasPersonalizedCopyButton": false,
+        "expectedGiftCount": 2,
+        "rsvpEnabled": false
+      },
+      "formRequests": 0,
+      "mapRequests": 1,
+      "wishRequests": 1,
+      "lightboxCounter": "2 / 9",
+      "qrRequests": 2
+    },
+    {
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "initial": {
+        "build": "v20.3-20260727",
+        "guestName": "Gia đình cô Lan",
+        "familiesHidden": true,
+        "timelineTimes": [
+          "08h30",
+          "10h00"
+        ],
+        "timelineLabels": [
+          "Lễ Thành Hôn",
+          "Đón khách và dùng tiệc"
+        ],
+        "deadline": "29/07/2026",
+        "audioPaused": true,
+        "audioSources": 2,
+        "scrollWidth": 568,
+        "clientWidth": 568,
+        "albumCount": 9,
+        "eventId": "groom",
+        "hasPersonalizedCopyButton": false,
+        "expectedGiftCount": 2,
+        "rsvpEnabled": false
+      },
+      "formRequests": 0,
+      "mapRequests": 1,
+      "wishRequests": 1,
+      "lightboxCounter": "2 / 9",
+      "qrRequests": 2
+    }
+  ]
+}
+
+> wedding-xuan-phuong@20.3.0 test:map-events
+> node tests/map_event_browser_regression.mjs
+
+{
+  "verdict": "PASS",
+  "report": [
+    {
+      "eventId": "bride",
+      "venueName": "Tư gia nhà gái",
+      "fullAddress": "Thôn Định Thiện Tây, Xã Tuy Phước Bắc, Tỉnh Gia Lai",
+      "embedUrl": "https://www.google.com/maps?q=13.8889284,109.1379013&z=17&output=embed",
+      "mapsUrl": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7",
+      "dialogVenue": "Tư gia nhà gái",
+      "dialogAddress": "Thôn Định Thiện Tây, Xã Tuy Phước Bắc, Tỉnh Gia Lai",
+      "frameTitle": "Bản đồ đến Tư gia nhà gái",
+      "mainAddress": "Thôn Định Thiện Tây, Xã Tuy Phước Bắc, Tỉnh Gia Lai",
+      "externalMapHref": "https://maps.app.goo.gl/6E3JzWf4MQboumNH7"
+    },
+    {
+      "eventId": "groom",
+      "venueName": "Tư gia nhà trai",
+      "fullAddress": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
+      "embedUrl": "https://www.google.com/maps?q=14.2869225,109.0786394&z=17&output=embed",
+      "mapsUrl": "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6",
+      "dialogVenue": "Tư gia nhà trai",
+      "dialogAddress": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
+      "frameTitle": "Bản đồ đến Tư gia nhà trai",
+      "mainAddress": "346 Nguyễn Huệ, Xã Bình Dương, Tỉnh Gia Lai",
+      "externalMapHref": "https://maps.app.goo.gl/zki7tKDUw8Ff8twA6"
+    },
+    {
+      "eventId": "nhatrang",
+      "venueName": "Sảnh Sea Flower, Khách sạn Xavia",
+      "fullAddress": "09 Hoàng Diệu, Phường Nha Trang, Khánh Hoà",
+      "embedUrl": "https://www.google.com/maps?q=12.2202026,109.2004447&z=17&output=embed",
+      "mapsUrl": "https://maps.app.goo.gl/kg3KhpvKhCz36LXw8",
+      "dialogVenue": "Sảnh Sea Flower, Khách sạn Xavia",
+      "dialogAddress": "09 Hoàng Diệu, Phường Nha Trang, Khánh Hoà",
+      "frameTitle": "Bản đồ đến Sảnh Sea Flower, Khách sạn Xavia",
+      "mainAddress": "09 Hoàng Diệu, Phường Nha Trang, Khánh Hoà",
+      "externalMapHref": "https://maps.app.goo.gl/kg3KhpvKhCz36LXw8"
+    },
+    {
+      "eventId": "saigon",
+      "venueName": "Nhà hàng Sesan",
+      "fullAddress": "14 Einstein, Phường Thủ Đức, Thành phố Hồ Chí Minh",
+      "embedUrl": "https://www.google.com/maps?q=10.8438291,106.7642708&z=17&output=embed",
+      "mapsUrl": "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949",
+      "dialogVenue": "Nhà hàng Sesan",
+      "dialogAddress": "14 Einstein, Phường Thủ Đức, Thành phố Hồ Chí Minh",
+      "frameTitle": "Bản đồ đến Nhà hàng Sesan",
+      "mainAddress": "14 Einstein, Phường Thủ Đức, Thành phố Hồ Chí Minh",
+      "externalMapHref": "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949"
+    }
+  ]
+}
+
+> wedding-xuan-phuong@20.3.0 test:audio-story-browser
+> node tests/audio_story_browser_regression.mjs
+
+{
+  "verdict": "PASS",
+  "result": {
+    "build": "v20.3-20260727",
+    "volume": 0.3499416666666675,
+    "autoScroll": "running",
+    "storyAutostart": "started",
+    "scrollY": 121
+  },
+  "motion": {
+    "distance": 120,
+    "seconds": 3,
+    "biggestStep": 1
+  }
+}
+
+> wedding-xuan-phuong@20.3.0 test:visual-safe-zones
+> node tests/visual_safe_zone_browser.mjs
+
+{
+  "verdict": "PASS",
+  "evidence": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "cover": {
+        "simpleButton": false,
+        "seam": false,
+        "contentTop": 0,
+        "contentBottom": 568,
+        "sealWidth": 82,
+        "sealHeight": 82,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "dialogOpen": true
+      },
+      "hero": {
+        "sectionTop": 0,
+        "sectionHeight": 568,
+        "namesTop": 84,
+        "namesBottom": 163.90625,
+        "dateTop": 413.609375,
+        "dateBottom": 440,
+        "openTop": 447.609375,
+        "scrollWidth": 320,
+        "clientWidth": 320
+      },
+      "closing": {
+        "sectionTop": -75.6875,
+        "sectionHeight": 720,
+        "contentTop": 0.3125,
+        "contentBottom": 107.3125
+      },
+      "screenshotPath": "reports/visual-safe-zone-320x568.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "cover": {
+        "simpleButton": false,
+        "seam": false,
+        "contentTop": 0,
+        "contentBottom": 844,
+        "sealWidth": 85.796875,
+        "sealHeight": 85.796875,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "dialogOpen": true
+      },
+      "hero": {
+        "sectionTop": 0,
+        "sectionHeight": 844,
+        "namesTop": 84.390625,
+        "namesBottom": 174.609375,
+        "dateTop": 689.609375,
+        "dateBottom": 716,
+        "openTop": 723.609375,
+        "scrollWidth": 390,
+        "clientWidth": 390
+      },
+      "closing": {
+        "sectionTop": 62.28125,
+        "sectionHeight": 720,
+        "contentTop": 149.359375,
+        "contentBottom": 256.359375
+      },
+      "screenshotPath": "reports/visual-safe-zone-390x844.png"
+    },
+    {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "cover": {
+        "simpleButton": false,
+        "seam": false,
+        "contentTop": 0,
+        "contentBottom": 932,
+        "sealWidth": 94.59375,
+        "sealHeight": 94.59375,
+        "scrollWidth": 430,
+        "clientWidth": 430,
+        "dialogOpen": true
+      },
+      "hero": {
+        "sectionTop": 0,
+        "sectionHeight": 932,
+        "namesTop": 93.1875,
+        "namesBottom": 191.125,
+        "dateTop": 765.8125,
+        "dateBottom": 792.203125,
+        "openTop": 805.0625,
+        "scrollWidth": 430,
+        "clientWidth": 430
+      },
+      "closing": {
+        "sectionTop": 126.3125,
+        "sectionHeight": 720,
+        "contentTop": 219.546875,
+        "contentBottom": 326.546875
+      },
+      "screenshotPath": "reports/visual-safe-zone-430x932.png"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "cover": {
+        "simpleButton": false,
+        "seam": false,
+        "contentTop": 0,
+        "contentBottom": 900,
+        "sealWidth": 104,
+        "sealHeight": 104,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "dialogOpen": true
+      },
+      "hero": {
+        "sectionTop": 0,
+        "sectionHeight": 900,
+        "namesTop": 94.5,
+        "namesBottom": 234.9375,
+        "dateTop": 738.609375,
+        "dateBottom": 765,
+        "openTop": 775.609375,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "closing": {
+        "sectionTop": 94.8125,
+        "sectionHeight": 720,
+        "contentTop": 199.3125,
+        "contentBottom": 356.03125
+      },
+      "screenshotPath": "reports/visual-safe-zone-1440x900.png"
+    },
+    {
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "cover": {
+        "simpleButton": false,
+        "seam": false,
+        "contentTop": 0,
+        "contentBottom": 320,
+        "sealWidth": 104,
+        "sealHeight": 104,
+        "scrollWidth": 568,
+        "clientWidth": 568,
+        "dialogOpen": true
+      },
+      "hero": {
+        "sectionTop": 0,
+        "sectionHeight": 500,
+        "namesTop": 50,
+        "namesBottom": 75.1875,
+        "dateTop": 387.609375,
+        "dateBottom": 414,
+        "openTop": 423.609375,
+        "scrollWidth": 568,
+        "clientWidth": 568
+      },
+      "closing": {
+        "sectionTop": -200.125,
+        "sectionHeight": 720,
+        "contentTop": -148.125,
+        "contentBottom": -23.203125
+      },
+      "screenshotPath": "reports/visual-safe-zone-568x320.png"
+    }
+  ]
+}
