@@ -40,19 +40,27 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
 
-      - name: Run full test suite
-        run: npm test
-
-      - name: Commit verified v20.3 patch
+      - name: Run full test suite and preserve evidence
+        id: tests
+        shell: bash
         run: |
-          rm -f \
-            .github/workflows/fix-event-map-binding-v20-3.yml \
-            .github/workflows/fix-event-map-pr-v20-3.yml \
-            tools/apply-event-map-fix-v20-3.py \
-            tools/finalize-event-map-fix-v20-3.py \
-            reports/MAP-FIX-FAILURE-TAIL.txt
+          set +e
+          mkdir -p reports
+          npm test 2>&1 | tee reports/V20.3-TEST.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Commit patched source and evidence
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix(maps): bind venue details per event in v20.3"
+          git commit -m "fix(maps): apply v20.3 patch and capture test evidence"
           git push origin HEAD:${{ github.head_ref }}
+
+      - name: Enforce test result
+        if: steps.tests.outputs.exit_code != '0'
+        run: |
+          echo "Full test suite failed; inspect reports/V20.3-TEST.log"
+          exit 1
