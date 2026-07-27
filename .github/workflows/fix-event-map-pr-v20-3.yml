@@ -30,7 +30,7 @@ jobs:
 
       - name: Install dependencies and Chromium
         run: |
-          python -m pip install --disable-pip-version-check Pillow
+          python -m pip install --disable-pip-version-check Pillow opencv-python-headless
           npm ci
           npx playwright install --with-deps chromium
 
@@ -42,7 +42,7 @@ jobs:
           npm test 2>&1 | tee /tmp/v20-3-test.log
           code=${PIPESTATUS[0]}
           mkdir -p reports
-          tail -n 300 /tmp/v20-3-test.log > reports/V20.3-TEST-CURRENT.log
+          tail -n 360 /tmp/v20-3-test.log > reports/V20.3-TEST-CURRENT.log
           echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
           exit 0
 
