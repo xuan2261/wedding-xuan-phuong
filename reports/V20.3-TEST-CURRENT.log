@@ -23,6 +23,6 @@ PASS: multi-event lifecycle contract
 PASS: wishes storage contract
 PASS: personalization utilities
 Traceback (most recent call last):
-  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tests/verify_assets.py", line 2, in <module>
-    from PIL import Image
-ModuleNotFoundError: No module named 'PIL'
+  File "/home/runner/work/wedding-xuan-phuong/wedding-xuan-phuong/tests/verify_assets.py", line 3, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
