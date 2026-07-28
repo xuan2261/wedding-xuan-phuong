@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "approved": false,
+  "approvedBy": "",
+  "approvedAt": "",
+  "checks": {
+    "livePagesVerified": false,
+    "androidChrome": false,
+    "iphoneSafari": false,
+    "zaloInApp": false,
+    "messengerInApp": false,
+    "openingMusicAutoStory": false,
+    "mapsCalendarQr": false,
+    "rsvpLiveE2E": false,
+    "wishesLiveE2E": false,
+    "privacyAccepted": false
+  },
+  "notes": "Chỉ chuyển approved=true sau khi điền người duyệt, thời điểm duyệt và hoàn tất toàn bộ kiểm tra thủ công."
+}
