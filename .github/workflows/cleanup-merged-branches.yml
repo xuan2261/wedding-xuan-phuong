@@ -26,16 +26,58 @@ jobs:
       github.event.pull_request.head.ref != github.event.repository.default_branch
     runs-on: ubuntu-latest
     steps:
-      - name: Delete merged head branch
+      - name: Delete merged head branch if it still exists
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         shell: bash
         run: |
           set -euo pipefail
-          encoded_ref=$(jq -rn --arg value "$HEAD_REF" '$value|@uri')
-          echo "DELETE: merged PR head ${HEAD_REF}"
-          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}"
+
+          delete_branch_if_present() {
+            local branch="$1"
+            local encoded_ref
+            local error_file
+            local delete_output
+
+            encoded_ref=$(jq -rn --arg value "$branch" '$value|@uri')
+            error_file=$(mktemp)
+
+            if ! gh api \
+              "repos/${GITHUB_REPOSITORY}/git/ref/heads/${encoded_ref}" \
+              >/dev/null 2>"${error_file}"; then
+              if grep -Eq 'HTTP 404|Not Found|Reference does not exist' "${error_file}"; then
+                echo "SKIP: ${branch} is already absent"
+                rm -f "${error_file}"
+                return 0
+              fi
+
+              cat "${error_file}" >&2
+              rm -f "${error_file}"
+              return 1
+            fi
+            rm -f "${error_file}"
+
+            echo "DELETE: merged PR head ${branch}"
+            if delete_output=$(gh api --method DELETE \
+              "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}" 2>&1); then
+              return 0
+            fi
+
+            # Một workflow hoặc thiết lập auto-delete có thể xóa branch sau bước
+            # kiểm tra tồn tại nhưng trước lệnh DELETE. Trường hợp race này vẫn là
+            # trạng thái đích hợp lệ; các lỗi API/quyền khác phải tiếp tục fail.
+            if grep -Eq 'HTTP 404|HTTP 422|Not Found|Reference does not exist' \
+              <<<"${delete_output}"; then
+              echo "SKIP: ${branch} disappeared before DELETE completed"
+              return 0
+            fi
+
+            echo "${delete_output}" >&2
+            return 1
+          }
+
+          delete_branch_if_present "$HEAD_REF"
 
   cleanup-historical-branches:
     if: github.event_name != 'pull_request'
@@ -73,6 +115,28 @@ jobs:
           for branch in "${approved_orphan_branches[@]}"; do
             approved_orphan["$branch"]=1
           done
+
+          delete_branch_if_present() {
+            local branch="$1"
+            local encoded_ref
+            local delete_output
+
+            encoded_ref=$(jq -rn --arg value "$branch" '$value|@uri')
+            echo "DELETE: $branch"
+            if delete_output=$(gh api --method DELETE \
+              "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}" 2>&1); then
+              return 0
+            fi
+
+            if grep -Eq 'HTTP 404|HTTP 422|Not Found|Reference does not exist' \
+              <<<"${delete_output}"; then
+              echo "SKIP: $branch was already removed"
+              return 0
+            fi
+
+            echo "${delete_output}" >&2
+            return 1
+          }
 
           candidates=("${merged_pr_branches[@]}" "${approved_orphan_branches[@]}")
 
@@ -113,13 +177,12 @@ jobs:
               echo "APPROVED: $branch is an explicitly reviewed temporary orphan"
             fi
 
-            encoded_ref=$(jq -rn --arg value "$branch" '$value|@uri')
-            echo "DELETE: $branch"
-            gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${encoded_ref}"
+            delete_branch_if_present "$branch"
           done
 
           echo "## Branch cleanup" >> "$GITHUB_STEP_SUMMARY"
           echo "- Protected default branch: \`$default_branch\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Missing/already-deleted refs are successful no-ops." >> "$GITHUB_STEP_SUMMARY"
           echo "- Open-PR branches are always kept." >> "$GITHUB_STEP_SUMMARY"
           echo "- Merged branches require merged-PR evidence." >> "$GITHUB_STEP_SUMMARY"
           echo "- Temporary orphan deletion is restricted to the reviewed allowlist." >> "$GITHUB_STEP_SUMMARY"
