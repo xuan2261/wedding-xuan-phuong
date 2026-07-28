@@ -33,9 +33,7 @@ jobs:
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
       # Danh sách kiểm tra nằm ở package.json để workflow và máy cá nhân dùng
-      # chung một đường. Trước đây workflow tự liệt kê nên xoá một file test là
-      # CI gãy trong khi `npm test` ở máy vẫn xanh.
-      # test:static bao gồm cả bước dựng và kiểm tra dist.
+      # chung một đường. test:static bao gồm cả bước dựng và kiểm tra dist.
       - name: Verify source and build dist
         run: npm run test:static
       - name: Generate release-readiness evidence
@@ -51,17 +49,18 @@ jobs:
             reports/RELEASE-READINESS.json
             reports/RELEASE-READINESS.md
           if-no-files-found: error
-      - name: Browser smoke and visual safe zones
+      # Chạy đúng một lệnh canonical trong package.json để mọi browser gate,
+      # gồm map binding đủ bốn event, không thể bị bỏ quên trong workflow PR.
+      - name: Full browser regression
         run: |
           set -o pipefail
-          npm run test:browser 2>&1 | tee reports/browser-smoke-ci.log
-          npm run test:visual-safe-zones
-      - name: Upload browser smoke log
+          npm run test:browser-all 2>&1 | tee reports/browser-all-ci.log
+      - name: Upload browser regression log
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
-          name: wedding-browser-smoke-log
-          path: reports/browser-smoke-ci.log
+          name: wedding-browser-regression-log
+          path: reports/browser-all-ci.log
           if-no-files-found: error
           retention-days: 1
       - name: Upload visual safe-zone evidence
@@ -72,18 +71,6 @@ jobs:
           path: reports/visual-safe-zone-*.png
           if-no-files-found: error
           retention-days: 7
-      - name: Audio/story browser regression
-        run: |
-          set -o pipefail
-          npm run test:audio-story-browser 2>&1 | tee reports/audio-story-browser-ci.log
-      - name: Upload audio/story browser log
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v7
-        with:
-          name: wedding-audio-story-browser-log
-          path: reports/audio-story-browser-ci.log
-          if-no-files-found: error
-          retention-days: 1
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
