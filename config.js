@@ -301,13 +301,13 @@
         shortTitle: "Sài Gòn · 22/08",
         heroKicker: "Tiệc Báo Hỷ · Sài Gòn",
         event: {
-          isoDateTime: "2026-08-22T17:00:00+07:00",
+          isoDateTime: "2026-08-22T17:30:00+07:00",
           weekday: "Thứ Bảy",
           dateDisplay: "22.08.2026",
           lunarDate: "",
           timeline: [
-            { time: "17h00", datetime: "2026-08-22T17:00:00+07:00", label: "Đón khách", note: "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý khách." },
-            { time: "18h00", datetime: "2026-08-22T18:00:00+07:00", label: "Bắt đầu Tiệc Báo Hỷ", note: "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật." }
+            { time: "17h30", datetime: "2026-08-22T17:30:00+07:00", label: "Đón khách", note: "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý khách." },
+            { time: "18h30", datetime: "2026-08-22T18:30:00+07:00", label: "Bắt đầu Tiệc Báo Hỷ", note: "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật." }
           ],
           venueName: "Sesan Restaurant",
           addressLine1: "14-15-16 Einstein",
