@@ -309,7 +309,7 @@
             { time: "17h00", datetime: "2026-08-22T17:00:00+07:00", label: "Đón khách", note: "Thanh Xuân và Thị Phượng hân hạnh đón tiếp Quý khách." },
             { time: "18h00", datetime: "2026-08-22T18:00:00+07:00", label: "Bắt đầu Tiệc Báo Hỷ", note: "Kính mời Quý khách cùng chung vui trong buổi tiệc thân mật." }
           ],
-          venueName: "Sesan Restaurant",
+          venueName: "Sảnh Lorien, Sesan Restaurant",
           addressLine1: "14-15-16 Einstein",
           addressLine2: "Phường Thủ Đức, Thành phố Hồ Chí Minh",
           mapsUrl: "https://maps.app.goo.gl/f9xA5oVAoMP6Ld949",
