@@ -1,9 +1,9 @@
 {
   "build": {
-    "buildId": "v20.3-20260727",
-    "release": "v20.3",
+    "buildId": "v20.4-20260804",
+    "release": "v20.4",
     "backendVersion": "1.5.0",
-    "status": "event-map-binding-and-location-consistency"
+    "status": "youtube-wedding-film-lazy-dialog"
   },
   "couple": {
     "groomFullName": "Bùi Thanh Xuân",
@@ -324,5 +324,16 @@
   "rsvpForm": {
     "enabled": true,
     "apiUrl": "https://script.google.com/macros/s/AKfycbzQN36EPuVLINaK4FPeQzJYFqf-iqob_FN5Ov0eUMmMZ2Yuxbw8YiW8L64pT3AjFT5o/exec"
+  },
+  "weddingFilm": {
+    "enabled": true,
+    "provider": "youtube",
+    "videoId": "9kv5T3W9fxo",
+    "watchUrl": "https://youtu.be/9kv5T3W9fxo",
+    "title": "Chuyện chúng mình",
+    "subtitle": "Một thước phim nhỏ trước ngày chung đôi.",
+    "buttonLabel": "Xem video cưới",
+    "poster": "assets/images/meta-v4.jpg",
+    "privacyEnhanced": true
   }
 }

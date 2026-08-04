@@ -1,5 +1,5 @@
 /**
- * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.3
+ * CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.4
  *
  * URL mẫu:
  *   #to=Gia%20đình%20cô%20Lan&event=bride
@@ -12,9 +12,9 @@
 
   const SOURCE = {
     build: {
-      buildId: "v20.3-20260727",
-      release: "v20.3",
-      status: "event-map-binding-and-location-consistency"
+      buildId: "v20.4-20260804",
+      release: "v20.4",
+      status: "youtube-wedding-film-lazy-dialog"
     },
 
     couple: {
@@ -370,6 +370,18 @@
       fallbackCheckThrottleMs: 180
     },
 
+    weddingFilm: {
+      enabled: true,
+      provider: "youtube",
+      videoId: "9kv5T3W9fxo",
+      watchUrl: "https://youtu.be/9kv5T3W9fxo",
+      title: "Chuyện chúng mình",
+      subtitle: "Một thước phim nhỏ trước ngày chung đôi.",
+      buttonLabel: "Xem video cưới",
+      poster: "assets/images/meta-v4.jpg",
+      privacyEnhanced: true
+    },
+
     music: {
       enabled: true,
       title: "Váy Cưới — Erik",
@@ -482,6 +494,7 @@
     sharing: Object.freeze({ ...SOURCE.sharingDefaults, ...profile.sharing }),
     gifts: Object.freeze(profile.giftIds.map((id) => SOURCE.giftCatalog[id]).filter(Boolean)),
     wishes: Object.freeze(SOURCE.wishes),
+    weddingFilm: Object.freeze(SOURCE.weddingFilm),
     music: Object.freeze(SOURCE.music),
     motion: Object.freeze(SOURCE.motion),
     openingExperience: Object.freeze(SOURCE.openingExperience),

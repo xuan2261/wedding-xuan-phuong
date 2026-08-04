@@ -43,6 +43,7 @@ RUNTIME_FILES = [
     "guest-utils.js",
     "event-entry.js",
     "app.js",
+    "wedding-film.js",
     "robots.txt",
     ".nojekyll",
 ]

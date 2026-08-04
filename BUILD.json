@@ -1,9 +1,9 @@
 {
-  "buildId": "v20.3-20260727",
-  "release": "v20.3",
-  "generatedAtUtc": "2026-07-27T12:00:00+00:00",
+  "buildId": "v20.4-20260804",
+  "release": "v20.4",
+  "generatedAtUtc": "2026-08-04T10:38:22+00:00",
   "backendVersion": "1.5.0",
-  "status": "event-map-binding-and-location-consistency",
+  "status": "youtube-wedding-film-lazy-dialog",
   "defaultEventId": "groom",
   "eventIds": [
     "bride",

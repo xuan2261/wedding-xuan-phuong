@@ -1,11 +1,11 @@
 {
   "name": "wedding-xuan-phuong",
   "private": true,
-  "version": "20.3.0",
+  "version": "20.4.0",
   "scripts": {
     "test": "npm run test:static && npm run test:browser-all",
-    "test:static": "python tests/consistency_check.py && python tests/event_location_consistency_check.py && python tests/build_metadata_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/rsvp_form_check.mjs && node tests/rsvp_dedup_check.mjs && node tests/audio_story_regression_check.mjs && node tests/release_hardening_check.mjs && python tests/guest_tool_check.py && python tests/release_readiness_check.py && python tests/ci_reliability_check.py && python tests/live_pages_verifier_check.py && node tests/lifecycle_check.js && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && node tools/check-syntax.mjs && python tools/build-dist.py && python tests/share_entry_pages_check.py && python tests/verify_dist.py",
-    "test:browser-all": "npm run test:browser && npm run test:map-events && npm run test:audio-story-browser && npm run test:visual-safe-zones",
+    "test:static": "python tests/consistency_check.py && python tests/event_location_consistency_check.py && python tests/build_metadata_check.py && python tests/verify_release.py && node tests/multi_event_check.mjs && node tests/opening_experience_check.mjs && node tests/rsvp_form_check.mjs && node tests/rsvp_dedup_check.mjs && node tests/audio_story_regression_check.mjs && node tests/release_hardening_check.mjs && python tests/guest_tool_check.py && python tests/release_readiness_check.py && python tests/ci_reliability_check.py && python tests/live_pages_verifier_check.py && node tests/lifecycle_check.js && node tests/contract_check.js && node tests/personalization_check.js && python tests/verify_assets.py && node tools/check-syntax.mjs && python tools/build-dist.py && python tests/share_entry_pages_check.py && python tests/verify_dist.py && npm run test:wedding-film",
+    "test:browser-all": "npm run test:browser && npm run test:map-events && npm run test:audio-story-browser && npm run test:visual-safe-zones && npm run test:wedding-film-browser",
     "test:browser": "node tests/browser_smoke.mjs",
     "test:audio-story-browser": "node tests/audio_story_browser_regression.mjs",
     "test:visual-safe-zones": "node tests/visual_safe_zone_browser.mjs",
@@ -24,7 +24,9 @@
     "test:live-pages-verifier": "python tests/live_pages_verifier_check.py",
     "test:readiness": "python tests/release_readiness_check.py",
     "test:metadata": "python tests/build_metadata_check.py",
-    "test:map-events": "node tests/map_event_browser_regression.mjs"
+    "test:map-events": "node tests/map_event_browser_regression.mjs",
+    "test:wedding-film": "node tests/wedding_film_check.mjs",
+    "test:wedding-film-browser": "node tests/wedding_film_browser_regression.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

@@ -16,7 +16,7 @@ guest=(ROOT/'guest-utils.js').read_text(encoding='utf-8')
 backend=(ROOT/'tools/wedding-wishes-webapp.gs').read_text(encoding='utf-8')
 package=json.loads((ROOT/'package.json').read_text(encoding='utf-8'))
 lock=json.loads((ROOT/'package-lock.json').read_text(encoding='utf-8'))
-require('v20.3-20260727' in index,'sai build marker')
+require('v20.4-20260804' in index,'sai build marker')
 require(package['version'] == lock['version'] == lock['packages']['']['version'],'package-lock lệch package.json')
 for event_id in ['bride','groom','nhatrang','saigon']:
     require(f'{event_id}: {{' in config,f'thiếu event {event_id}')
