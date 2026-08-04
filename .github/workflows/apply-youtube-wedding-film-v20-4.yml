@@ -1,0 +1,776 @@
+name: Apply YouTube wedding film v20.4
+
+on:
+  push:
+    branches: [feature/youtube-wedding-film-v20-4]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Apply production patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import json
+
+          ROOT = Path('.')
+          OLD_BUILD = 'v20.3-20260727'
+          NEW_BUILD = 'v20.4-20260804'
+          NEW_RELEASE = 'v20.4'
+          NEW_PACKAGE = '20.4.0'
+          VIDEO_ID = '9kv5T3W9fxo'
+          STATUS = 'youtube-wedding-film-lazy-dialog'
+
+          def read(path):
+              return (ROOT / path).read_text(encoding='utf-8')
+
+          def write(path, content):
+              (ROOT / path).write_text(content, encoding='utf-8')
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'FAIL {label}: expected exactly one match, got {count}')
+              return text.replace(old, new, 1)
+
+          # Release/build metadata.
+          build_path = ROOT / 'BUILD.json'
+          build = json.loads(build_path.read_text(encoding='utf-8'))
+          build['buildId'] = NEW_BUILD
+          build['release'] = NEW_RELEASE
+          build['generatedAtUtc'] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+          build['status'] = STATUS
+          build_path.write_text(json.dumps(build, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          data_path = ROOT / 'tools/wedding-data.json'
+          data = json.loads(data_path.read_text(encoding='utf-8'))
+          data.setdefault('build', {})['buildId'] = NEW_BUILD
+          data['build']['release'] = NEW_RELEASE
+          data['build']['status'] = STATUS
+          data['weddingFilm'] = {
+              'enabled': True,
+              'provider': 'youtube',
+              'videoId': VIDEO_ID,
+              'watchUrl': f'https://youtu.be/{VIDEO_ID}',
+              'title': 'Chuyện chúng mình',
+              'subtitle': 'Một thước phim nhỏ trước ngày chung đôi.',
+              'buttonLabel': 'Xem video cưới',
+              'poster': 'assets/images/meta-v4.jpg',
+              'privacyEnhanced': True,
+          }
+          data_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          package_path = ROOT / 'package.json'
+          package = json.loads(package_path.read_text(encoding='utf-8'))
+          package['version'] = NEW_PACKAGE
+          scripts = package.setdefault('scripts', {})
+          if 'npm run test:wedding-film' not in scripts['test:static']:
+              scripts['test:static'] += ' && npm run test:wedding-film'
+          if 'npm run test:wedding-film-browser' not in scripts['test:browser-all']:
+              scripts['test:browser-all'] += ' && npm run test:wedding-film-browser'
+          scripts['test:wedding-film'] = 'node tests/wedding_film_check.mjs'
+          scripts['test:wedding-film-browser'] = 'node tests/wedding_film_browser_regression.mjs'
+          package_path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          lock_path = ROOT / 'package-lock.json'
+          lock = json.loads(lock_path.read_text(encoding='utf-8'))
+          lock['version'] = NEW_PACKAGE
+          lock['packages']['']['version'] = NEW_PACKAGE
+          lock_path.write_text(json.dumps(lock, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Runtime config: global film, available for all four events.
+          config = read('config.js')
+          config = config.replace('CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.3', 'CẤU HÌNH THIỆP CƯỚI ĐA SỰ KIỆN — v20.4')
+          config = config.replace(f'buildId: "{OLD_BUILD}"', f'buildId: "{NEW_BUILD}"')
+          config = config.replace('release: "v20.3"', f'release: "{NEW_RELEASE}"', 1)
+          config = config.replace('status: "event-map-binding-and-location-consistency"', f'status: "{STATUS}"', 1)
+          film_config = '''    weddingFilm: {
+      enabled: true,
+      provider: "youtube",
+      videoId: "9kv5T3W9fxo",
+      watchUrl: "https://youtu.be/9kv5T3W9fxo",
+      title: "Chuyện chúng mình",
+      subtitle: "Một thước phim nhỏ trước ngày chung đôi.",
+      buttonLabel: "Xem video cưới",
+      poster: "assets/images/meta-v4.jpg",
+      privacyEnhanced: true
+    },
+
+'''
+          if 'weddingFilm:' not in config:
+              config = replace_once(config, '    music: {\n', film_config + '    music: {\n', 'config film insertion')
+          if 'weddingFilm: Object.freeze(SOURCE.weddingFilm)' not in config:
+              config = replace_once(
+                  config,
+                  '    wishes: Object.freeze(SOURCE.wishes),\n',
+                  '    wishes: Object.freeze(SOURCE.wishes),\n    weddingFilm: Object.freeze(SOURCE.weddingFilm),\n',
+                  'config film export'
+              )
+          write('config.js', config)
+
+          # HTML: privacy-enhanced YouTube is permitted only as a frame, and the
+          # iframe is created after an explicit click. No YouTube request occurs
+          # during initial page load.
+          index = read('index.html')
+          index = index.replace(f'<meta name="wedding-build" content="{OLD_BUILD}">', f'<meta name="wedding-build" content="{NEW_BUILD}">')
+          index = replace_once(
+              index,
+              'frame-src https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com https://docs.google.com https://www.google.com;',
+              'frame-src https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com https://docs.google.com https://www.google.com https://www.youtube-nocookie.com;',
+              'CSP frame-src'
+          )
+          index = index.replace('config.js?v=5.8', 'config.js?v=5.9')
+          if 'assets/css/wedding-film.css' not in index:
+              index = replace_once(
+                  index,
+                  '  <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.4">\n',
+                  '  <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.4">\n  <link rel="stylesheet" href="assets/css/wedding-film.css?v=1.0">\n',
+                  'film css link'
+              )
+          if 'wedding-film.js' not in index:
+              index = replace_once(
+                  index,
+                  '  <script src="app.js?v=5.8" defer></script>\n',
+                  '  <script src="app.js?v=5.8" defer></script>\n  <script src="wedding-film.js?v=1.0" defer></script>\n',
+                  'film js link'
+              )
+
+          film_section = '''    <section class="section wedding-film reveal" id="wedding-film" data-motion="fade-up" aria-labelledby="wedding-film-title" hidden>
+      <p class="section-kicker" data-wedding-film-kicker>Wedding Film</p>
+      <h2 id="wedding-film-title" data-wedding-film-title>Chuyện chúng mình</h2>
+      <p class="wedding-film__intro" data-wedding-film-subtitle>Một thước phim nhỏ trước ngày chung đôi.</p>
+
+      <button
+        class="wedding-film__poster"
+        id="weddingFilmOpenButton"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="weddingFilmDialog"
+      >
+        <img
+          src="assets/images/meta-v4.jpg"
+          width="1200"
+          height="630"
+          loading="lazy"
+          decoding="async"
+          alt="Thanh Xuân và Thị Phượng trong video cưới"
+        >
+        <span class="wedding-film__poster-shade" aria-hidden="true"></span>
+        <span class="wedding-film__play" aria-hidden="true">
+          <span class="wedding-film__play-icon">▶</span>
+        </span>
+        <span class="wedding-film__poster-copy">
+          <strong data-wedding-film-button>Xem video cưới</strong>
+          <small>Video chỉ tải sau khi Quý khách bấm xem</small>
+        </span>
+      </button>
+    </section>
+
+'''
+          if 'id="wedding-film"' not in index:
+              index = replace_once(
+                  index,
+                  '    <section class="section event reveal" id="event-section"',
+                  film_section + '    <section class="section event reveal" id="event-section"',
+                  'film section'
+              )
+
+          film_dialog = '''  <dialog
+    class="wedding-film-dialog"
+    id="weddingFilmDialog"
+    aria-labelledby="wedding-film-dialog-title"
+    aria-describedby="wedding-film-dialog-description"
+  >
+    <div class="dialog-header wedding-film-dialog__header">
+      <div>
+        <p class="section-kicker">Wedding Film</p>
+        <h2 id="wedding-film-dialog-title">Chuyện chúng mình</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-wedding-film aria-label="Đóng video cưới">×</button>
+    </div>
+    <p class="wedding-film-dialog__description" id="wedding-film-dialog-description">
+      Nhạc nền của thiệp sẽ tạm dừng trong lúc Quý khách xem video.
+    </p>
+    <div class="wedding-film-dialog__player" id="weddingFilmPlayerHost">
+      <p class="wedding-film-dialog__loading" id="weddingFilmLoading">Video sẽ được tải từ YouTube khi mở.</p>
+    </div>
+    <div class="wedding-film-dialog__footer">
+      <a class="button button--secondary" id="weddingFilmExternalLink" href="https://youtu.be/9kv5T3W9fxo" target="_blank" rel="noopener noreferrer">
+        Mở trên YouTube
+      </a>
+      <button class="button button--secondary" type="button" data-close-wedding-film>Đóng video</button>
+    </div>
+  </dialog>
+
+'''
+          if 'id="weddingFilmDialog"' not in index:
+              index = replace_once(
+                  index,
+                  '  <dialog class="lightbox" id="lightboxDialog"',
+                  film_dialog + '  <dialog class="lightbox" id="lightboxDialog"',
+                  'film dialog'
+              )
+          write('index.html', index)
+
+          # New isolated runtime module. It intentionally does not load the
+          # YouTube IFrame API: direct iframe is smaller and the player is fully
+          # unloaded on close. `strict-origin-when-cross-origin` overrides the
+          # page-wide no-referrer policy for this iframe only, satisfying
+          # YouTube's embed client identity requirement without leaking URL path.
+          film_js = r'''(() => {
+  "use strict";
+
+  const config = window.WEDDING_CONFIG?.weddingFilm;
+  const section = document.querySelector("#wedding-film");
+  const openButton = document.querySelector("#weddingFilmOpenButton");
+  const dialog = document.querySelector("#weddingFilmDialog");
+  const playerHost = document.querySelector("#weddingFilmPlayerHost");
+  const externalLink = document.querySelector("#weddingFilmExternalLink");
+  const title = document.querySelector("[data-wedding-film-title]");
+  const subtitle = document.querySelector("[data-wedding-film-subtitle]");
+  const buttonLabel = document.querySelector("[data-wedding-film-button]");
+
+  if (!config?.enabled || config.provider !== "youtube" || !config.videoId || !section || !openButton || !dialog || !playerHost) {
+    return;
+  }
+
+  const safeVideoId = String(config.videoId).trim();
+  if (!/^[A-Za-z0-9_-]{11}$/.test(safeVideoId)) {
+    console.error("Wedding Film: YouTube videoId không hợp lệ.");
+    return;
+  }
+
+  if (title) title.textContent = config.title || "Chuyện chúng mình";
+  if (subtitle) subtitle.textContent = config.subtitle || "Một thước phim nhỏ trước ngày chung đôi.";
+  if (buttonLabel) buttonLabel.textContent = config.buttonLabel || "Xem video cưới";
+  if (externalLink) externalLink.href = config.watchUrl || `https://youtu.be/${safeVideoId}`;
+  section.hidden = false;
+
+  const placeholder = () => {
+    const message = document.createElement("p");
+    message.className = "wedding-film-dialog__loading";
+    message.id = "weddingFilmLoading";
+    message.textContent = "Video sẽ được tải từ YouTube khi mở.";
+    return message;
+  };
+
+  const buildEmbedUrl = () => {
+    const host = config.privacyEnhanced === false
+      ? "https://www.youtube.com"
+      : "https://www.youtube-nocookie.com";
+    const url = new URL(`${host}/embed/${safeVideoId}`);
+    url.searchParams.set("autoplay", "1");
+    url.searchParams.set("playsinline", "1");
+    url.searchParams.set("rel", "0");
+    return url.toString();
+  };
+
+  let resumeMusicAfterClose = false;
+
+  const pauseBackgroundMusic = () => {
+    const audio = document.querySelector("#weddingMusic");
+    resumeMusicAfterClose = Boolean(audio && !audio.paused && !audio.ended);
+    if (resumeMusicAfterClose) audio.pause();
+  };
+
+  const restoreBackgroundMusic = () => {
+    const audio = document.querySelector("#weddingMusic");
+    const shouldResume = resumeMusicAfterClose;
+    resumeMusicAfterClose = false;
+    if (!shouldResume || !audio || !audio.paused) return;
+    const result = audio.play();
+    if (result && typeof result.catch === "function") {
+      result.catch(() => {
+        // Một số WebView yêu cầu thêm một thao tác người dùng; nút nhạc nền vẫn
+        // là fallback và app.js tự đồng bộ trạng thái play/pause.
+      });
+    }
+  };
+
+  const unloadPlayer = () => {
+    playerHost.replaceChildren(placeholder());
+    playerHost.removeAttribute("aria-busy");
+  };
+
+  const loadPlayer = () => {
+    if (playerHost.querySelector("iframe")) return;
+
+    const frame = document.createElement("iframe");
+    frame.className = "wedding-film-dialog__iframe";
+    frame.title = config.title || "Video cưới Thanh Xuân và Thị Phượng";
+    frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.loading = "eager";
+    frame.src = buildEmbedUrl();
+
+    playerHost.setAttribute("aria-busy", "true");
+    frame.addEventListener("load", () => playerHost.removeAttribute("aria-busy"), { once: true });
+    playerHost.replaceChildren(frame);
+  };
+
+  const openFilm = () => {
+    pauseBackgroundMusic();
+
+    if (typeof dialog.showModal !== "function") {
+      window.open(config.watchUrl || `https://youtu.be/${safeVideoId}`, "_blank", "noopener");
+      restoreBackgroundMusic();
+      return;
+    }
+
+    dialog.showModal();
+    loadPlayer();
+  };
+
+  const closeFilm = () => {
+    if (dialog.open) dialog.close();
+  };
+
+  openButton.addEventListener("click", openFilm);
+  dialog.querySelectorAll("[data-close-wedding-film]").forEach((button) => {
+    button.addEventListener("click", closeFilm);
+  });
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) closeFilm();
+  });
+  dialog.addEventListener("close", () => {
+    unloadPlayer();
+    restoreBackgroundMusic();
+    openButton.focus({ preventScroll: true });
+  });
+})();
+'''
+          write('wedding-film.js', film_js)
+
+          film_css = r'''.wedding-film {
+  text-align: center;
+}
+
+.wedding-film__intro {
+  max-width: 620px;
+  margin: 0 auto 1.4rem;
+  color: var(--muted, #66756d);
+  line-height: 1.75;
+}
+
+.wedding-film__poster {
+  position: relative;
+  display: grid;
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(181, 145, 72, 0.42);
+  border-radius: 26px;
+  background: #173b2d;
+  box-shadow: 0 22px 58px rgba(19, 56, 42, 0.18);
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.wedding-film__poster::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: 3;
+  border: 1px solid rgba(255, 245, 218, 0.48);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.wedding-film__poster img {
+  grid-area: 1 / 1;
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  display: block;
+  transition: transform 420ms ease;
+}
+
+.wedding-film__poster-shade {
+  grid-area: 1 / 1;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(9, 28, 21, 0.08) 20%, rgba(9, 28, 21, 0.72) 100%),
+    radial-gradient(circle at center, transparent 0 18%, rgba(8, 28, 20, 0.12) 54%, rgba(8, 28, 20, 0.32) 100%);
+}
+
+.wedding-film__play,
+.wedding-film__poster-copy {
+  grid-area: 1 / 1;
+  z-index: 2;
+}
+
+.wedding-film__play {
+  align-self: center;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 10vw, 88px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 248, 226, 0.86);
+  border-radius: 50%;
+  color: #fffaf0;
+  background: rgba(24, 63, 47, 0.72);
+  box-shadow: 0 0 0 10px rgba(255, 248, 226, 0.12), 0 12px 32px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+}
+
+.wedding-film__play-icon {
+  margin-left: 0.18em;
+  font-size: clamp(1.25rem, 4vw, 1.8rem);
+  line-height: 1;
+}
+
+.wedding-film__poster-copy {
+  align-self: end;
+  justify-self: stretch;
+  display: grid;
+  gap: 0.25rem;
+  padding: clamp(1.1rem, 4vw, 2rem);
+  color: #fffaf0;
+  text-align: left;
+}
+
+.wedding-film__poster-copy strong {
+  font-family: "Lora", serif;
+  font-size: clamp(1.15rem, 3vw, 1.55rem);
+}
+
+.wedding-film__poster-copy small {
+  color: rgba(255, 250, 240, 0.82);
+  font-size: 0.82rem;
+}
+
+.wedding-film__poster:hover img,
+.wedding-film__poster:focus-visible img {
+  transform: scale(1.018);
+}
+
+.wedding-film__poster:focus-visible {
+  outline: 3px solid #b9934f;
+  outline-offset: 4px;
+}
+
+.wedding-film-dialog {
+  width: min(980px, calc(100vw - 24px));
+  max-width: 980px;
+  max-height: min(94dvh, 820px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(181, 145, 72, 0.46);
+  border-radius: 24px;
+  color: #f9f3e7;
+  background: #102d22;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+}
+
+.wedding-film-dialog::backdrop {
+  background: rgba(4, 15, 11, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.wedding-film-dialog .dialog-header {
+  color: inherit;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.wedding-film-dialog .section-kicker {
+  color: #d7b96f;
+}
+
+.wedding-film-dialog .icon-button {
+  color: #fffaf0;
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.wedding-film-dialog__description {
+  margin: 0;
+  padding: 0 1.25rem 1rem;
+  color: rgba(255, 250, 240, 0.76);
+  line-height: 1.6;
+}
+
+.wedding-film-dialog__player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #07150f;
+}
+
+.wedding-film-dialog__iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.wedding-film-dialog__loading {
+  margin: 0;
+  padding: 1.25rem;
+  color: rgba(255, 250, 240, 0.76);
+  text-align: center;
+}
+
+.wedding-film-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .wedding-film__poster {
+    border-radius: 20px;
+  }
+
+  .wedding-film__poster::after {
+    inset: 6px;
+    border-radius: 15px;
+  }
+
+  .wedding-film__poster-copy small {
+    display: none;
+  }
+
+  .wedding-film-dialog {
+    width: calc(100vw - 12px);
+    max-height: 96dvh;
+    border-radius: 18px;
+  }
+
+  .wedding-film-dialog__description {
+    font-size: 0.9rem;
+  }
+
+  .wedding-film-dialog__footer {
+    flex-direction: column;
+  }
+
+  .wedding-film-dialog__footer .button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wedding-film__poster img {
+    transition: none;
+  }
+
+  .wedding-film__poster:hover img,
+  .wedding-film__poster:focus-visible img {
+    transform: none;
+  }
+}
+'''
+          css_path = ROOT / 'assets/css/wedding-film.css'
+          css_path.parent.mkdir(parents=True, exist_ok=True)
+          css_path.write_text(film_css, encoding='utf-8')
+
+          static_test = r'''import fs from "node:fs";
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+const index = fs.readFileSync("index.html", "utf8");
+const config = fs.readFileSync("config.js", "utf8");
+const runtime = fs.readFileSync("wedding-film.js", "utf8");
+const css = fs.readFileSync("assets/css/wedding-film.css", "utf8");
+const data = JSON.parse(fs.readFileSync("tools/wedding-data.json", "utf8"));
+
+assert(index.includes('id="wedding-film"'), "Thiếu section Wedding Film");
+assert(index.includes('id="weddingFilmDialog"'), "Thiếu dialog Wedding Film");
+assert(index.includes('loading="lazy"'), "Poster Wedding Film phải lazy-load");
+assert(index.includes("https://www.youtube-nocookie.com"), "CSP chưa cho phép YouTube privacy-enhanced iframe");
+assert(!/<iframe[^>]+youtube/i.test(index), "Không được có YouTube iframe trong HTML initial");
+assert(config.includes('provider: "youtube"'), "Provider Wedding Film phải là YouTube");
+assert(config.includes('videoId: "9kv5T3W9fxo"'), "Sai YouTube video ID");
+assert(config.includes('weddingFilm: Object.freeze(SOURCE.weddingFilm)'), "Wedding Film chưa export vào runtime config");
+assert(data.weddingFilm?.videoId === "9kv5T3W9fxo", "wedding-data chưa đồng bộ video ID");
+assert(runtime.includes("https://www.youtube-nocookie.com"), "Runtime chưa dùng Privacy Enhanced Mode");
+assert(runtime.includes('referrerPolicy = "strict-origin-when-cross-origin"'), "Iframe YouTube phải gửi origin referrer để tránh lỗi 153");
+assert(runtime.includes("audio.pause()"), "Wedding Film chưa pause nhạc nền");
+assert(runtime.includes("audio.play()"), "Wedding Film chưa restore nhạc nền");
+assert(runtime.includes("playerHost.replaceChildren"), "Wedding Film chưa unload player khi đóng");
+assert(css.includes("aspect-ratio: 16 / 9"), "Player phải giữ tỷ lệ 16:9");
+
+console.log("PASS: YouTube Wedding Film static contract");
+'''
+          write('tests/wedding_film_check.mjs', static_test)
+
+          browser_test = r'''import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const types = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "application/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json",
+  ".jpg": "image/jpeg",
+  ".webp": "image/webp",
+  ".png": "image/png",
+  ".mp3": "audio/mpeg"
+};
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+const server = http.createServer((request, response) => {
+  const pathname = decodeURIComponent(new URL(request.url, "http://127.0.0.1").pathname);
+  const relative = pathname === "/" ? "index.html" : pathname.slice(1);
+  const resolved = path.resolve(root, relative);
+  if (!resolved.startsWith(root) || !fs.existsSync(resolved)) {
+    response.writeHead(404); response.end("Not found"); return;
+  }
+  const stat = fs.statSync(resolved);
+  const file = stat.isDirectory() ? path.join(resolved, "index.html") : resolved;
+  response.writeHead(200, { "Content-Type": types[path.extname(file)] || "application/octet-stream", "Cache-Control": "no-store" });
+  fs.createReadStream(file).pipe(response);
+});
+
+await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+const { port } = server.address();
+const baseUrl = `http://127.0.0.1:${port}/`;
+const browser = await chromium.launch();
+
+try {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+    const page = await browser.newPage({ viewport });
+    let youtubeRequests = 0;
+    let youtubeReferer = "";
+    const pageErrors = [];
+    page.on("pageerror", (error) => pageErrors.push(String(error)));
+
+    await page.route(/https:\/\/fonts\.googleapis\.com\/.*/, (route) => route.fulfill({ status: 200, contentType: "text/css", body: "" }));
+    await page.route(/https:\/\/fonts\.gstatic\.com\/.*/, (route) => route.fulfill({ status: 204, body: "" }));
+    await page.route(/https:\/\/www\.youtube-nocookie\.com\/.*/, async (route) => {
+      youtubeRequests += 1;
+      youtubeReferer = route.request().headers()["referer"] || "";
+      await route.fulfill({ status: 200, contentType: "text/html; charset=utf-8", body: "<!doctype html><html><body>YouTube embed test</body></html>" });
+    });
+
+    await page.addInitScript(() => {
+      window.__WEDDING_TEST_MODE__ = true;
+      window.__WEDDING_SKIP_COVER__ = true;
+      window.__WEDDING_TEST_NOW__ = "2026-07-23T12:00:00+07:00";
+    });
+    await page.goto(`${baseUrl}#event=groom`, { waitUntil: "domcontentloaded" });
+    await page.waitForSelector("#weddingFilmOpenButton:not([hidden])");
+
+    assert(youtubeRequests === 0, `YouTube bị tải trước khi click: ${youtubeRequests}`);
+    assert(await page.locator("#weddingFilmDialog iframe").count() === 0, "Initial DOM không được có YouTube iframe");
+
+    await page.locator("#weddingFilmOpenButton").click();
+    await page.waitForSelector("#weddingFilmDialog[open] iframe");
+    await page.waitForTimeout(80);
+
+    const opened = await page.evaluate(() => {
+      const dialog = document.querySelector("#weddingFilmDialog");
+      const frame = dialog?.querySelector("iframe");
+      const rect = dialog?.getBoundingClientRect();
+      return {
+        open: dialog?.open === true,
+        src: frame?.src || "",
+        referrerPolicy: frame?.referrerPolicy || "",
+        width: rect?.width || 0,
+        viewport: document.documentElement.clientWidth,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      };
+    });
+
+    assert(opened.open, "Wedding Film dialog chưa mở");
+    assert(opened.src.includes("youtube-nocookie.com/embed/9kv5T3W9fxo"), `Sai embed URL: ${opened.src}`);
+    assert(opened.referrerPolicy === "strict-origin-when-cross-origin", `Sai referrer policy: ${opened.referrerPolicy}`);
+    assert(opened.width <= opened.viewport + 1, "Video dialog tràn viewport");
+    assert(opened.overflow <= 1, "Wedding Film gây horizontal overflow");
+    assert(youtubeRequests === 1, `Click phải tạo đúng một YouTube request, thực tế: ${youtubeRequests}`);
+    assert(youtubeReferer.startsWith(`http://127.0.0.1:${port}/`), `Thiếu Referer cho YouTube embed: ${youtubeReferer}`);
+
+    await page.locator("[data-close-wedding-film]").last().click();
+    await page.waitForFunction(() => !document.querySelector("#weddingFilmDialog")?.open);
+    assert(await page.locator("#weddingFilmDialog iframe").count() === 0, "Đóng dialog phải unload iframe");
+    assert(pageErrors.length === 0, `Page errors: ${pageErrors.join(" | ")}`);
+
+    await page.close();
+  }
+  console.log("PASS: YouTube Wedding Film browser lazy-load / dialog / referrer regression");
+} finally {
+  await browser.close();
+  await new Promise((resolve) => server.close(resolve));
+}
+'''
+          write('tests/wedding_film_browser_regression.mjs', browser_test)
+
+          # Build and verification tooling must know about the new runtime file.
+          build_dist = read('tools/build-dist.py')
+          if '"wedding-film.js"' not in build_dist:
+              build_dist = replace_once(build_dist, '    "app.js",\n', '    "app.js",\n    "wedding-film.js",\n', 'build-dist runtime file')
+          write('tools/build-dist.py', build_dist)
+
+          verify_dist = read('tests/verify_dist.py')
+          verify_dist = verify_dist.replace(OLD_BUILD, NEW_BUILD)
+          if "'wedding-film.js'" not in verify_dist:
+              verify_dist = verify_dist.replace("'app.js','robots.txt'", "'app.js','wedding-film.js','robots.txt'")
+          write('tests/verify_dist.py', verify_dist)
+
+          metadata = read('tests/build_metadata_check.py')
+          metadata = metadata.replace(OLD_BUILD, NEW_BUILD)
+          metadata = metadata.replace('EXPECTED_RELEASE = "v20.3"', f'EXPECTED_RELEASE = "{NEW_RELEASE}"')
+          metadata = metadata.replace('EXPECTED_PACKAGE = "20.3.0"', f'EXPECTED_PACKAGE = "{NEW_PACKAGE}"')
+          metadata = metadata.replace('PASS: v20.3 build metadata, deploy contract and wording consistency', 'PASS: v20.4 build metadata, deploy contract and wording consistency')
+          write('tests/build_metadata_check.py', metadata)
+
+          # Replace exact build marker in active tests/docs but leave historical
+          # reports untouched.
+          for base in [ROOT / 'tests', ROOT / 'README.md']:
+              paths = [base] if base.is_file() else list(base.rglob('*'))
+              for path in paths:
+                  if not path.is_file() or path.suffix.lower() not in {'.py', '.mjs', '.js', '.md', '.json'}:
+                      continue
+                  text = path.read_text(encoding='utf-8')
+                  if OLD_BUILD in text:
+                      path.write_text(text.replace(OLD_BUILD, NEW_BUILD), encoding='utf-8')
+
+          # One-off workflow must not enter production history/diff.
+          one_off = ROOT / '.github/workflows/apply-youtube-wedding-film-v20-4.yml'
+          if one_off.exists():
+              one_off.unlink()
+
+          print('PASS: applied YouTube Wedding Film v20.4 source patch')
+          PY
+
+          node --check wedding-film.js
+          node tests/wedding_film_check.mjs
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status --short
+          git commit -m "feat(video): add lazy YouTube wedding film"
+          git push origin HEAD:feature/youtube-wedding-film-v20-4
