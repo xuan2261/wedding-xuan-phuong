@@ -1,0 +1,66 @@
+name: Apply event gift visibility
+
+on:
+  push:
+    branches:
+      - fix/event-gift-visibility
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/event-gift-visibility
+          fetch-depth: 0
+
+      - name: Apply event-specific gift visibility
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          config_path = Path('config.js')
+          text = config_path.read_text(encoding='utf-8')
+
+          def replace_gift_ids(section_start: str, section_end: str, replacement: str) -> None:
+              global text
+              start = text.index(section_start)
+              end = text.index(section_end, start)
+              section = text[start:end]
+              old = 'giftIds: ["groom", "bride"]'
+              count = section.count(old)
+              if count != 1:
+                  raise SystemExit(f'Expected exactly one giftIds in {section_start}, found {count}')
+              section = section.replace(old, replacement, 1)
+              text = text[:start] + section + text[end:]
+
+          replace_gift_ids('      nhatrang: {', '      saigon: {', 'giftIds: ["groom"]')
+          replace_gift_ids('      saigon: {', '    },\n\n    wishes:', 'giftIds: ["bride"]')
+          config_path.write_text(text, encoding='utf-8')
+
+          data_path = Path('tools/wedding-data.json')
+          data = json.loads(data_path.read_text(encoding='utf-8'))
+          data['events']['nhatrang']['giftIds'] = ['groom']
+          data['events']['saigon']['giftIds'] = ['bride']
+          data_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          check = json.loads(data_path.read_text(encoding='utf-8'))
+          assert check['events']['nhatrang']['giftIds'] == ['groom']
+          assert check['events']['saigon']['giftIds'] == ['bride']
+          print('PASS: Nha Trang -> groom only; Sài Gòn -> bride only')
+          PY
+
+      - name: Remove one-shot workflow and commit
+        shell: bash
+        run: |
+          git rm .github/workflows/apply-gift-visibility.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config.js tools/wedding-data.json
+          git commit -m "fix(gifts): scope reception gifts by event"
+          git push origin HEAD:fix/event-gift-visibility
