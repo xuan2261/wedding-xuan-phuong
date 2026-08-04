@@ -3,13 +3,13 @@ import re, sys
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/'dist'
 errors=[]
-for name in ['index.html','styles.css','config.js','guest-utils.js','event-entry.js','app.js','robots.txt','.nojekyll','release.json']:
+for name in ['index.html','styles.css','config.js','guest-utils.js','event-entry.js','app.js','wedding-film.js','robots.txt','.nojekyll','release.json']:
     if not (DIST/name).exists(): errors.append(f'thiếu dist/{name}')
 for forbidden in ['tests','tools','reports','README.md','MULTI-EVENT-SETUP.md']:
     if (DIST/forbidden).exists(): errors.append(f'dist không được chứa {forbidden}')
 index=(DIST/'index.html').read_text(encoding='utf-8')
 config=(DIST/'config.js').read_text(encoding='utf-8')
-if 'v20.3-20260727' not in index: errors.append('dist sai build')
+if 'v20.4-20260804' not in index: errors.append('dist sai build')
 if 'id="invitationCover"' not in index: errors.append('dist thiếu opening cover')
 if 'story-player' in index: errors.append('dist còn thanh điều khiển theo chương')
 for event_id in ['bride','groom','nhatrang','saigon']:

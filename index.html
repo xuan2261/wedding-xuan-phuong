@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#214b3a">
-  <meta name="wedding-build" content="v20.3-20260727">
+  <meta name="wedding-build" content="v20.4-20260804">
   <meta name="description" content="Trân trọng kính mời Quý khách đến chung vui trong hành trình cưới của Thanh Xuân và Thị Phượng tại Gia Lai, Nha Trang và Sài Gòn.">
 
   <!-- Không cho phép lập chỉ mục; không phải là cơ chế đặt mật khẩu. -->
@@ -12,7 +12,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; media-src 'self' https://statics.pancake.vn; connect-src 'self'; frame-src https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com https://docs.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; upgrade-insecure-requests">
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; media-src 'self' https://statics.pancake.vn; connect-src 'self'; frame-src https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com https://docs.google.com https://www.google.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action https://script.google.com https://script.googleusercontent.com https://*.script.googleusercontent.com; upgrade-insecure-requests">
 
   <title>Hành trình cưới · Thanh Xuân &amp; Thị Phượng</title>
 
@@ -42,10 +42,12 @@
         href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Dancing+Script:wght@500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
   <link rel="stylesheet" href="styles.css?v=5.8">
   <link rel="stylesheet" href="assets/css/wedding-motion.css?v=1.4">
+  <link rel="stylesheet" href="assets/css/wedding-film.css?v=1.0">
 
-  <script src="config.js?v=5.8" defer></script>
+  <script src="config.js?v=5.9" defer></script>
   <script src="guest-utils.js?v=5.8" defer></script>
   <script src="app.js?v=5.8" defer></script>
+  <script src="wedding-film.js?v=1.0" defer></script>
 </head>
 
 <body>
@@ -278,6 +280,37 @@
       <blockquote>
         “Từ hôm nay, hai hành trình trở thành một.”
       </blockquote>
+    </section>
+
+    <section class="section wedding-film reveal" id="wedding-film" data-motion="fade-up" aria-labelledby="wedding-film-title" hidden>
+      <p class="section-kicker" data-wedding-film-kicker>Wedding Film</p>
+      <h2 id="wedding-film-title" data-wedding-film-title>Chuyện chúng mình</h2>
+      <p class="wedding-film__intro" data-wedding-film-subtitle>Một thước phim nhỏ trước ngày chung đôi.</p>
+
+      <button
+        class="wedding-film__poster"
+        id="weddingFilmOpenButton"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="weddingFilmDialog"
+      >
+        <img
+src="assets/images/meta-v4.jpg"
+width="1200"
+height="630"
+loading="lazy"
+decoding="async"
+alt="Thanh Xuân và Thị Phượng trong video cưới"
+        >
+        <span class="wedding-film__poster-shade" aria-hidden="true"></span>
+        <span class="wedding-film__play" aria-hidden="true">
+<span class="wedding-film__play-icon">▶</span>
+        </span>
+        <span class="wedding-film__poster-copy">
+<strong data-wedding-film-button>Xem video cưới</strong>
+<small>Video chỉ tải sau khi Quý khách bấm xem</small>
+        </span>
+      </button>
     </section>
 
     <section class="section event reveal" id="event-section" data-motion="fade-up" aria-labelledby="event-title">
@@ -854,6 +887,33 @@
     aria-hidden="true"
     tabindex="-1"
   ></iframe>
+
+  <dialog
+    class="wedding-film-dialog"
+    id="weddingFilmDialog"
+    aria-labelledby="wedding-film-dialog-title"
+    aria-describedby="wedding-film-dialog-description"
+  >
+    <div class="dialog-header wedding-film-dialog__header">
+      <div>
+        <p class="section-kicker">Wedding Film</p>
+        <h2 id="wedding-film-dialog-title">Chuyện chúng mình</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-wedding-film aria-label="Đóng video cưới">×</button>
+    </div>
+    <p class="wedding-film-dialog__description" id="wedding-film-dialog-description">
+      Nhạc nền của thiệp sẽ tạm dừng trong lúc Quý khách xem video.
+    </p>
+    <div class="wedding-film-dialog__player" id="weddingFilmPlayerHost">
+      <p class="wedding-film-dialog__loading" id="weddingFilmLoading">Video sẽ được tải từ YouTube khi mở.</p>
+    </div>
+    <div class="wedding-film-dialog__footer">
+      <a class="button button--secondary" id="weddingFilmExternalLink" href="https://youtu.be/9kv5T3W9fxo" target="_blank" rel="noopener noreferrer">
+        Mở trên YouTube
+      </a>
+      <button class="button button--secondary" type="button" data-close-wedding-film>Đóng video</button>
+    </div>
+  </dialog>
 
   <dialog class="lightbox" id="lightboxDialog" aria-label="Xem ảnh phóng lớn">
     <button class="icon-button lightbox__close" type="button" data-close-lightbox aria-label="Đóng ảnh">×</button>
