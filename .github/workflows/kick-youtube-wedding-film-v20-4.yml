@@ -27,7 +27,6 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import textwrap
 
           path = Path('.github/workflows/apply-youtube-wedding-film-v20-4.yml')
           text = path.read_text(encoding='utf-8')
@@ -35,8 +34,12 @@ jobs:
           end_marker = "\n          PY\n"
           if start_marker not in text or end_marker not in text:
               raise SystemExit('FAIL: cannot locate embedded patch script')
-          script = text.split(start_marker, 1)[1].split(end_marker, 1)[0]
-          exec(compile(textwrap.dedent(script), str(path), 'exec'))
+          segment = text.split(start_marker, 1)[1].split(end_marker, 1)[0]
+          script = "\n".join(
+              line[10:] if line.startswith("          ") else line
+              for line in segment.splitlines()
+          )
+          exec(compile(script, str(path), 'exec'))
           PY
 
           rm -f .github/workflows/apply-youtube-wedding-film-v20-4.yml
