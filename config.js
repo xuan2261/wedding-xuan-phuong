@@ -287,7 +287,7 @@
           postWeddingMessage: "Thanh Xuân và Thị Phượng trân trọng cảm ơn Quý khách đã đến chung vui tại Nha Trang.",
           rsvpClosedMessage: "RSVP Tiệc Báo Hỷ Nha Trang đã khép lại. Quý khách vui lòng liên hệ trực tiếp nếu cần hỗ trợ."
         },
-        giftIds: ["groom", "bride"],
+        giftIds: ["groom"],
         sharing: {
           title: "Tiệc Báo Hỷ Nha Trang · Thanh Xuân & Thị Phượng",
           text: "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Nha Trang của Thanh Xuân và Thị Phượng."
@@ -347,7 +347,7 @@
           postWeddingMessage: "Thanh Xuân và Thị Phượng trân trọng cảm ơn Quý khách đã đến chung vui tại Sài Gòn.",
           rsvpClosedMessage: "RSVP Tiệc Báo Hỷ Sài Gòn đã khép lại. Quý khách vui lòng liên hệ trực tiếp nếu cần hỗ trợ."
         },
-        giftIds: ["groom", "bride"],
+        giftIds: ["bride"],
         sharing: {
           title: "Tiệc Báo Hỷ Sài Gòn · Thanh Xuân & Thị Phượng",
           text: "Trân trọng kính mời Quý khách đến chung vui trong Tiệc Báo Hỷ tại Sài Gòn của Thanh Xuân và Thị Phượng."

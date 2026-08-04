@@ -217,8 +217,7 @@
         "giftsHideAt": ""
       },
       "giftIds": [
-        "groom",
-        "bride"
+        "groom"
       ],
       "directionPhoneRole": "groom",
       "invitationHeading": "Trân trọng báo tin vui",
@@ -289,7 +288,6 @@
         "giftsHideAt": ""
       },
       "giftIds": [
-        "groom",
         "bride"
       ],
       "directionPhoneRole": "groom",
