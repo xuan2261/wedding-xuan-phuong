@@ -109,6 +109,9 @@ jobs:
             "staging/v20-binary-upload"
             "images/refresh-photoshop-v20-final"
             "feature/photoshop-images-v20-clean"
+            "dependabot/github_actions/actions/deploy-pages-5"
+            "dependabot/github_actions/actions/setup-python-7"
+            "dependabot/npm_and_yarn/playwright-1.62.1"
           )
 
           declare -A approved_orphan=()
