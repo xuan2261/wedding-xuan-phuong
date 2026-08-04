@@ -27,6 +27,6 @@
     "test:map-events": "node tests/map_event_browser_regression.mjs"
   },
   "devDependencies": {
-    "playwright": "1.62.0"
+    "playwright": "1.62.1"
   }
 }
