@@ -43,7 +43,7 @@ for event_id, event in DATA["events"].items():
         require(address in ics.replace("\\,", ","), f"{event_id}: ICS thiếu địa chỉ đầy đủ")
 require(len(set(maps_urls)) == len(maps_urls), "Có mapsUrl dùng chung sai giữa các event")
 require(len(set(embed_urls)) == len(embed_urls), "Có mapEmbedUrl dùng chung sai giữa các event")
-require('venueName: "Sesan Restaurant"' in CONFIG, "Tên Sesan chưa đồng bộ")
+require('venueName: "Sảnh Lorien, Sesan Restaurant"' in CONFIG, "Tên Sesan chưa đồng bộ")
 require('addressLine1: "14-15-16 Einstein"' in CONFIG, "Địa chỉ Sesan chưa sửa thành 14-15-16 Einstein")
 require('addressLine2: "Phường Thủ Đức, Thành phố Hồ Chí Minh"' in CONFIG, "Sesan chưa cập nhật phường/thành phố")
 require('giftIds: ["groom"]' in CONFIG, "config.js thiếu cấu hình Nha Trang chỉ hiện quà chú rể")
