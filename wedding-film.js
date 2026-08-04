@@ -104,6 +104,10 @@
   };
 
   const closeFilm = () => {
+    // Gỡ iframe ngay trong cùng thao tác đóng để dừng audio/video tức thì, thay
+    // vì chờ sự kiện `close` ở task kế tiếp. `close` vẫn lặp lại cleanup an toàn
+    // cho Esc hoặc các cách đóng dialog khác.
+    unloadPlayer();
     if (dialog.open) dialog.close();
   };
 
